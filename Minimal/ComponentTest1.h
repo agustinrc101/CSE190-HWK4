@@ -1,5 +1,6 @@
-#ifndef COMPONENT_TEST1_H
-#define COMPONENT_TEST1_H
+#ifndef H_COMPONENT_TEST1
+#define H_COMPONENT_TEST1
+#pragma once
 
 #include <iostream>
 #include "Transform.h"
@@ -8,13 +9,23 @@
 class ComponentTest1 : public Component{
 	public:
 		ComponentTest1(){}
-		~ComponentTest1(){ std::cout << "DELETING Component Test 1" << std::endl; }
+		~ComponentTest1(){}
 
-		void Start(Transform * p) { setTransform(p); std::cout << "START Component Test 1" << std::endl; }
-		void Update(double deltaTime) { std::cout << "UPDATE Component Test 1" << std::endl; }
+		void Init(Transform * p) { 
+			transform = p;
+			Start();
+		}
+		
+		void Update(double deltaTime) override { 
+			
+		}
 
 	protected:
 		Transform * transform;
+
+		void Start() override {
+			std::cout << "ComponentTest1 Start" << std::endl;
+		}
 };
 
 #endif

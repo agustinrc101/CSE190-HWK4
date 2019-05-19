@@ -136,6 +136,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ProjectManager.cpp" />
+    <ClCompile Include="SceneGraph.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="Skybox.cpp" />
     <ClCompile Include="Quad.cpp" />
@@ -144,14 +145,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="shader.frag" />
-    <None Include="shader.vert" />
     <None Include="shaders\color.frag" />
     <None Include="shaders\color.vert" />
-    <None Include="shaders\LCDisplayShader.frag" />
-    <None Include="shaders\LCDisplayShader.vert" />
-    <None Include="shaders\RenderedTextureShader.frag" />
-    <None Include="shaders\RenderedTextureShader.vert" />
     <None Include="shaders\TextureShader.frag" />
     <None Include="shaders\TextureShader.vert" />
     <None Include="shaders\skybox.frag" />
@@ -166,8 +161,10 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Lines.h" />
     <ClInclude Include="LoadPPM.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ProjectManager.h" />
+    <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="Shaders.h" />
     <ClInclude Include="Skybox.h" />

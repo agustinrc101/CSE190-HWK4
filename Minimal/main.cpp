@@ -800,7 +800,7 @@ protected:
 				lastView[eye] = view;
 			});
 		}
-		//=================================================================================
+		//==============================================================================
 
 		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);

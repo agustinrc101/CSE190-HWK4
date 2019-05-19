@@ -1,5 +1,6 @@
-#ifndef LOADPPM_H
-#define LOADPPM_H
+#ifndef H_LOADPPM
+#define H_LOADPPM
+#pragma once
 
 #include <iostream>
 #include <stdio.h>

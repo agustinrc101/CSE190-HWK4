@@ -1,6 +1,6 @@
+#ifndef H_INPUT
+#define H_INPUT
 #pragma once
-#ifndef INPUT_H
-#define INPUT_H
 
 #define INPUT_STICK_SMOOTHING 0.01f
 

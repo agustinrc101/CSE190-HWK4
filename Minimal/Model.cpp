@@ -26,15 +26,17 @@ Model::~Model(){
 	glDeleteBuffers(1, &EBO);
 }
 
-void Model::draw(glm::mat4 projection, glm::mat4 headPose, GLint shader, glm::vec3 rgb, glm::mat4 M) {
-	glUseProgram(shader);
-	glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, &projection[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, &headPose[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, &M[0][0]);
+void Model::draw(glm::mat4 projection, glm::mat4 headPose, glm::mat4 M, Material * mat) {
+	glUseProgram(mat->shader);
+	glUniformMatrix4fv(glGetUniformLocation(mat->shader, "Projection"), 1, GL_FALSE, &projection[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(mat->shader, "View"), 1, GL_FALSE, &headPose[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(mat->shader, "Model"), 1, GL_FALSE, &M[0][0]);
 
-	glUniform3f(glGetUniformLocation(shader, "rgb"), rgb.x, rgb.y, rgb.z);
+	glUniform3f(glGetUniformLocation(mat->shader, "Color"), mat->color.r, mat->color.g, mat->color.b);
 
 	glBindVertexArray(VAO);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mat->TEX);
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
 
 	glBindVertexArray(0);
@@ -68,8 +70,12 @@ void Model::parse(const char * filepath) {
 				c1 = fgetc(file);
 		}
 		else if (c1 == 'v' && c2 == ' ') {
-			fscanf(file, "%f %f %f %f %f %f", &x, &y, &z, &r, &g, &b);
+			fscanf(file, "%f %f %f", &x, &y, &z);
 			vertices.push_back(glm::vec3(x, y, z));
+		}
+		else if (c1 == 'v' && c2 == 't') {
+			fscanf(file, "%f %f", &x, &y);
+			uvs.push_back(glm::vec2(x, y));
 		}
 		else if (c1 == 'v' && c2 == 'n') {
 			fscanf(file, "%f %f %f", &x, &y, &z);

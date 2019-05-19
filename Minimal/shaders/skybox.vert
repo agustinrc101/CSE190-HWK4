@@ -11,13 +11,13 @@ layout (location = 1) in vec3 normal;
 
 out vec3 TexCoords;
 
-uniform mat4 projection;
-uniform mat4 view;
-uniform mat4 model;
+uniform mat4 Projection;
+uniform mat4 View;
+uniform mat4 Model;
 
 void main()
 {
     TexCoords = position;
-    gl_Position = projection * view * model * vec4(position, 1.0);
+    gl_Position = Projection * View * Model * vec4(position, 1.0);
     //gl_Position = pos.xyww;
 }  

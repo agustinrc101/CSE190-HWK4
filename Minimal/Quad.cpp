@@ -17,62 +17,21 @@ Quad::~Quad(){
 	glDeleteBuffers(1, &VBO2);
 }
 
-void Quad::draw(glm::mat4 projection, glm::mat4 headPose, GLint shader, glm::mat4 M, GLuint texture, glm::vec3 eye) {
+void Quad::draw(glm::mat4 projection, glm::mat4 headPose, glm::mat4 M, Material * mat) {
 	glm::mat4 m = M * toWorld;
 
-	glUseProgram(shader);
+	glUseProgram(mat->shader);
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
-	glUniform1i(glGetUniformLocation(shader, "TexCoords"), 0);
-	glUniform3f(glGetUniformLocation(shader, "eye"), eye.x, eye.y, eye.z);
-	glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, &projection[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, &headPose[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, &m[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(mat->shader, "projection"), 1, GL_FALSE, &projection[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(mat->shader, "view"), 1, GL_FALSE, &headPose[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(mat->shader, "model"), 1, GL_FALSE, &m[0][0]);
+	glUniform3f(glGetUniformLocation(mat->shader, "rgb"), mat->color.r, mat->color.g, mat->color.b);
 
 	glBindVertexArray(VAO);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
-
-	glBindVertexArray(0);
-}
-
-void Quad::draw(glm::mat4 projection, glm::mat4 headPose, GLint shader, glm::mat4 M, GLuint texture, glm::vec3 normal, glm::vec3 eyepos) {
-	glm::mat4 m = M * toWorld;
-
-	glUseProgram(shader);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-
-	glUniform1i(glGetUniformLocation(shader, "TexCoords"), 0);
-	glUniform3f(glGetUniformLocation(shader, "planeNormal"), normal.x, normal.y, normal.z);
-	glUniform3f(glGetUniformLocation(shader, "eyePos"), eyepos.x, eyepos.y, eyepos.z);
-	glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, &projection[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, &headPose[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, &m[0][0]);
-
-	glBindVertexArray(VAO);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
-
-	glBindVertexArray(0);
-}
-
-void Quad::draw(glm::mat4 projection, glm::mat4 headPose, GLint shader, glm::mat4 M, glm::vec3 rgb) {
-	glm::mat4 m = M * toWorld;
-
-	glUseProgram(shader);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
-
-	glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, &projection[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, &headPose[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, &m[0][0]);
-	glUniform3f(glGetUniformLocation(shader, "rgb"), rgb.x, rgb.y, rgb.z);
-
-	glBindVertexArray(VAO);
+	glBindTexture(GL_TEXTURE_2D, mat->TEX);
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
 
 	glBindVertexArray(0);

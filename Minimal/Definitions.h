@@ -1,6 +1,6 @@
+#ifndef H_DEFINITIONS
+#define H_DEFINITIONS
 #pragma once
-#ifndef DEFINITIONS_H
-#define DEFINITIONS_H
 
 #include <iostream>
 
@@ -11,18 +11,17 @@
 #define SHADER_TEXTURE_FRAGMENT "./shaders/TextureShader.frag"
 #define SHADER_SKYBOX_VERTEX "./shaders/skybox.vert"
 #define SHADER_SKYBOX_FRAGMENT "./shaders/skybox.frag"
-#define SHADER_RENDERED_TEXTURE_VERTEX "./shaders/RenderedTextureShader.vert"
-#define SHADER_RENDERED_TEXTURE_FRAGMENT "./shaders/RenderedTextureShader.frag"
-#define SHADER_LCDISPLAY_VERTEX "./shaders/LCDisplayShader.vert"
-#define SHADER_LCDISPLAY_FRAGMENT "./shaders/LCDisplayShader.frag"
 
 //Textures
 #define TEXTURE_SKYBOX_LEFT "skybox/left"
 #define TEXTURE_SKYBOX_RIGHT "skybox/right"
 #define TEXTURE_CUBE_STEAM "textures/steam/albedo.ppm"
+#define TEXTURE_GRIP1_ALBEDO "textures/Grip1/Grip1_Albedo.png"
+#define TEXTURE_GRIP2_ALBEDO "textures/Grip2/Grip2_Albedo.png"
 
 //Models
 #define MODEL_SPHERE "models/sphere.obj"
+#define MODEL_CUBE "models/cube.obj"
 
 //Colors
 #define COLOR_RED 1, 0, 0
@@ -32,7 +31,15 @@
 #define COLOR_YELLOW 1, 1, 0
 #define COLOR_CYAN 0, 1, 1
 #define COLOR_BLACK 0, 0, 0
-#define COLOR_WHITE .8f, .8f, .8f
+#define COLOR_WHITE 1, 1, 1
+
+//Axes
+#define AXIS_X_POSITIVE glm::vec3(1, 0, 0)
+#define AXIS_X_NEGATIVE glm::vec3(-1, 0, 0)
+#define AXIS_Y_POSITIVE glm::vec3(0, 1, 0)
+#define AXIS_Y_NEGATIVE glm::vec3(0, -1, 0)
+#define AXIS_Z_POSITIVE glm::vec3(0, 0, -1)
+#define AXIS_Z_NEGATIVE glm::vec3(0, 0, 1)
 
 //Variables
 #define MATH_PI 3.1415926535897932384626433832795f
@@ -64,89 +71,6 @@ static void print(glm::vec3 v) {
 static void print(glm::vec2 v) {
 	std::cout << "Vector2: " << v[0] << ", " << v[1] << std::endl;
 }
-
-/*
-//========
-//BINDING
-//========
-//Bind Vertices, Indices, and TexCoords
-static std::vector<GLuint> bindBuffers(std::vector<glm::vec3> vertices, std::vector<GLuint> indices, std::vector<glm::vec2> texCoords){
-	std::vector<GLuint> buf;	//VAO, VBO, EBO, and VBO2
-	buf.push_back(0);
-	buf.push_back(0);
-	buf.push_back(0);
-	buf.push_back(0);
-
-	//Begin
-	glGenVertexArrays(1, &buf[0]);
-	glGenBuffers(1, &buf[1]);
-	glGenBuffers(1, &buf[2]);
-	glGenBuffers(1, &buf[3]);
-
-	//Pass vertices
-	glBindVertexArray(buf[0]);
-	glBindBuffer(GL_ARRAY_BUFFER, buf[1]);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &(vertices[0]), GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-
-	//Pass indices
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf[2]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-
-	//Pass texture coords
-	glBindBuffer(GL_ARRAY_BUFFER, buf[3]);
-	glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(glm::vec2), &(texCoords[0]), GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (GLvoid*)0);
-
-	//Finish
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	return buf;
-}
-
-//Bind Vertices and Indices
-static std::vector<GLuint> bindBuffers(std::vector<glm::vec3> vertices, std::vector<GLuint> indices) {
-	std::vector<GLuint> buf;	//VAO, VBO, EBO, and VBO2
-	buf.push_back(0);
-	buf.push_back(0);
-	buf.push_back(0);
-
-	//Begin
-	glGenVertexArrays(1, &buf[0]);
-	glGenBuffers(1, &buf[1]);
-	glGenBuffers(1, &buf[2]);
-	glGenBuffers(1, &buf[3]);
-
-	//Pass vertices
-	glBindVertexArray(buf[0]);
-	glBindBuffer(GL_ARRAY_BUFFER, buf[1]);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &(vertices[0]), GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-
-	//Pass indices
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf[2]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), &indices[0], GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-
-	//Finish
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
-
-	return buf;
-}
-*/
 
 //========
 //Helpers

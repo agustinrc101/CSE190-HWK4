@@ -1,6 +1,6 @@
+#ifndef H_PROJECT_MANAGER
+#define H_PROJECT_MANAGER
 #pragma once
-#ifndef PROJECT_MANAGER_H
-#define PROJECT_MANAGER_H
 
 #include <glm/glm.hpp>
 
@@ -18,7 +18,7 @@ private:
 	void initTextures();
 	void initModels();
 	void initObjects();
-	void initValues();
+	void initSceneGraph();
 };
 
 #endif

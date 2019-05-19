@@ -1,11 +1,8 @@
 #include "Lines.h"
 
 
-
-Lines::Lines(){ }
-
-
 Lines::~Lines(){
+	if(material != NULL) delete(material);
 	indices.clear();
 	vertices.clear();
 
@@ -15,19 +12,44 @@ Lines::~Lines(){
 	glDeleteBuffers(1, &VBO2);
 }
 
-void Lines::draw(glm::mat4 projection, glm::mat4 headPose, GLint shader, glm::mat4 M, glm::vec3 rgb) {
+void Lines::draw(glm::mat4 headPose, glm::mat4 projection, glm::mat4 M, Material * mat) {
 	//Rebind buffers
 	bindBuffers();
 
 	//Begin draw
 	glm::mat4 m = M * toWorld;
 
-	glUseProgram(shader);
+	glUseProgram(mat->shader);
 
-	glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, &projection[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, &headPose[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, &m[0][0]);
-	glUniform3f(glGetUniformLocation(shader, "rgb"), rgb.x, rgb.y, rgb.z);
+	glUniformMatrix4fv(glGetUniformLocation(mat->shader, "Projection"), 1, GL_FALSE, &projection[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(mat->shader, "View"), 1, GL_FALSE, &headPose[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(mat->shader, "Model"), 1, GL_FALSE, &m[0][0]);
+	glUniform3f(glGetUniformLocation(mat->shader, "Color"), mat->color.r, mat->color.g, mat->color.b);
+
+	glBindVertexArray(VAO);
+	glDrawElements(GL_LINE_STRIP, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
+
+	glBindVertexArray(0);
+
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
+	glDeleteBuffers(1, &VBO2);
+}
+
+void Lines::draw(glm::mat4 headPose, glm::mat4 projection, glm::mat4 M) {
+	//Rebind buffers
+	bindBuffers();
+
+	//Begin draw
+	glm::mat4 m = M * toWorld;
+
+	glUseProgram(material->shader);
+
+	glUniformMatrix4fv(glGetUniformLocation(material->shader, "Projection"), 1, GL_FALSE, &projection[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(material->shader, "View"), 1, GL_FALSE, &headPose[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(material->shader, "Model"), 1, GL_FALSE, &m[0][0]);
+	glUniform3f(glGetUniformLocation(material->shader, "Color"), material->color.r, material->color.g, material->color.b);
 
 	glBindVertexArray(VAO);
 	glDrawElements(GL_LINE_STRIP, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
@@ -63,7 +85,7 @@ void Lines::bindBuffers(){
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 }
 
-void Lines::updateEyePos(glm::vec3 pos) {
+void Lines::updateInitialPosition(glm::vec3 pos) {
 	if (vertices.size() > 1)
 		vertices[0] = pos;
 }

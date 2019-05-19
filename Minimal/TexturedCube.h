@@ -1,7 +1,6 @@
+#ifndef H_TEXTUREDCUBE
+#define H_TEXTUREDCUBE
 #pragma once
-
-#ifndef TEXTUREDCUBE_H
-#define TEXTUREDCUBE_H
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
@@ -13,15 +12,17 @@
 #include <string>
 #include <vector>
 
+#include "Material.h"
+
 class TexturedCube{
 public:
-	TexturedCube(GLuint tex = 0);
+	TexturedCube(Material * mat);
 	~TexturedCube();
 
 	glm::mat4 toWorld;
 
-	void draw(glm::mat4 projection, glm::mat4 headPose, GLint shader, glm::mat4 M);
-	void update();
+	void draw(glm::mat4 projection, glm::mat4 headPose, glm::mat4 M, Material * mat);
+	void update(double deltaTime);
 
 	void setPosition(glm::vec3 pos);
 	void setScale(float scale);
@@ -31,7 +32,8 @@ private:
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec2> texCoords;
 
-	GLuint VBO, VAO, EBO, TEX, VBO2;
+	Material * material;
+	GLuint VBO, VAO, EBO, VBO2;
 
 	void initCube(float size);
 	void initBuffers();

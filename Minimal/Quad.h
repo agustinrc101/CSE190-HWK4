@@ -1,5 +1,6 @@
-#ifndef QUAD_H
-#define QUAD_H
+#ifndef H_QUAD
+#define H_QUAD
+#pragma once
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
@@ -11,6 +12,8 @@
 #include <string>
 #include <vector>
 
+#include "Material.h"
+
 class Quad{
 public:
 	Quad(float size);
@@ -19,9 +22,7 @@ public:
 	glm::mat4 toWorld = glm::mat4(1.0f);
 	std::vector<glm::vec3> vertices;
 
-	void draw(glm::mat4 projection, glm::mat4 headPose, GLint shader, glm::mat4 M, GLuint texture, glm::vec3 eye);
-	void draw(glm::mat4 projection, glm::mat4 headPose, GLint shader, glm::mat4 M, glm::vec3 rgb);
-	void draw(glm::mat4 projection, glm::mat4 headPose, GLint shader, glm::mat4 M, GLuint texture, glm::vec3 normal, glm::vec3 eyepos);
+	void draw(glm::mat4 projection, glm::mat4 headPose,glm::mat4 M, Material * mat);
 	void update();
 
 private:

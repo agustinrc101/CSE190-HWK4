@@ -42,15 +42,12 @@
     <ClCompile Include="ProjectManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SceneGraph.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="shader.frag">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="shader.vert">
-      <Filter>Resource Files</Filter>
-    </None>
     <None Include="shaders\color.frag" />
     <None Include="shaders\color.vert" />
     <None Include="shaders\TextureShader.frag" />
@@ -61,10 +58,6 @@
     <None Include="shaders\skybox.frag">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="shaders\RenderedTextureShader.frag" />
-    <None Include="shaders\RenderedTextureShader.vert" />
-    <None Include="shaders\LCDisplayShader.vert" />
-    <None Include="shaders\LCDisplayShader.frag" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader.h">
@@ -119,6 +112,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ComponentTest3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

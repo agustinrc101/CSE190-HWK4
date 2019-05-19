@@ -1,5 +1,6 @@
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#ifndef H_COMPONENT
+#define H_COMPONENT
+#pragma once
 
 class Transform;
 
@@ -8,13 +9,13 @@ public:
 	Component() {}
 	virtual ~Component() {}
 
-	virtual void Start(Transform * p) = 0;
-	virtual void Update(double deltaTime) = 0;
+	virtual void Init(Transform * p) = 0;
+	virtual void Update(double deltaTime) { };
 
 protected:
 	Transform * transform;
 
-	virtual void setTransform(Transform * p) { transform = p; }
+	virtual void Start() {}
 };
 
 #endif

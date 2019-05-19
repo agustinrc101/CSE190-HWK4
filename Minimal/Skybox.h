@@ -1,5 +1,6 @@
-#ifndef _SKYBOX_H_
-#define _SKYBOX_H_
+#ifndef H_SKYBOX_H
+#define H_SKYBOX_H
+#pragma once
 
 #define GLFW_INCLUDE_GLEXT
 #ifdef __APPLE__
@@ -21,14 +22,16 @@
 class Skybox{
 public:
 	Skybox(std::string path);
+	Skybox(GLuint tex);
 	~Skybox();
 	unsigned int getTextureID();
-	void draw(glm::mat4 projection, glm::mat4 headPose, GLint shader);
+	void draw(glm::mat4 headPose, glm::mat4 projection, GLint shader);
 
+	//Getters
 	void setPos(glm::vec3 pos);
 
 private:
-	unsigned int textureID;
+	unsigned int textureID = 0;
 	std::vector<glm::vec3> vertices;
 	
 	glm::mat4 toWorld = glm::mat4(1.0f);

@@ -1,5 +1,5 @@
 #include "Skybox.h"
-#define STB_IMAGE_IMPLEMENTATION
+//#define STB_IMAGE_IMPLEMENTATION	//needs to be called ONCE before the first #include "stbi.image.h"
 #include "stb_image.h"
 
 
@@ -18,6 +18,13 @@ Skybox::Skybox(std::string path){
 	loadCubeMap(faces);		
 }
 
+Skybox::Skybox(GLuint tex) {
+	initVertices(10.0f);
+	initCubeMap();
+
+	textureID = tex;
+}
+
 Skybox::~Skybox(){
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
@@ -27,14 +34,14 @@ void Skybox::setPos(glm::vec3 pos) {
 	toWorld[3] = glm::vec4(pos.x, pos.y, pos.z, 1.0f);
 }
 
-void Skybox::draw(glm::mat4 projection, glm::mat4 headPose, GLint shader) {
+void Skybox::draw(glm::mat4 headPose, glm::mat4 projection, GLint shader) {
 	glActiveTexture(GL_TEXTURE0);
 	glDepthMask(GL_FALSE);
 	glUseProgram(shader);
 
-	glUniformMatrix4fv(glGetUniformLocation(shader, "projection"), 1, GL_FALSE, &projection[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, GL_FALSE, &headPose[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(shader, "model"), 1, GL_FALSE, &toWorld[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(shader, "Projection"), 1, GL_FALSE, &projection[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(shader, "View"), 1, GL_FALSE, &headPose[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(shader, "Model"), 1, GL_FALSE, &toWorld[0][0]);
 
 	glBindVertexArray(VAO);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
