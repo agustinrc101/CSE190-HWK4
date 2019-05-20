@@ -22,8 +22,8 @@ public:
 	void scale(float s) { toWorld = glm::scale(toWorld, glm::vec3(s, s, s)); }
 	void scale(glm::vec3 s) { toWorld = glm::scale(toWorld, s); }
 	void translate(glm::vec3 t, bool localSpace = true) { 
-		if(localSpace) toWorld = glm::translate(toWorld, t);
-		else toWorld = glm::translate(glm::mat4(1), t) * toWorld;
+		if(localSpace) toWorld = glm::translate(toWorld, t);		//Local space translation
+		else toWorld = glm::translate(glm::mat4(1), t) * toWorld;	//Global space translation
 	}
 	void rotate(float angle, glm::vec3 axis) { toWorld = glm::rotate(toWorld, glm::radians(angle), axis); }
 
