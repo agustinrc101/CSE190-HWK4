@@ -49,6 +49,8 @@ ProjectManager::~ProjectManager() {
 	delete(sceneGraph);
 	//Delete nontransform objects
 	delete(skybox);
+	//Delete lines
+	delete(lines);
 	//Delete shaders
 	Shaders::deleteShaders();
 	//Delete textures
@@ -61,6 +63,9 @@ ProjectManager::ProjectManager() {
 	initModels();
 	initObjects();
 	initSceneGraph();
+	initAudio();
+	initProject();
+	initNetworking();
 }
 
 void ProjectManager::initShaders() {
@@ -82,6 +87,7 @@ void ProjectManager::initModels() {
 }
 
 void ProjectManager::initObjects() {
+	//Initialize non-scenegraph objects here
 	skybox = new Skybox(Textures::getTextureSkybox());
 	lines = new Lines(new Material(Shaders::getColorShader(), glm::vec3(COLOR_GREEN)));
 }
@@ -112,7 +118,10 @@ void ProjectManager::initSceneGraph() {
 
 		sceneGraph->addTransform(handR);
 	}
-	//Transform samples
+	//
+	//Initialize scenegraph objects here
+	//
+	//[Transform samples]
 	{
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureSteam());
 		Transform * transform = new Transform(model_sphere, mat);
@@ -182,6 +191,18 @@ void ProjectManager::initSceneGraph() {
 	}
 }
 
+void ProjectManager::initAudio() {
+	//TODO
+}
+
+void ProjectManager::initProject() {
+	//TODO
+}
+
+void ProjectManager::initNetworking() {
+	//TODO
+}
+
 void ProjectManager::draw(glm::mat4 headPose, glm::mat4 projection, int eye) {
 	//Draw skybox skybox
 	skybox->draw(headPose, projection, Shaders::getSkyboxShader());
@@ -192,6 +213,8 @@ void ProjectManager::draw(glm::mat4 headPose, glm::mat4 projection, int eye) {
 }
 
 void ProjectManager::update(double deltaTime) {
+	//TODO - handle networking packets
+	//TODO - handle audio
 	sceneGraph->update(deltaTime);
 }
 

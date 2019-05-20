@@ -19,6 +19,9 @@ private:
 	void initModels();
 	void initObjects();
 	void initSceneGraph();
+	void initAudio();
+	void initProject();
+	void initNetworking();
 };
 
 #endif
