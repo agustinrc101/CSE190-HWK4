@@ -3,7 +3,7 @@
 #include "stb_image.h"
 
 
-Skybox::Skybox(std::string path){
+Skybox::Skybox(std::string path, float size){
 	std::vector<std::string> faces = 
 			{	path + "/left.ppm",		//left		//px
 				path + "/right.ppm",	//right		//nx
@@ -13,7 +13,7 @@ Skybox::Skybox(std::string path){
 				path + "/front.ppm"		//front		//nz
 			};
 
-	initVertices(10.0f);	//parameter is the distance from the center
+	initVertices(size);	//parameter is the distance from the center
 	initCubeMap();
 	loadCubeMap(faces);		
 }

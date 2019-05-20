@@ -39,13 +39,34 @@ void TexturedCube::draw(glm::mat4 projection, glm::mat4 headPose,glm::mat4 M, Ma
 	glUniformMatrix4fv(glGetUniformLocation(mat->shader, "Projection"), 1, GL_FALSE, &projection[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(mat->shader, "View"), 1, GL_FALSE, &headPose[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(mat->shader, "Model"), 1, GL_FALSE, &m[0][0]);
-	glUniform3f(glGetUniformLocation(mat->shader, "rgb"), mat->color.r, mat->color.g, mat->color.b);
+	glUniform3f(glGetUniformLocation(mat->shader, "Color"), mat->color.r, mat->color.g, mat->color.b);
 
 	glBindVertexArray(VAO);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mat->TEX);
 	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
 	
+
+	glBindVertexArray(0);
+}
+
+void TexturedCube::draw(glm::mat4 projection, glm::mat4 headPose, glm::mat4 M) {
+	glm::mat4 m = M * toWorld;
+
+	glUseProgram(material->shader);
+
+	glUniform1i(glGetUniformLocation(material->shader, "TexCoords"), 0);
+	glUniformMatrix4fv(glGetUniformLocation(material->shader, "Projection"), 1, GL_FALSE, &projection[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(material->shader, "View"), 1, GL_FALSE, &headPose[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(material->shader, "Model"), 1, GL_FALSE, &m[0][0]);
+	glUniform3f(glGetUniformLocation(material->shader, "Color"), material->color.r, material->color.g, material->color.b);
+
+	glBindVertexArray(VAO);
+	glActiveTexture(GL_TEXTURE0);
+	glUniform1i(glGetUniformLocation(material->shader, "texture_diffuse1"), 0);
+	glBindTexture(GL_TEXTURE_2D, material->TEX);
+	glDrawElements(GL_TRIANGLES, (GLsizei)indices.size(), GL_UNSIGNED_INT, 0);
+
 
 	glBindVertexArray(0);
 }

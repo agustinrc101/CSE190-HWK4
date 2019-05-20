@@ -22,6 +22,7 @@ public:
 	glm::mat4 toWorld;
 
 	void draw(glm::mat4 projection, glm::mat4 headPose, glm::mat4 M, Material * mat);
+	void draw(glm::mat4 projection, glm::mat4 headPose, glm::mat4 M);
 	void update(double deltaTime);
 
 	void setPosition(glm::vec3 pos);

@@ -21,8 +21,11 @@ public:
 	//transform
 	void scale(float s) { toWorld = glm::scale(toWorld, glm::vec3(s, s, s)); }
 	void scale(glm::vec3 s) { toWorld = glm::scale(toWorld, s); }
-	void translate(glm::vec3 t) { toWorld = glm::translate(toWorld, t); }
-	void rotate(float angle, glm::vec3 axis) { toWorld = glm::rotate(toWorld, glm::radians(angle), axis); } 
+	void translate(glm::vec3 t, bool localSpace = true) { 
+		if(localSpace) toWorld = glm::translate(toWorld, t);
+		else toWorld = glm::translate(glm::mat4(1), t) * toWorld;
+	}
+	void rotate(float angle, glm::vec3 axis) { toWorld = glm::rotate(toWorld, glm::radians(angle), axis); }
 
 	//setters
 	void setColor(glm::vec3 c)		{ if (material != NULL) material->color = c; }

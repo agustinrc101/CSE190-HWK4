@@ -9,6 +9,7 @@
 #include "Material.h"
 //Rendering
 #include "SceneGraph.h"
+#include "Model.h"
 #include "Transform.h"
 #include "TexturedCube.h"
 #include "Skybox.h"
@@ -17,6 +18,7 @@
 #include "ComponentTest1.h"
 #include "ComponentTest2.h"
 #include "ComponentTest3.h"
+#include "ComponentTest4.h"
 
 //Init Shaders
 GLint Shaders::colorShader = 0;
@@ -30,7 +32,6 @@ GLuint Textures::textureGrip2Albedo = 0;
 
 //Init SceneGraph
 SceneGraph * sceneGraph;
-
 //Declare Models
 Model * model_sphere;
 Model * model_cube;
@@ -39,7 +40,6 @@ Transform * handL;
 Transform * handR;
 //Declare Skyboxes
 Skybox * skybox;
-
 
 //Debug
 Lines * lines;
@@ -51,6 +51,8 @@ ProjectManager::~ProjectManager() {
 	delete(skybox);
 	//Delete shaders
 	Shaders::deleteShaders();
+	//Delete textures
+	Textures::deleteTextures();
 }
 
 ProjectManager::ProjectManager() {
@@ -110,7 +112,7 @@ void ProjectManager::initSceneGraph() {
 
 		sceneGraph->addTransform(handR);
 	}
-	//More transform samples
+	//Transform samples
 	{
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureSteam());
 		Transform * transform = new Transform(model_sphere, mat);
@@ -125,7 +127,7 @@ void ProjectManager::initSceneGraph() {
 		lines->addVertex(transform->getPosition());
 	}
 	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureGrip1Albedo());
+		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_BLUE), Textures::getTextureGrip1Albedo());
 		Transform * transform = new Transform(model_cube, mat);
 
 		transform->scale(0.1f);
@@ -151,7 +153,7 @@ void ProjectManager::initSceneGraph() {
 		lines->addVertex(transform->getPosition());
 	}
 	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureSteam());
+		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_GREEN), Textures::getTextureSteam());
 		Transform * transform = new Transform(model_sphere, mat);
 
 		transform->scale(0.1f);
@@ -163,7 +165,21 @@ void ProjectManager::initSceneGraph() {
 		sceneGraph->addTransform(transform);
 		lines->addVertex(transform->getPosition());
 	}
+	{
+		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureGrip1Albedo());
+		Transform * transform = new Transform(model_sphere, mat);
 
+		transform->scale(0.1f);
+		transform->translate(glm::vec3(3, 6, -2));
+
+		ComponentTest4 * c4 = new ComponentTest4(AXIS_X_NEGATIVE, 3.0f, 0.2f);
+		transform->addComponent(c4);
+		ComponentTest2 * c2 = new ComponentTest2(AXIS_Y_NEGATIVE, 3.0f);
+		transform->addComponent(c2);
+
+		sceneGraph->addTransform(transform);
+		lines->addVertex(transform->getPosition());
+	}
 }
 
 void ProjectManager::draw(glm::mat4 headPose, glm::mat4 projection, int eye) {

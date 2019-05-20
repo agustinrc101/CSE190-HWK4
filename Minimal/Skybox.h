@@ -21,7 +21,7 @@
 
 class Skybox{
 public:
-	Skybox(std::string path);
+	Skybox(std::string path, float size = 500.0f);
 	Skybox(GLuint tex);
 	~Skybox();
 	unsigned int getTextureID();

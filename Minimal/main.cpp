@@ -621,6 +621,7 @@ protected:
 
   //==============================================================================PROJECT VARIABLES
 	double lastTime = 0;
+	bool waitedForFirstFrame = false;
 	glm::mat4 lastView [2] = { glm::mat4(1), glm::mat4(1) };
 
 	void draw() final override {
@@ -781,7 +782,8 @@ protected:
 			projectManager->updateHands(ovr::toGlm(handPoses[ovrHand_Left]), ovr::toGlm(handPoses[ovrHand_Right]));
 
 			//Calls update in children
-			projectManager->update(ovr_GetTimeInSeconds() - lastTime);
+			if(waitedForFirstFrame) projectManager->update(ovr_GetTimeInSeconds() - lastTime);
+			else waitedForFirstFrame = true;
 			lastTime = ovr_GetTimeInSeconds();
 		}
 		//==============================================================================DRAW

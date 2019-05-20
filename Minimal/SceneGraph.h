@@ -18,7 +18,7 @@ public:
 
 private:
 	std::vector<Transform *> transforms;
-
+	glm::mat4 toWorld = glm::mat4(1);
 };
 
 #endif

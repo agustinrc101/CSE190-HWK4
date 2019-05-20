@@ -29,6 +29,7 @@
 #define COLOR_BLUE 0, 0, 1
 #define COLOR_PURPLE 0.5f, 0, 1
 #define COLOR_YELLOW 1, 1, 0
+#define COLOR_ORANGE 1, 0.56f, 0
 #define COLOR_CYAN 0, 1, 1
 #define COLOR_BLACK 0, 0, 0
 #define COLOR_WHITE 1, 1, 1

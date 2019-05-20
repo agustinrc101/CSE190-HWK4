@@ -27,7 +27,7 @@ void Transform::draw(glm::mat4 headPose, glm::mat4 projection, glm::mat4 parent)
 
 	//Draw if this transform has a model
 	if (model != NULL)								
-		model->draw(projection, headPose, M, material);
+		model->draw(headPose, projection, M, material);
 	//Draw all of this transform's children
 	for (int i = 0; i < children.size(); i++)		
 		children[i]->draw(headPose, projection, M);

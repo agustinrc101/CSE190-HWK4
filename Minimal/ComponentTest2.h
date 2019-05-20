@@ -9,7 +9,8 @@
 
 class ComponentTest2 : public Component {
 public:
-	ComponentTest2(glm::vec3 axisOfRotation = AXIS_Y_POSITIVE) { axis = axisOfRotation; }
+	ComponentTest2(glm::vec3 axisOfRotation = AXIS_Y_POSITIVE, float rotationSpeed = 1.0f, float rotationAngle = 45.0f)
+		: axis(axisOfRotation), speed(rotationSpeed), angle(rotationAngle) { }
 	~ComponentTest2() {}
 
 	void Init(Transform * p) {
@@ -18,12 +19,14 @@ public:
 	}
 
 	void Update(double deltaTime) override { 
-		transform->rotate(45.0f * deltaTime, axis);
+		transform->rotate(angle * (float)deltaTime * speed, axis);
 	}
 
 protected:
 	Transform * transform;
 	glm::vec3 axis;
+	float angle;
+	float speed;
 
 	void Start() override {
 		std::cout << "ComponentTest2 Start" << std::endl;

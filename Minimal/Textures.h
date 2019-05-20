@@ -17,12 +17,19 @@ class Textures{
 		static void setTextureGrip1Albedo(GLuint t) { textureGrip1Albedo = t; }
 		static void setTextureGrip2Albedo(GLuint t) { textureGrip2Albedo = t; }
 
-
 		//Setters
 		static GLuint getTextureSkybox(){ return textureSkybox; }
 		static GLuint getTextureSteam() { return textureSteam; }
 		static GLuint getTextureGrip1Albedo() { return textureGrip1Albedo; }
 		static GLuint getTextureGrip2Albedo() { return textureGrip2Albedo; }
+
+		//Delete textures
+		static void deleteTextures() {
+			glDeleteTextures(1, &textureSkybox);
+			glDeleteTextures(1, &textureSteam);
+			glDeleteTextures(1, &textureGrip1Albedo);
+			glDeleteTextures(1, &textureGrip2Albedo);
+		}
 
 	protected:
 		static GLuint textureSkybox;
