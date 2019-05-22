@@ -18,10 +18,17 @@ private:
 	void initTextures();
 	void initModels();
 	void initObjects();
-	void initSceneGraph();
+	void initSceneGraphs();
+	void initGlobalScene();
+	void initMenuScene();
+	void initScene1();
 	void initAudio();
 	void initProject();
+
+	void networkingSetup();
 	void initNetworking();
+
+	void testing();
 };
 
 #endif

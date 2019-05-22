@@ -23,21 +23,25 @@ void Transform::addComponent(Component * component){
 }
 
 void Transform::draw(glm::mat4 headPose, glm::mat4 projection, glm::mat4 parent) {
-	glm::mat4 M =  parent * toWorld;
+	if (isActive) {
+		glm::mat4 M = parent * toWorld;
 
-	//Draw if this transform has a model
-	if (model != NULL)								
-		model->draw(headPose, projection, M, material);
-	//Draw all of this transform's children
-	for (int i = 0; i < children.size(); i++)		
-		children[i]->draw(headPose, projection, M);
+		//Draw if this transform has a model
+		if (model != NULL)
+			model->draw(headPose, projection, M, material);
+		//Draw all of this transform's children
+		for (int i = 0; i < children.size(); i++)
+			children[i]->draw(headPose, projection, M);
+	}
 }
 
 void Transform::update(double deltaTime) {
-	//Update this transform's components
-	for (int i = 0; i < components.size(); i++)
-		components[i]->Update(deltaTime);
-	//Update this transform's children
-	for (int i = 0; i < children.size(); i++)
-		children[i]->update(deltaTime);
+	if (isActive) {
+		//Update this transform's components
+		for (int i = 0; i < components.size(); i++)
+			components[i]->Update(deltaTime);
+		//Update this transform's children
+		for (int i = 0; i < children.size(); i++)
+			children[i]->update(deltaTime);
+	}
 }

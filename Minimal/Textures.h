@@ -16,12 +16,14 @@ class Textures{
 		static void setTextureSteam(GLuint t) { textureSteam = t; }
 		static void setTextureGrip1Albedo(GLuint t) { textureGrip1Albedo = t; }
 		static void setTextureGrip2Albedo(GLuint t) { textureGrip2Albedo = t; }
+		static void setTextureTrash(GLuint t) { textureTrash = t; }
 
 		//Setters
 		static GLuint getTextureSkybox(){ return textureSkybox; }
 		static GLuint getTextureSteam() { return textureSteam; }
 		static GLuint getTextureGrip1Albedo() { return textureGrip1Albedo; }
 		static GLuint getTextureGrip2Albedo() { return textureGrip2Albedo; }
+		static GLuint getTextureTrash() { return textureTrash; }
 
 		//Delete textures
 		static void deleteTextures() {
@@ -29,6 +31,7 @@ class Textures{
 			glDeleteTextures(1, &textureSteam);
 			glDeleteTextures(1, &textureGrip1Albedo);
 			glDeleteTextures(1, &textureGrip2Albedo);
+			glDeleteTextures(1, &textureTrash);
 		}
 
 	protected:
@@ -36,6 +39,7 @@ class Textures{
 		static GLuint textureSteam;
 		static GLuint textureGrip1Albedo;
 		static GLuint textureGrip2Albedo;
+		static GLuint textureTrash;
 
 };
 
@@ -47,14 +51,27 @@ static GLuint LoadTextures(const char * path) {
 	int nrcChannels = 0;
 	unsigned char * ppm = stbi_load(path, &width, &height, &nrcChannels, 0);
 
-	glGenTextures(1, &TEX);
-	glBindTexture(GL_TEXTURE_2D, TEX);
+	if (!ppm) {
+		std::cout << "\tTexture failed to load" << std::endl;
+		delete(ppm);
+		return 0;
+	}
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height,
-		0, GL_RGB, GL_UNSIGNED_BYTE, &ppm[0]);
+	glGenTextures(1, &TEX);
+	
+	GLenum format;
+	if (nrcChannels == 1)
+		format = GL_RED;
+	else if (nrcChannels == 3)
+		format = GL_RGB;
+	else if (nrcChannels == 4)
+		format = GL_RGBA;
+
+	glBindTexture(GL_TEXTURE_2D, TEX);
+	glTexImage2D(GL_TEXTURE_2D, 0, format, width, height,
+		0, format, GL_UNSIGNED_BYTE, &ppm[0]);
 
 	glGenerateMipmap(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);

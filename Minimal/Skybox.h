@@ -22,7 +22,7 @@
 class Skybox{
 public:
 	Skybox(std::string path, float size = 500.0f);
-	Skybox(GLuint tex);
+	Skybox(GLuint tex = 0);
 	~Skybox();
 	unsigned int getTextureID();
 	void draw(glm::mat4 headPose, glm::mat4 projection, GLint shader);

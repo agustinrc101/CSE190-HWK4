@@ -7,11 +7,13 @@
 #include "Definitions.h"
 #include "Material.h"
 #include "Model.h"
-#include "Component.h"
+#include "Components/Component.h"
 #include <vector>
 
 class Transform {
 public:
+	bool isActive = true;
+
 	Transform(Model * model = NULL, Material * mat = NULL);
 	~Transform();
 

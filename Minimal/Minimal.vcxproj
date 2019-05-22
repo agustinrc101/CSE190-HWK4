@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{9E48D90F-7C30-4BCE-B738-3DE30FCE147B}</ProjectGuid>
     <RootNamespace>Minimal</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
     <ProjectName>Project 4</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -153,11 +153,11 @@
     <None Include="shaders\skybox.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="ComponentTest1.h" />
-    <ClInclude Include="ComponentTest2.h" />
-    <ClInclude Include="ComponentTest3.h" />
-    <ClInclude Include="ComponentTest4.h" />
+    <ClInclude Include="Components\Component.h" />
+    <ClInclude Include="Components\ComponentTest1.h" />
+    <ClInclude Include="Components\ComponentTest2.h" />
+    <ClInclude Include="Components\ComponentTest3.h" />
+    <ClInclude Include="Components\ComponentTest4.h" />
     <ClInclude Include="Definitions.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Lines.h" />

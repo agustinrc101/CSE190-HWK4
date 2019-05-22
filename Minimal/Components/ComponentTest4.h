@@ -19,7 +19,7 @@ public:
 	}
 
 	void Update(double deltaTime) override {
-		curTime += deltaTime;
+		curTime += (float)deltaTime;
 		if (curTime > time) {
 			curTime = 0;
 			curDir *= -1.0f;

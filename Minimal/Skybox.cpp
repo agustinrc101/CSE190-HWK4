@@ -19,10 +19,11 @@ Skybox::Skybox(std::string path, float size){
 }
 
 Skybox::Skybox(GLuint tex) {
+	textureID = tex;
+	if (textureID == 0) return;
+
 	initVertices(10.0f);
 	initCubeMap();
-
-	textureID = tex;
 }
 
 Skybox::~Skybox(){
@@ -35,6 +36,8 @@ void Skybox::setPos(glm::vec3 pos) {
 }
 
 void Skybox::draw(glm::mat4 headPose, glm::mat4 projection, GLint shader) {
+	if (textureID == 0) return;
+
 	glActiveTexture(GL_TEXTURE0);
 	glDepthMask(GL_FALSE);
 	glUseProgram(shader);
