@@ -298,7 +298,7 @@ void ProjectManager::networkingSetup() {
 	//Has networking setup begun?
 	if (startedNetwork) return;	
 	//If not, is user attempting to begin?
-	if (!(Input::getButtonA() || Input::getButtonX())) return;
+	if (!(Input::getButtonA() || Input::getButtonX())) return;	//TODO - change how to host/join server
 	//If so, initialize networking
 	startedNetwork = true;
 	initNetworking();
