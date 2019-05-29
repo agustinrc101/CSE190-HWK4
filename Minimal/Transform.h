@@ -13,6 +13,7 @@
 class Transform {
 public:
 	bool isActive = true;
+	std::string name = "Transform";
 
 	Transform(Model * model = NULL, Material * mat = NULL);
 	~Transform();

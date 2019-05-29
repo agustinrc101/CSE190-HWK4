@@ -1,5 +1,5 @@
-#ifndef H_COMPONENT_TEST4
-#define H_COMPONENT_TEST4
+#ifndef H_COMPONENT_MOVE_TEST
+#define H_COMPONENT_MOVE_TEST
 #pragma once
 
 #include <glm/glm.hpp>
@@ -7,11 +7,11 @@
 #include "Component.h"
 #include "Transform.h"
 
-class ComponentTest4 : public Component {
+class ComponentMoveTest : public Component {
 public:
-	ComponentTest4(glm::vec3 direction, float moveTime = 1.0f, float moveSpeed = 1.0f) 
+	ComponentMoveTest(glm::vec3 direction, float moveTime = 1.0f, float moveSpeed = 1.0f)
 		: dir(direction), time(moveTime), speed(moveSpeed) {}
-	~ComponentTest4() {}
+	~ComponentMoveTest() {}
 
 	void Init(Transform * p) {
 		transform = p;

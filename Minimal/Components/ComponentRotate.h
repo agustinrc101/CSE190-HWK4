@@ -1,5 +1,5 @@
-#ifndef H_COMPONENT_TEST2
-#define H_COMPONENT_TEST2
+#ifndef H_COMPONENT_ROTATE
+#define H_COMPONENT_ROTATE
 #pragma once
 
 #include <iostream>
@@ -7,11 +7,11 @@
 #include "Component.h"
 #include "Definitions.h"
 
-class ComponentTest2 : public Component {
+class ComponentRotate : public Component {
 public:
-	ComponentTest2(glm::vec3 axisOfRotation = AXIS_Y_POSITIVE, float rotationSpeed = 1.0f, float rotationAngle = 45.0f)
+	ComponentRotate(glm::vec3 axisOfRotation = AXIS_Y_POSITIVE, float rotationSpeed = 1.0f, float rotationAngle = 45.0f)
 		: axis(axisOfRotation), speed(rotationSpeed), angle(rotationAngle) { }
-	~ComponentTest2() {}
+	~ComponentRotate() {}
 
 	void Init(Transform * p) {
 		transform = p;
@@ -29,7 +29,7 @@ protected:
 	float speed;
 
 	void Start() override {
-		std::cout << "ComponentTest2 Start" << std::endl;
+		
 	}
 	
 };

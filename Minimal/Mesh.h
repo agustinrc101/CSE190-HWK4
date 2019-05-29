@@ -15,6 +15,7 @@
 
 #include "Material.h"
 #include "Shaders.h"
+#include "Light.h"
 
 using namespace std;
 
@@ -69,8 +70,11 @@ public:
 	// render the mesh
 	void draw(glm::mat4 headPose, glm::mat4 projection, glm::mat4 M, Material * mat) {
 		glm::mat4 m = M * glm::mat4(1);
-		if(mat->TEX != 0)	glUseProgram(mat->shader);
-		else				glUseProgram(Shaders::getColorShader());
+		GLuint shader = 0;
+		if(mat->TEX != 0)	shader = mat->shader;
+		else				shader = Shaders::getColorShader();
+		
+		glUseProgram(shader);
 
 		if (textures.size() > 0) {
 			unsigned int diffuseNr = 1;
@@ -99,16 +103,25 @@ public:
 			}
 		}
 		else {
-			glUniform1i(glGetUniformLocation(mat->shader, "TexCoords"), 0);
-			glUniformMatrix4fv(glGetUniformLocation(mat->shader, "Projection"), 1, GL_FALSE, &projection[0][0]);
-			glUniformMatrix4fv(glGetUniformLocation(mat->shader, "View"), 1, GL_FALSE, &headPose[0][0]);
-			glUniformMatrix4fv(glGetUniformLocation(mat->shader, "Model"), 1, GL_FALSE, &m[0][0]);
-			glUniform3f(glGetUniformLocation(mat->shader, "Color"), mat->color.r, mat->color.g, mat->color.b);
-
 			glActiveTexture(GL_TEXTURE0);
 			glUniform1i(glGetUniformLocation(mat->shader, "texture_diffuse1"), 0);
 			glBindTexture(GL_TEXTURE_2D, mat->TEX);
 		}
+
+		glm::vec3 lightP = Light::getLightPosition();
+		glm::vec3 lightC = Light::getLightColor();
+		glm::vec3 cameraPos = Light::getCameraPos();
+
+		glUniform1i(glGetUniformLocation(shader, "TexCoords"), 0);
+		glUniformMatrix4fv(glGetUniformLocation(shader, "Projection"), 1, GL_FALSE, &projection[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(shader, "View"), 1, GL_FALSE, &headPose[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(shader, "Model"), 1, GL_FALSE, &m[0][0]);
+		glUniform3f(glGetUniformLocation(shader, "Color"), mat->color.r, mat->color.g, mat->color.b);
+		glUniform3f(glGetUniformLocation(shader, "LightPos"), lightP.x, lightP.y, lightP.z);
+		glUniform3f(glGetUniformLocation(shader, "LightColor"), lightC.r, lightC.g, lightC.b);
+		glUniform3f(glGetUniformLocation(shader, "CameraPos"), cameraPos.x, cameraPos.y, cameraPos.z);
+		glUniform1f(glGetUniformLocation(shader, "SpecularStrenght"), mat->specular);
+		glUniform1f(glGetUniformLocation(shader, "AmbianceStrength"), mat->ambiance);
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

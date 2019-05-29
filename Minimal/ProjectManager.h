@@ -12,9 +12,10 @@ public:
 	void draw(glm::mat4 headPose, glm::mat4 projection, int eye);
 	void update(double deltaTime);
 	void updateHands(glm::mat4 handL, glm::mat4 handR);
+	void updateHead(glm::mat4 eye);
 
 private:
-	void initShaders();
+	void initShadersAndLighting();
 	void initTextures();
 	void initModels();
 	void initObjects();
@@ -27,6 +28,7 @@ private:
 
 	void networkingSetup();
 	void initNetworking();
+	void stopNetworking();
 
 	void testing();
 };

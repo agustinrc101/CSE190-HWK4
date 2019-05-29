@@ -64,15 +64,15 @@ static void print(glm::mat4 c){
 };
 //Print Vec4
 static void print(glm::vec4 v){
-	std::cout << "Vector4: " << v[0] << ", " << v[1] << ", " << v[2] << ", " << v[3] << std::endl;
+	std::cout << v[0] << ", " << v[1] << ", " << v[2] << ", " << v[3] << std::endl;
 };
 //Print Vec3
 static void print(glm::vec3 v) {
-	std::cout << "Vector3: " << v[0] << ", " << v[1] << ", " << v[2] << std::endl;
+	std::cout << v[0] << ", " << v[1] << ", " << v[2] << std::endl;
 };
 //Print Vec2
 static void print(glm::vec2 v) {
-	std::cout << "Vector2: " << v[0] << ", " << v[1] << std::endl;
+	std::cout << v[0] << ", " << v[1] << std::endl;
 }
 
 //========

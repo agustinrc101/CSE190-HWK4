@@ -1,5 +1,5 @@
-#ifndef TEXTURES_H
-#define TEXTURES_H
+#ifndef H_TEXTURES
+#define H_TEXTURES
 #pragma once
 
 #include <iostream>

@@ -114,13 +114,16 @@
     <ClInclude Include="Components\ComponentTest1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Components\ComponentTest2.h">
+    <ClInclude Include="Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Components\ComponentTest3.h">
+    <ClInclude Include="Components\ComponentRotate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Components\ComponentTest4.h">
+    <ClInclude Include="Components\ComponentMoveTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\ComponentPrintPosition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

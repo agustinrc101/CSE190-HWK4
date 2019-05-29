@@ -5,6 +5,7 @@
 //Shaders and textures
 #include "Shaders.h"
 #include "Shader.h"
+#include "Light.h"
 #include "Textures.h"
 #include "Material.h"
 //Rendering
@@ -16,14 +17,18 @@
 #include "Lines.h"
 //Components
 #include "Components/ComponentTest1.h"
-#include "Components/ComponentTest2.h"
-#include "Components/ComponentTest3.h"
-#include "Components/ComponentTest4.h"
+#include "Components/ComponentRotate.h"
+#include "Components/ComponentPrintPosition.h"
+#include "Components/ComponentMoveTest.h"
 
 //Init Shaders
 GLint Shaders::colorShader = 0;
 GLint Shaders::textureShader = 0;
 GLint Shaders::skyboxShader = 0;
+//Init Light
+glm::vec3 Light::position = glm::vec3(0);
+glm::vec3 Light::color = glm::vec3(1);
+glm::vec3 Light::cameraPos = glm::vec3(0);
 //Init Textures
 GLuint Textures::textureSteam = 0;
 GLuint Textures::textureSkybox = 0;
@@ -60,7 +65,7 @@ ProjectManager::~ProjectManager() {
 }
 
 ProjectManager::ProjectManager() {
-	initShaders();
+	initShadersAndLighting();
 	initTextures();
 	initModels();
 	initObjects();
@@ -70,7 +75,10 @@ ProjectManager::ProjectManager() {
 	initNetworking();
 }
 
-void ProjectManager::initShaders() {
+void ProjectManager::initShadersAndLighting() {
+	Light::setLightPosition(glm::vec3(-100, 100, 25));
+	Light::setLightColor(glm::vec3(0.7f, .9f, 0.7f));
+
 	Shaders::setColorShader(LoadShaders(SHADER_COLOR_VERTEX, SHADER_COLOR_FRAGMENT));
 	Shaders::setTextureShader(LoadShaders(SHADER_TEXTURE_VERTEX, SHADER_TEXTURE_FRAGMENT));
 	Shaders::setSkyboxShader(LoadShaders(SHADER_SKYBOX_VERTEX, SHADER_SKYBOX_FRAGMENT));
@@ -112,11 +120,8 @@ void ProjectManager::initGlobalScene() {
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_CYAN));
 		handL = new Transform(model_sphere, mat);
 
-		ComponentTest1 * test1 = new ComponentTest1();
-		ComponentTest3 * test3 = new ComponentTest3(false);
-
-		handL->addComponent(test1);
-		handL->addComponent(test3);
+		ComponentPrintPosition * c = new ComponentPrintPosition();
+		handL->addComponent(c);
 
 		sceneGlobal->addTransform(handL);
 	}
@@ -124,9 +129,6 @@ void ProjectManager::initGlobalScene() {
 	{
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_RED));
 		handR = new Transform(model_sphere, mat);
-
-		ComponentTest3 * test3 = new ComponentTest3(true);
-		handR->addComponent(test3);
 
 		sceneGlobal->addTransform(handR);
 	}
@@ -159,7 +161,7 @@ void ProjectManager::initScene1() {
 		transform->scale(0.1f);
 		transform->translate(glm::vec3(0, 0, -2));
 
-		ComponentTest2 * c = new ComponentTest2(AXIS_X_POSITIVE + AXIS_Z_NEGATIVE);
+		ComponentRotate * c = new ComponentRotate(AXIS_X_POSITIVE + AXIS_Z_NEGATIVE);
 		transform->addComponent(c);
 
 		scene1->addTransform(transform);
@@ -171,7 +173,7 @@ void ProjectManager::initScene1() {
 		transform->scale(0.1f);
 		transform->translate(glm::vec3(3, 0, -1.5));
 
-		ComponentTest2 * c = new ComponentTest2(AXIS_Y_POSITIVE);
+		ComponentRotate * c = new ComponentRotate(AXIS_Y_POSITIVE);
 		transform->addComponent(c);
 
 		scene1->addTransform(transform);
@@ -183,19 +185,19 @@ void ProjectManager::initScene1() {
 		transform->scale(0.1f);
 		transform->translate(glm::vec3(-3, 0, -1.5));
 
-		ComponentTest2 * c = new ComponentTest2(AXIS_Y_NEGATIVE);
+		ComponentRotate * c = new ComponentRotate(AXIS_Y_NEGATIVE);
 		transform->addComponent(c);
 
 		scene1->addTransform(transform);
 	}
 	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_GREEN), Textures::getTextureSteam());
+		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_ORANGE), Textures::getTextureSteam());
 		Transform * transform = new Transform(model_sphere, mat);
 
 		transform->scale(0.1f);
 		transform->translate(glm::vec3(0, 3, -2));
 
-		ComponentTest2 * c = new ComponentTest2(AXIS_X_NEGATIVE + AXIS_Z_POSITIVE);
+		ComponentRotate * c = new ComponentRotate(AXIS_X_NEGATIVE + AXIS_Z_POSITIVE);
 		transform->addComponent(c);
 
 		scene1->addTransform(transform);
@@ -207,9 +209,9 @@ void ProjectManager::initScene1() {
 		transform->scale(0.1f);
 		transform->translate(glm::vec3(3, 6, -2));
 
-		ComponentTest4 * c4 = new ComponentTest4(AXIS_X_NEGATIVE, 3.0f, 0.2f);
+		ComponentMoveTest * c4 = new ComponentMoveTest(AXIS_X_NEGATIVE, 3.0f, 0.2f);
 		transform->addComponent(c4);
-		ComponentTest2 * c2 = new ComponentTest2(AXIS_Y_NEGATIVE, 3.0f);
+		ComponentRotate * c2 = new ComponentRotate(AXIS_Y_NEGATIVE, 3.0f);
 		transform->addComponent(c2);
 
 		scene1->addTransform(transform);
@@ -221,8 +223,6 @@ void ProjectManager::initScene1() {
 		transform->scale(1.0f);
 		transform->translate(glm::vec3(0, -2, 0));
 
-		
-
 		scene1->addTransform(transform);
 	}
 	{
@@ -232,7 +232,7 @@ void ProjectManager::initScene1() {
 		transform->scale(0.2f);
 		transform->translate(glm::vec3(-5, 0, 0));
 
-		ComponentTest2 * c2 = new ComponentTest2(AXIS_Y_POSITIVE, 2.0f);
+		ComponentRotate * c2 = new ComponentRotate(AXIS_Y_POSITIVE, 2.0f);
 		transform->addComponent(c2);
 
 		//Child
@@ -243,7 +243,7 @@ void ProjectManager::initScene1() {
 			child->scale(0.5f);
 			child->translate(glm::vec3(0, 4.5f, 0));
 
-			ComponentTest4 * c4 = new ComponentTest4(AXIS_X_POSITIVE);
+			ComponentMoveTest * c4 = new ComponentMoveTest(AXIS_X_POSITIVE);
 			child->addComponent(c4);
 
 			transform->addChild(child);
@@ -251,6 +251,15 @@ void ProjectManager::initScene1() {
 
 		scene1->addTransform(transform);
 	}
+	{
+		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_WHITE));
+		Transform * transform = new Transform(model_sphere, mat);
+
+		transform->scale(0.2f);
+		
+		scene1->addTransform(transform);
+	}
+
 }
 
 void ProjectManager::initAudio() {
@@ -275,6 +284,7 @@ void ProjectManager::update(double deltaTime) {
 	networkingSetup();
 	//TODO - handle networking packets
 	//TODO - handle audio
+	//TODO - handle scene changes (maybe use enum with a switch statement)
 	sceneGlobal->update(deltaTime);
 	sceneMenu->update(deltaTime);
 	scene1->update(deltaTime);
@@ -289,8 +299,12 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 	handR->scale(0.015f);
 }
 
+void ProjectManager::updateHead(glm::mat4 eye){
+	Light::setCameraPos(eye[3]);
+}
+
 void ProjectManager::testing() {
-	
+	//Testing code here
 }
 
 bool startedNetwork = false;
@@ -308,4 +322,10 @@ void ProjectManager::networkingSetup() {
 void ProjectManager::initNetworking() {
 	std::cout << "init networking" << std::endl;
 	//TODO
+}
+
+void ProjectManager::stopNetworking(){
+	std::cout << "stop networking" << std::endl;
+	startedNetwork = false;
+
 }

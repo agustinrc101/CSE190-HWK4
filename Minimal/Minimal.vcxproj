@@ -155,11 +155,12 @@
   <ItemGroup>
     <ClInclude Include="Components\Component.h" />
     <ClInclude Include="Components\ComponentTest1.h" />
-    <ClInclude Include="Components\ComponentTest2.h" />
-    <ClInclude Include="Components\ComponentTest3.h" />
-    <ClInclude Include="Components\ComponentTest4.h" />
+    <ClInclude Include="Components\ComponentRotate.h" />
+    <ClInclude Include="Components\ComponentPrintPosition.h" />
+    <ClInclude Include="Components\ComponentMoveTest.h" />
     <ClInclude Include="Definitions.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Lines.h" />
     <ClInclude Include="LoadPPM.h" />
     <ClInclude Include="Material.h" />

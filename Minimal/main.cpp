@@ -793,6 +793,7 @@ protected:
 				const auto& vp = _sceneLayer.Viewport[eye];
 				glViewport(vp.Pos.x, vp.Pos.y, vp.Size.w, vp.Size.h);
 				_sceneLayer.RenderPose[eye] = eyePoses[eye];
+				projectManager->updateHead(ovr::toGlm(eyePoses[eye]));
 				//---------------------------------------------------View Matrix
 				glm::mat4 view = glm::inverse(ovr::toGlm(eyePoses[eye]));
 				glm::mat4 projection = _eyeProjections[eye];
