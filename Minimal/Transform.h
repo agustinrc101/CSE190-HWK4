@@ -3,6 +3,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 
 #include "Definitions.h"
 #include "Material.h"
@@ -41,6 +42,7 @@ public:
 	//Getters
 	glm::mat4 getToWorld() { return toWorld; }
 	glm::vec3 getPosition() { return glm::vec3(toWorld[3][0], toWorld[3][1], toWorld[3][2]) ; }
+	glm::quat getRotation() { return glm::quat_cast(toWorld); }
 
 	//Others
 	void addChild(Transform * child) { children.emplace_back(child); }

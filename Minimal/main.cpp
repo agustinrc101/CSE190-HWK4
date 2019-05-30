@@ -780,20 +780,30 @@ protected:
 		{
 			//Update hand positions
 			projectManager->updateHands(ovr::toGlm(handPoses[ovrHand_Left]), ovr::toGlm(handPoses[ovrHand_Right]));
+			projectManager->updateHead(ovr::toGlm(trackState.HeadPose.ThePose));
 
 			//Calls update in children
 			if(waitedForFirstFrame) projectManager->update(ovr_GetTimeInSeconds() - lastTime);
 			else waitedForFirstFrame = true;
 			lastTime = ovr_GetTimeInSeconds();
+
+			glm::vec3 playerPos = projectManager->getPlayerPosition();
+			glm::quat playerRot = projectManager->getPlayerRotation();
+
+			
+
+			//trackState.HeadPose.ThePose.Position += 
+			//trackState.HeadPose.ThePose.Orientation *= 
 		}
 		//==============================================================================DRAW
-		{
+		{	
 			ovr::for_each_eye([&](ovrEyeType eye) {
-				//---------------------------------------------------Setup
+				//---------------------------------------------------Setup Variables
+				projectManager->updateLightCameraPos(ovr::toGlm(eyePoses[eye]));
+				//---------------------------------------------------Setup Rendering
 				const auto& vp = _sceneLayer.Viewport[eye];
 				glViewport(vp.Pos.x, vp.Pos.y, vp.Size.w, vp.Size.h);
 				_sceneLayer.RenderPose[eye] = eyePoses[eye];
-				projectManager->updateHead(ovr::toGlm(eyePoses[eye]));
 				//---------------------------------------------------View Matrix
 				glm::mat4 view = glm::inverse(ovr::toGlm(eyePoses[eye]));
 				glm::mat4 projection = _eyeProjections[eye];

@@ -33,7 +33,7 @@ protected:
 	Transform * transform;
 
 	void Start() override {
-		std::cout << "ComponentTest4 Start" << std::endl;
+		
 	}
 
 private:

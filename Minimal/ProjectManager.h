@@ -12,7 +12,11 @@ public:
 	void draw(glm::mat4 headPose, glm::mat4 projection, int eye);
 	void update(double deltaTime);
 	void updateHands(glm::mat4 handL, glm::mat4 handR);
-	void updateHead(glm::mat4 eye);
+	void updateHead(glm::mat4 hmd);
+	void updateLightCameraPos(glm::mat4 eye);
+
+	glm::vec3 getPlayerPosition();
+	glm::quat getPlayerRotation();
 
 private:
 	void initShadersAndLighting();
@@ -27,7 +31,8 @@ private:
 	void initProject();
 
 	void networkingSetup();
-	void initNetworking();
+	void serverConnect();
+	void clientConnect();
 	void stopNetworking();
 
 	void testing();

@@ -50,6 +50,8 @@ Model * model_sphere;
 Model * model_cube;
 Model * model_plane;
 //Declare Important Objects
+Transform * player;
+Transform * head;
 Transform * handL; 
 Transform * handR;
 
@@ -84,7 +86,7 @@ ProjectManager::ProjectManager() {
 }
 
 void ProjectManager::initShadersAndLighting() {
-	Light::setLightPosition(glm::vec3(-100, 100, 25));
+	Light::setLightPosition(glm::vec3(-10, 10, 5));
 	Light::setLightColor(glm::vec3(COLOR_WHITE));
 
 	Shaders::setColorShader(LoadShaders(SHADER_COLOR_VERTEX, SHADER_COLOR_FRAGMENT));
@@ -118,7 +120,7 @@ void ProjectManager::initSceneGraphs() {
 }
 
 void ProjectManager::initGlobalScene() {
-	sceneGlobal = new SceneGraph(new Skybox(), 0);	//This does not render a skybox
+	sceneGlobal = new SceneGraph(new Skybox(), 0);	//No parameters on Skybox and a 0 don't render a skybox
 
 	//==================================
 	//Initialize sceneGlobal objects here
@@ -133,35 +135,51 @@ void ProjectManager::initGlobalScene() {
 		handL->addComponent(c1);
 		ComponentSendTestPacket * c2 = new ComponentSendTestPacket();
 		handL->addComponent(c2);
-
-		sceneGlobal->addTransform(handL);
 	}
 	//Left Hand setup
 	{
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_RED));
 		handR = new Transform(model_sphere, mat);
 		handR->name = "Left Hand";
-
-		sceneGlobal->addTransform(handR);
 	}
 	//Head setup
-	//TODO
+	{
+		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_BLUE));
+		head = new Transform(model_sphere, mat);
+		head->name = "Head";
+	}
+	{
+		Material * mat = new Material();
+		player = new Transform();
+		player->name = "Player";
+
+		ComponentRotate * c = new ComponentRotate(AXIS_Y_POSITIVE);
+		player->addComponent(c);
+
+		player->addChild(head);
+		player->addChild(handL);
+		player->addChild(handR);
+		
+		sceneGlobal->addTransform(head);
+	}
 
 	//Other player setup
 	//TODO
 }
 
 void ProjectManager::initMenuScene() {
-	sceneMenu = new SceneGraph(new Skybox(), 0);	//This does not render a skybox
+	sceneMenu = new SceneGraph(new Skybox(), 0);	//No parameters on Skybox and a 0 don't render a skybox
 
 	//==================================
-	//Initialize scene1 objects here
+	//Initialize sceneMenu objects here
 	//==================================
+	{
+
+	}
 }
 
 void ProjectManager::initScene1() {
 	scene1 = new SceneGraph(new Skybox(Textures::getTextureSkybox()), Shaders::getSkyboxShader());
-	//scene1 = new SceneGraph(new Skybox(), 0);
 	
 	//==================================
 	//Initialize scene1 objects here
@@ -311,35 +329,55 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 	handR->scale(0.015f);
 }
 
-void ProjectManager::updateHead(glm::mat4 eye){
+void ProjectManager::updateHead(glm::mat4 hmd) {
+	head->setToWorld(hmd);
+}
+
+void ProjectManager::updateLightCameraPos(glm::mat4 eye){
 	Light::setCameraPos(eye[3]);
+}
+
+glm::vec3 ProjectManager::getPlayerPosition() {
+	return player->getPosition();
+}
+
+glm::quat ProjectManager::getPlayerRotation() {
+	return player->getRotation();
 }
 
 void ProjectManager::testing() {
 	//Testing code here
 
-
+	glm::vec3 move = glm::vec3(Input::getStickL().x, Input::getStickR().y, Input::getStickL().y);
+	player->translate(move);
 }
 
 void ProjectManager::networkingSetup() {
 	//Has networking setup begun?
 	if (startedNetwork) return;	
 	//If not, is user attempting to begin?
-	if (!(Input::getButtonA() || Input::getButtonX())) return;	//TODO - change how to host/join server
-	//If so, initialize networking
-	startedNetwork = true;
-	initNetworking();
+	if (Input::getButtonA()) {	//TODO - change how to host/join server
+		//Start Server
+		startedNetwork = true;
+		serverConnect();
+	}
+	else if (Input::getButtonX()) {
+		//Connect to server
+		startedNetwork = true;
+		clientConnect();
+	}
 }
 
-
-void ProjectManager::initNetworking() {
-	std::cout << "init networking" << std::endl;
+void ProjectManager::serverConnect() {
 	Server::startServer();
+	clientConnect();
+}
+
+void ProjectManager::clientConnect() {
 	client->joinServer();
 }
 
 void ProjectManager::stopNetworking(){
-	std::cout << "stop networking" << std::endl;
 	startedNetwork = false;
 
 }
