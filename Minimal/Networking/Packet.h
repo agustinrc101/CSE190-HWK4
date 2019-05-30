@@ -3,7 +3,7 @@
 #pragma once
 
 #define LOCAL_HOST "127.0.0.1"
-#define DEFAULT_IP "127.0.0.1"	//TODO 
+#define DEFAULT_IP "128.54.70.52"	//TODO 
 #define DEFAULT_PORT 54000
 #define MAX_PACKET_SIZE 256	//Change to actual packet size (maybe)
 
