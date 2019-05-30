@@ -33,6 +33,4 @@ void main(){
 	vec4 c =  vec4(Color.r, Color.g, Color.b, 1.0);			//Color
 	vec3 result = (ambient + diffuse + specular) * vec3(c);	//Phong
 	FragColor = vec4(result, c.a);
-
-	//TODO ambiance causes green hue
 }

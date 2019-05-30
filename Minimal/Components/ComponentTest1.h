@@ -6,6 +6,7 @@
 #include "Transform.h"
 #include "Component.h"
 
+
 class ComponentTest1 : public Component{
 	public:
 		ComponentTest1(){}

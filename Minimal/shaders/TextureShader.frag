@@ -32,9 +32,7 @@ void main(){
 
 	//Fragment Color
 	vec4 c = texture(texture_diffuse1, TexCoords);			//Texture color
-	c = c * vec4(Color.r, Color.g, Color.b, 1.0);			//Hue
+	c *= vec4(Color.r, Color.g, Color.b, 1.0);				//Hue
 	vec3 result = (ambient + diffuse + specular) * vec3(c);	//Phong
 	FragColor = vec4(result, c.a);
-
-	//TODO ambiance causes green hue
 }

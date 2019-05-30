@@ -16,10 +16,10 @@
 #include "Skybox.h"
 #include "Lines.h"
 //Components
-#include "Components/ComponentTest1.h"
-#include "Components/ComponentRotate.h"
-#include "Components/ComponentPrintPosition.h"
-#include "Components/ComponentMoveTest.h"
+#include "Components/ComponentHeader.h"	//Includes all component scripts
+//Networking
+#include "Networking/Server.h"
+#include "Networking/Client.h"
 
 //Init Shaders
 GLint Shaders::colorShader = 0;
@@ -27,7 +27,7 @@ GLint Shaders::textureShader = 0;
 GLint Shaders::skyboxShader = 0;
 //Init Light
 glm::vec3 Light::position = glm::vec3(0);
-glm::vec3 Light::color = glm::vec3(1);
+glm::vec3 Light::color = glm::vec3(COLOR_WHITE);
 glm::vec3 Light::cameraPos = glm::vec3(0);
 //Init Textures
 GLuint Textures::textureSteam = 0;
@@ -35,6 +35,11 @@ GLuint Textures::textureSkybox = 0;
 GLuint Textures::textureGrip1Albedo = 0;
 GLuint Textures::textureGrip2Albedo = 0;
 GLuint Textures::textureTrash = 0;
+//Init Networking
+Client * Client::client = 0;
+Client * client;
+bool startedNetwork = false;
+bool Server::serverOn = false;
 
 //Init SceneGraph
 SceneGraph * sceneGlobal;
@@ -52,6 +57,9 @@ Transform * handR;
 Lines * lines;
 
 ProjectManager::~ProjectManager() {
+	//Stop Server and client
+	Server::stopServer();
+	delete(client);
 	//Delete SceneGraph	(also deletes transforms, models, and components) --> make sure to use every declared model/component/transform
 	delete(sceneGlobal);
 	delete(sceneMenu);
@@ -72,12 +80,12 @@ ProjectManager::ProjectManager() {
 	initSceneGraphs();
 	initAudio();
 	initProject();
-	initNetworking();
+	client = new Client();
 }
 
 void ProjectManager::initShadersAndLighting() {
 	Light::setLightPosition(glm::vec3(-100, 100, 25));
-	Light::setLightColor(glm::vec3(0.7f, .9f, 0.7f));
+	Light::setLightColor(glm::vec3(COLOR_WHITE));
 
 	Shaders::setColorShader(LoadShaders(SHADER_COLOR_VERTEX, SHADER_COLOR_FRAGMENT));
 	Shaders::setTextureShader(LoadShaders(SHADER_TEXTURE_VERTEX, SHADER_TEXTURE_FRAGMENT));
@@ -119,9 +127,12 @@ void ProjectManager::initGlobalScene() {
 	{
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_CYAN));
 		handL = new Transform(model_sphere, mat);
+		handL->name = "Right Hand";
 
-		ComponentPrintPosition * c = new ComponentPrintPosition();
-		handL->addComponent(c);
+		ComponentPrintPosition * c1 = new ComponentPrintPosition();
+		handL->addComponent(c1);
+		ComponentSendTestPacket * c2 = new ComponentSendTestPacket();
+		handL->addComponent(c2);
 
 		sceneGlobal->addTransform(handL);
 	}
@@ -129,6 +140,7 @@ void ProjectManager::initGlobalScene() {
 	{
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_RED));
 		handR = new Transform(model_sphere, mat);
+		handR->name = "Left Hand";
 
 		sceneGlobal->addTransform(handR);
 	}
@@ -305,9 +317,10 @@ void ProjectManager::updateHead(glm::mat4 eye){
 
 void ProjectManager::testing() {
 	//Testing code here
+
+
 }
 
-bool startedNetwork = false;
 void ProjectManager::networkingSetup() {
 	//Has networking setup begun?
 	if (startedNetwork) return;	
@@ -321,7 +334,8 @@ void ProjectManager::networkingSetup() {
 
 void ProjectManager::initNetworking() {
 	std::cout << "init networking" << std::endl;
-	//TODO
+	Server::startServer();
+	client->joinServer();
 }
 
 void ProjectManager::stopNetworking(){
