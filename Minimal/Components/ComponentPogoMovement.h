@@ -8,9 +8,8 @@
 
 class ComponentPogoMovement : public Component {
 public:
-	ComponentPogoMovement(Transform * h, Transform * left, Transform * right, Transform * pogo) : head(h), handL(left), handR(right), collider(pogo)  {
-		storedColorL = handL->material->color;
-		storedColorR = handR->material->color;
+	ComponentPogoMovement(Transform * theHead, Transform * theHand, Transform * pogoCollider) : head(theHead), hand(theHand), collider(pogoCollider)  {
+		storedColor = hand->material->color;
 	}
 	~ComponentPogoMovement() {}
 
@@ -24,8 +23,8 @@ public:
 		case IDLE:
 			handleIdleState();
 			break;
-		case ARM_UP_AWAY:
-			handleArmUpAwayState();
+		case ARM_UP:
+			handleArmUpState();
 			break;
 		case ARM_DOWN:
 			handleArmDownState();
@@ -47,80 +46,89 @@ private:
 
 	enum MovementState {
 		IDLE = 0,
-		ARM_UP_AWAY = 1,
+		ARM_UP = 1,
 		ARM_DOWN = 2,
+	};
+	enum HandState {
+		BOTH_IDLE = 0,
+		LEFT = 1,
+		RIGHT = 2,
 	};
 
 	Transform * head;
-	Transform * handL;
-	Transform * handR;
+	Transform * hand;
 	Transform * collider;
 
-	glm::vec3 storedColorL;
-	glm::vec3 storedColorR;
+	glm::vec3 storedColor;
 
 	glm::vec3 storedHandPosition;
-	glm::vec3 prevHandRPosition;
+	glm::vec3 prevHandPosition;
 
 	float maxDistance = 0.55f;
 	float minDistance = 0.3f;
 
 	MovementState state = IDLE;
+	HandState handState = BOTH_IDLE;
 
 	void handleIdleState() {
-		if (handR->getPosition().y >= head->getPosition().y) {
-
-			handR->material->color = glm::vec3(COLOR_WHITE);
-			state = ARM_UP_AWAY;
+		if (hand->getPosition().y >= head->getPosition().y) {
+			handState = RIGHT;
+			hand->material->color = glm::vec3(COLOR_WHITE);
+			state = ARM_UP;
 		}
 		else {
-			handR->material->color = storedColorR;
+			hand->material->color = storedColor;
 		}
+
 	}
 
-	void handleArmUpAwayState() {
-		//if (handR->getPosition().y < (head->getPosition().y - 0.15f)) {
-		//print(collider->getPosition(false));
-		if(collider->getPosition(false).y <= -2){
-			handR->material->color = glm::vec3(COLOR_BLACK);
-			storedHandPosition = handR->getPosition(false);
-			prevHandRPosition = handR->getPosition(false);
+	void handleArmUpState() {
+		if (hand->getPosition().y < (head->getPosition().y - 0.15f) && collider->getPosition(false).y <= -1.0f) {
+			hand->material->color = glm::vec3(COLOR_BLACK);
+			storedHandPosition = hand->getPosition(false);
+			prevHandPosition = hand->getPosition(false);
 			state = ARM_DOWN;
 
 		}
 		else {
-			handR->material->color = glm::vec3(COLOR_WHITE);
+			hand->material->color = glm::vec3(COLOR_WHITE);
 		}
 	}
 
 	void handleArmDownState() {
-		glm::vec3 dir = prevHandRPosition - handR->getPosition(false);
+		if (collider->getPosition(false).y > -0.5f) {
+			hand->material->color = storedColor;
+			state = IDLE;
+		}
+
+
+		glm::vec3 dir = prevHandPosition - hand->getPosition(false);
 		dir.y = 0;
 		dir.z = dir.z;
 
 		transform->translate(dir);
 
 		//Lock
-		prevHandRPosition = handR->getPosition(false);
-		glm::vec3 yMove = prevHandRPosition - storedHandPosition;	yMove.x = yMove.z = 0;
-		if (yMove.y < 0)	handR->setPosition(storedHandPosition, false);
-		else				handR->setPosition(storedHandPosition + yMove, false);
+		prevHandPosition = hand->getPosition(false);
+		glm::vec3 yMove = prevHandPosition - storedHandPosition;	yMove.x = yMove.z = 0;
+		if (yMove.y < 0)	hand->setPosition(storedHandPosition, false);
+		else				hand->setPosition(storedHandPosition + yMove, false);
 
-		if (testMinHorizontalDistance(handR->getPosition(false), head->getPosition(false))) {
-			handR->material->color = storedColorR;
+		if (testMinHorizontalDistance(hand->getPosition(false), head->getPosition(false))) {
+			hand->material->color = storedColor;
 			state = IDLE;
 		}
-		else if (handR->getPosition().y >= head->getPosition().y) {
+		else if (hand->getPosition().y >= head->getPosition().y) {
 
-			handR->material->color = glm::vec3(COLOR_WHITE);
-			state = ARM_UP_AWAY;
+			hand->material->color = glm::vec3(COLOR_WHITE);
+			state = ARM_UP;
 		}
 		//else if (testMaxHorizontalDistance(handR->getPosition(false), head->getPosition(false))) {
 		//	handR->material->color = storedColorR;
 		//	state = IDLE;
 		//}
 		else {
-			handR->material->color = glm::vec3(COLOR_BLACK);
+			hand->material->color = glm::vec3(COLOR_BLACK);
 		}
 		
 	}
@@ -137,7 +145,7 @@ private:
 	bool testMinHorizontalDistance(glm::vec3 v1, glm::vec3 v2) {
 		glm::vec3 a = v1;//glm::vec3(v1.x, 0, v1.z);
 		glm::vec3 b = v2;//glm::vec3(v2.x, 0, v2.z);
-		std::cout << distance(a, b) << std::endl;
+		
 		return distance(a, b) < minDistance;
 	}
 };

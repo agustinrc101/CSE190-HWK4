@@ -34,7 +34,8 @@ GLuint Textures::textureSteam = 0;
 GLuint Textures::textureSkybox = 0;
 GLuint Textures::textureGrip1Albedo = 0;
 GLuint Textures::textureGrip2Albedo = 0;
-GLuint Textures::textureTrash = 0;
+GLuint Textures::textureStick = 0;
+GLuint Textures::textureGrass = 0;
 //Init Networking
 Client * Client::client = 0;
 Client * client;
@@ -49,6 +50,7 @@ SceneGraph * scene1;
 Model * model_sphere;
 Model * model_cube;
 Model * model_plane;
+Model * model_stick;
 //Declare Important Objects
 Transform * player;
 Transform * head;
@@ -103,13 +105,15 @@ void ProjectManager::initTextures(){
 	Textures::setTextureSteam(LoadTextures(TEXTURE_CUBE_STEAM));
 	Textures::setTextureGrip1Albedo(LoadTextures(TEXTURE_GRIP1_ALBEDO));
 	Textures::setTextureGrip2Albedo(LoadTextures(TEXTURE_GRIP2_ALBEDO));
-	Textures::setTextureTrash(LoadTextures(TEXTURE_TRASH));
+	Textures::setTextureStick(LoadTextures(TEXTURE_STICK));
+	Textures::setTextureGrass(LoadTextures(TEXTURE_GRASS));
 }
 
 void ProjectManager::initModels() {
 	model_sphere = new Model(MODEL_SPHERE);
 	model_cube = new Model(MODEL_CUBE);
 	model_plane = new Model(MODEL_PLANE);
+	model_stick = new Model(MODEL_STICK);
 }
 
 void ProjectManager::initObjects() {
@@ -127,7 +131,8 @@ void ProjectManager::initGlobalScene() {
 	sceneGlobal = new SceneGraph(new Skybox(), 0);	//No parameters on Skybox and a 0 don't render a skybox
 	sceneGlobal->isActive = true;
 
-	Transform * collider;
+	Transform * colliderR;
+	Transform * colliderL;
 	//==================================
 	//Initialize sceneGlobal objects here
 	//==================================
@@ -137,26 +142,40 @@ void ProjectManager::initGlobalScene() {
 		handR = new Transform(model_sphere, mat);
 		handR->name = "Right Hand";
 
-		mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_ORANGE));
-		Transform * t = new Transform(model_cube, mat);
+		mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureStick());
+		Transform * stick = new Transform(model_stick, mat);
 
-		t->scale(glm::vec3(5, 50.0f, 3.0f));
-		t->translate(glm::vec3(0, -1, 0));
+		stick->scale(glm::vec3(0.5f, 0.7f, 0.5f));
+		stick->translate(glm::vec3(0, -175, 0));
 
-		mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_PURPLE));
-		collider = new Transform(model_sphere, mat);
+		colliderR = new Transform();
 
-		collider->scale(5);
-		collider->translate(glm::vec3(0, -20, 0));
+		colliderR->scale(5);
+		colliderR->translate(glm::vec3(0, -20, 0));
 		
-		handR->addChild(t);
-		handR->addChild(collider);
+		handR->addChild(stick);
+		handR->addChild(colliderR);
+		
 	}
 	//Left Hand setup
 	{
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_RED));
 		handL = new Transform(model_sphere, mat);
 		handL->name = "Left Hand";
+
+		mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureStick());
+		Transform * stick = new Transform(model_stick, mat);
+
+		stick->scale(glm::vec3(0.5f, 0.7f, 0.5f));
+		stick->translate(glm::vec3(0, -175, 0));
+
+		colliderL = new Transform();
+
+		colliderL->scale(5);
+		colliderL->translate(glm::vec3(0, -20, 0));
+
+		handL->addChild(stick);
+		handL->addChild(colliderL);
 	}
 	//Head setup
 	{
@@ -173,7 +192,9 @@ void ProjectManager::initGlobalScene() {
 		player->addChild(handL);
 		player->addChild(handR);
 
-		ComponentPogoMovement * c1 = new ComponentPogoMovement(head, handL, handR, collider);
+		ComponentPogoMovement * c1 = new ComponentPogoMovement(head, handR, colliderR);
+		player->addComponent(c1);
+		c1 = new ComponentPogoMovement(head, handL, colliderL);
 		player->addComponent(c1);
 		
 		sceneGlobal->addTransform(player);
@@ -227,7 +248,7 @@ void ProjectManager::initScene1() {
 		Transform * transform = new Transform(model_sphere, mat);
 
 		transform->scale(0.1f);
-		transform->translate(glm::vec3(0, 0, -2));
+		transform->translate(glm::vec3(0, 0, -5));
 
 		ComponentRotate * c = new ComponentRotate(AXIS_X_POSITIVE + AXIS_Z_NEGATIVE);
 		transform->addComponent(c);
@@ -239,7 +260,7 @@ void ProjectManager::initScene1() {
 		Transform * transform = new Transform(model_cube, mat);
 
 		transform->scale(0.1f);
-		transform->translate(glm::vec3(3, 0, -1.5));
+		transform->translate(glm::vec3(3, 0, -5));
 
 		ComponentRotate * c = new ComponentRotate(AXIS_Y_POSITIVE);
 		transform->addComponent(c);
@@ -251,7 +272,7 @@ void ProjectManager::initScene1() {
 		Transform * transform = new Transform(model_cube, mat);
 
 		transform->scale(0.1f);
-		transform->translate(glm::vec3(-3, 0, -1.5));
+		transform->translate(glm::vec3(-3, 0, -5));
 
 		ComponentRotate * c = new ComponentRotate(AXIS_Y_NEGATIVE);
 		transform->addComponent(c);
@@ -263,7 +284,7 @@ void ProjectManager::initScene1() {
 		Transform * transform = new Transform(model_sphere, mat);
 
 		transform->scale(0.1f);
-		transform->translate(glm::vec3(0, 3, -2));
+		transform->translate(glm::vec3(0, 3, -5));
 
 		ComponentRotate * c = new ComponentRotate(AXIS_X_NEGATIVE + AXIS_Z_POSITIVE);
 		transform->addComponent(c);
@@ -271,63 +292,13 @@ void ProjectManager::initScene1() {
 		scene1->addTransform(transform);
 	}
 	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureGrip1Albedo());
-		Transform * transform = new Transform(model_sphere, mat);
+		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureGrass());
+		Transform * t = new Transform(model_plane, mat);
 
-		transform->scale(0.1f);
-		transform->translate(glm::vec3(3, 6, -2));
+		t->translate(glm::vec3(0, -1.7f, 0));
 
-		ComponentMoveTest * c4 = new ComponentMoveTest(AXIS_X_NEGATIVE, 3.0f, 0.2f);
-		transform->addComponent(c4);
-		ComponentRotate * c2 = new ComponentRotate(AXIS_Y_NEGATIVE, 3.0f);
-		transform->addComponent(c2);
-
-		scene1->addTransform(transform);
+		scene1->addTransform(t);
 	}
-	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureGrip1Albedo());
-		Transform * transform = new Transform(model_plane, mat);
-
-		transform->scale(1.0f);
-		transform->translate(glm::vec3(0, -1.7f, 0));
-
-		scene1->addTransform(transform);
-	}
-	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureTrash());
-		Transform * transform = new Transform(model_sphere, mat);
-
-		transform->scale(0.2f);
-		transform->translate(glm::vec3(-5, 0, 0));
-
-		ComponentRotate * c2 = new ComponentRotate(AXIS_Y_POSITIVE, 2.0f);
-		transform->addComponent(c2);
-
-		//Child
-		{
-			mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_YELLOW));
-			Transform * child = new Transform(model_cube, mat);
-
-			child->scale(0.5f);
-			child->translate(glm::vec3(0, 4.5f, 0));
-
-			ComponentMoveTest * c4 = new ComponentMoveTest(AXIS_X_POSITIVE);
-			child->addComponent(c4);
-
-			transform->addChild(child);
-		}
-
-		scene1->addTransform(transform);
-	}
-	{
-		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_WHITE));
-		Transform * transform = new Transform(model_sphere, mat);
-
-		transform->scale(0.2f);
-		
-		scene1->addTransform(transform);
-	}
-
 }
 
 void ProjectManager::initAudio() {

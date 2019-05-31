@@ -16,14 +16,16 @@ class Textures{
 		static void setTextureSteam(GLuint t) { textureSteam = t; }
 		static void setTextureGrip1Albedo(GLuint t) { textureGrip1Albedo = t; }
 		static void setTextureGrip2Albedo(GLuint t) { textureGrip2Albedo = t; }
-		static void setTextureTrash(GLuint t) { textureTrash = t; }
+		static void setTextureStick(GLuint t) { textureStick = t; }
+		static void setTextureGrass(GLuint t) { textureGrass = t; }
 
 		//Setters
 		static GLuint getTextureSkybox(){ return textureSkybox; }
 		static GLuint getTextureSteam() { return textureSteam; }
 		static GLuint getTextureGrip1Albedo() { return textureGrip1Albedo; }
 		static GLuint getTextureGrip2Albedo() { return textureGrip2Albedo; }
-		static GLuint getTextureTrash() { return textureTrash; }
+		static GLuint getTextureStick() { return textureStick; }
+		static GLuint getTextureGrass() { return textureGrass; }
 
 		//Delete textures
 		static void deleteTextures() {
@@ -31,7 +33,7 @@ class Textures{
 			glDeleteTextures(1, &textureSteam);
 			glDeleteTextures(1, &textureGrip1Albedo);
 			glDeleteTextures(1, &textureGrip2Albedo);
-			glDeleteTextures(1, &textureTrash);
+			glDeleteTextures(1, &textureStick);
 		}
 
 	protected:
@@ -39,7 +41,8 @@ class Textures{
 		static GLuint textureSteam;
 		static GLuint textureGrip1Albedo;
 		static GLuint textureGrip2Albedo;
-		static GLuint textureTrash;
+		static GLuint textureStick;
+		static GLuint textureGrass;
 
 };
 

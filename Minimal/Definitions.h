@@ -18,12 +18,14 @@
 #define TEXTURE_CUBE_STEAM "textures/steam/albedo.ppm"
 #define TEXTURE_GRIP1_ALBEDO "textures/Grip1/Grip1_Albedo.png"
 #define TEXTURE_GRIP2_ALBEDO "textures/Grip2/Grip2_Albedo.png"
-#define TEXTURE_TRASH "textures/trash.png"
+#define TEXTURE_GRASS "textures/grass.jpg"
+#define TEXTURE_STICK "models/stick/stick.jpg"
 
 //Models
 #define MODEL_SPHERE "models/sphere.obj"
 #define MODEL_CUBE "models/cube.obj"
 #define MODEL_PLANE "models/plane.obj"
+#define MODEL_STICK "models/stick/stick.obj"
 
 //Colors
 #define COLOR_RED 1, 0, 0

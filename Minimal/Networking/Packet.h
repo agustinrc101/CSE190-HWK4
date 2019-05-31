@@ -12,9 +12,10 @@
 
 enum PacketType {
 	TEST = -1,		
-	INIT = 0,			//Player joining 
+	INIT = 0,			//Player joining
 	EXIT = 1,			//Player leaving
-	PLAYER_DATA = 2,	//Sending player transform data
+	INIT_REPLY = 2,	
+	PLAYER_DATA = 3,	//Sending player transform data
 
 };
 
