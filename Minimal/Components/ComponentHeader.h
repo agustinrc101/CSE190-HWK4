@@ -8,5 +8,6 @@
 #include "ComponentPrintPosition.h"
 #include "ComponentMoveTest.h"
 #include "ComponentSendTestPacket.h"
+#include "ComponentPogoMovement.h"
 
 #endif

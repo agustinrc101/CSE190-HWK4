@@ -135,10 +135,8 @@ void Client::clientLoop(void *) {
 
 std::vector<Packet> Client::getPlayerPackets() {
 	std::vector<Packet> p = playerDataPackets;
-	
-	std::cout << playerDataPackets.size() << std::endl;
+
 	playerDataPackets.clear();
-	std::cout << p.size() << std::endl;
 
 	return p;
 }

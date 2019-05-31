@@ -126,6 +126,8 @@ void ProjectManager::initSceneGraphs() {
 void ProjectManager::initGlobalScene() {
 	sceneGlobal = new SceneGraph(new Skybox(), 0);	//No parameters on Skybox and a 0 don't render a skybox
 	sceneGlobal->isActive = true;
+
+	Transform * collider;
 	//==================================
 	//Initialize sceneGlobal objects here
 	//==================================
@@ -134,6 +136,21 @@ void ProjectManager::initGlobalScene() {
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_CYAN));
 		handR = new Transform(model_sphere, mat);
 		handR->name = "Right Hand";
+
+		mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_ORANGE));
+		Transform * t = new Transform(model_cube, mat);
+
+		t->scale(glm::vec3(5, 50.0f, 3.0f));
+		t->translate(glm::vec3(0, -1, 0));
+
+		mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_PURPLE));
+		collider = new Transform(model_sphere, mat);
+
+		collider->scale(5);
+		collider->translate(glm::vec3(0, -20, 0));
+		
+		handR->addChild(t);
+		handR->addChild(collider);
 	}
 	//Left Hand setup
 	{
@@ -156,8 +173,8 @@ void ProjectManager::initGlobalScene() {
 		player->addChild(handL);
 		player->addChild(handR);
 
-		ComponentSendTestPacket * c2 = new ComponentSendTestPacket();
-		head->addComponent(c2);
+		ComponentPogoMovement * c1 = new ComponentPogoMovement(head, handL, handR, collider);
+		player->addComponent(c1);
 		
 		sceneGlobal->addTransform(player);
 	}
@@ -202,7 +219,6 @@ void ProjectManager::initMenuScene() {
 
 void ProjectManager::initScene1() {
 	scene1 = new SceneGraph(new Skybox(Textures::getTextureSkybox()), Shaders::getSkyboxShader());
-	
 	//==================================
 	//Initialize scene1 objects here
 	//==================================
@@ -273,7 +289,7 @@ void ProjectManager::initScene1() {
 		Transform * transform = new Transform(model_plane, mat);
 
 		transform->scale(1.0f);
-		transform->translate(glm::vec3(0, -2, 0));
+		transform->translate(glm::vec3(0, -1.7f, 0));
 
 		scene1->addTransform(transform);
 	}
@@ -373,9 +389,11 @@ glm::quat ProjectManager::getPlayerRotation() {
 
 void ProjectManager::testing() {
 	//Testing code here
+	if (Input::getButtonStickL()) {
+		print(handL->getToWorld());
+		print(handL->getCompleteToWorld());
+	}
 
-	glm::vec3 move = glm::vec3(Input::getStickL().x, Input::getStickR().y, Input::getStickL().y);
-	player->translate(move);
 }
 
 void ProjectManager::networkingSetup() {

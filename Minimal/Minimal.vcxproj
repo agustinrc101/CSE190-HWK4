@@ -155,6 +155,7 @@
     <None Include="shaders\skybox.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Components\ComponentPogoMovement.h" />
     <ClInclude Include="Components\ComponentSendTestPacket.h" />
     <ClInclude Include="Components\ComponentHeader.h" />
     <ClInclude Include="Networking\Client.h" />

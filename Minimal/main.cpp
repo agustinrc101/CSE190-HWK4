@@ -786,27 +786,12 @@ protected:
 			if(waitedForFirstFrame) projectManager->update(ovr_GetTimeInSeconds() - lastTime);
 			else waitedForFirstFrame = true;
 			lastTime = ovr_GetTimeInSeconds();
-
-			glm::vec3 playerPos = projectManager->getPlayerPosition();
-			glm::quat playerRot = projectManager->getPlayerRotation();
-			playerPos.z = -playerPos.z;
-
-			//trackState.HeadPose.ThePose.Position = ovr::fromGlm(ovr::toGlm(trackState.HeadPose.ThePose.Position) + playerPos);
-			//trackState.HeadPose.ThePose.Orientation = ovr::fromGlm(playerRot * ovr::toGlm(trackState.HeadPose.ThePose.Orientation));
-
-			for (int i = 0; i < 2; i++) {
-				eyePoses[i].Position = ovr::fromGlm(ovr::toGlm(eyePoses[i].Position) + playerPos);
-				eyePoses[i].Orientation = ovr::fromGlm(playerRot * ovr::toGlm(eyePoses[i].Orientation));
-			}
-
-			//handPoses[ovrHand_Left].Position = ovr::fromGlm(ovr::toGlm(handPoses[ovrHand_Left].Position) + playerPos);
-			//handPoses[ovrHand_Left].Orientation = ovr::fromGlm(playerRot * ovr::toGlm(handPoses[ovrHand_Left].Orientation));
-
-			//handPoses[ovrHand_Right].Position = ovr::fromGlm(ovr::toGlm(handPoses[ovrHand_Right].Position) + playerPos);
-			//handPoses[ovrHand_Right].Orientation = ovr::fromGlm(playerRot * ovr::toGlm(handPoses[ovrHand_Right].Orientation));
 		}
 		//==============================================================================DRAW
 		{	
+			glm::vec3 playerPos = projectManager->getPlayerPosition();
+			glm::quat playerRot = projectManager->getPlayerRotation();
+
 			ovr::for_each_eye([&](ovrEyeType eye) {
 				//---------------------------------------------------Setup Variables
 				projectManager->updateLightCameraPos(ovr::toGlm(eyePoses[eye]));
@@ -814,6 +799,9 @@ protected:
 				const auto& vp = _sceneLayer.Viewport[eye];
 				glViewport(vp.Pos.x, vp.Pos.y, vp.Size.w, vp.Size.h);
 				_sceneLayer.RenderPose[eye] = eyePoses[eye];
+
+				eyePoses[eye].Position = ovr::fromGlm(ovr::toGlm(eyePoses[eye].Position) + playerPos);
+				eyePoses[eye].Orientation = ovr::fromGlm(playerRot * ovr::toGlm(eyePoses[eye].Orientation));
 				//---------------------------------------------------View Matrix
 				glm::mat4 view = glm::inverse(ovr::toGlm(eyePoses[eye]));
 				glm::mat4 projection = _eyeProjections[eye];

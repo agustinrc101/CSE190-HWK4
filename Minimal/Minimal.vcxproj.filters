@@ -147,5 +147,8 @@
     <ClInclude Include="Components\ComponentHeader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Components\ComponentPogoMovement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

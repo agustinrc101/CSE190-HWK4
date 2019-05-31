@@ -14,6 +14,7 @@
 class Transform {
 public:
 	Transform * parent = 0;
+	Material * material = NULL;
 
 	bool isActive = true;
 	std::string name = "Transform";
@@ -39,15 +40,26 @@ public:
 	void setTextures(GLuint t)		{ if (material != NULL) material->TEX = t; }
 	void setModel(Model * m)		{ model = m; }
 	void setToWorld(glm::mat4 w)	{ toWorld = w; }
-	void setPosition(glm::vec3 p)	{ toWorld[3] = glm::vec4(p, 1.0f); }
+	void setPosition(glm::vec3 p, bool localSpace = true) {
+		if(localSpace) toWorld[3] = glm::vec4(p, 1.0f); 
+		else {
+			glm::vec3 parentGlobalPos = getPosition(false);
+			parentGlobalPos = parentGlobalPos - (glm::vec3)toWorld[3];
+
+			toWorld[3] = glm::vec4(p - parentGlobalPos, 1.0f);
+		}
+	}
 
 	//Getters
 	glm::mat4 getToWorld() { return toWorld; }
 	glm::mat4 getCompleteToWorld() { 
 		if(parent != 0) return parent->getCompleteToWorld() * toWorld; 
-		else return glm::mat4(1.0);
+		else return toWorld;
 	}
-	glm::vec3 getPosition() { return glm::vec3(toWorld[3][0], toWorld[3][1], toWorld[3][2]) ; }
+	glm::vec3 getPosition(bool localSpace = true) { 
+		if (localSpace) return toWorld[3]; 
+		else return getCompleteToWorld()[3];
+	}
 	glm::quat getRotation() { return glm::quat_cast(toWorld); }
 
 	//Others
@@ -56,7 +68,6 @@ public:
 
 private:
 	glm::mat4 toWorld = glm::mat4(1);
-	Material * material = NULL;
 	Model * model = NULL;
 	std::vector<Transform *> children;
 	std::vector<std::unique_ptr<Component>> components;
