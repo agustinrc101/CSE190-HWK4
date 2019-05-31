@@ -19,6 +19,7 @@ public:
 	glm::quat getPlayerRotation();
 
 private:
+	void initBulletPhysics();
 	void initShadersAndLighting();
 	void initTextures();
 	void initModels();

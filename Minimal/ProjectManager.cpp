@@ -81,6 +81,7 @@ ProjectManager::~ProjectManager() {
 }
 
 ProjectManager::ProjectManager() {
+	initBulletPhysics();
 	initShadersAndLighting();
 	initTextures();
 	initModels();
@@ -89,6 +90,10 @@ ProjectManager::ProjectManager() {
 	initAudio();
 	initProject();
 	client = new Client();
+}
+
+void ProjectManager::initBulletPhysics() {
+
 }
 
 void ProjectManager::initShadersAndLighting() {
