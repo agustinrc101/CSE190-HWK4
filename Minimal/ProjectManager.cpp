@@ -146,6 +146,7 @@ void ProjectManager::initGlobalScene() {
 		head = new Transform();
 		head->name = "Head";
 	}
+	//Player parent
 	{
 		Material * mat = new Material();
 		player = new Transform();
@@ -167,8 +168,8 @@ void ProjectManager::initGlobalScene() {
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_GREEN));
 		otherHandR = new Transform(model_sphere, mat);
 		otherHandR->name = "Other Player's Right Hand";
-
 		sceneGlobal->addTransform(otherHandR);
+
 	}
 	//Left Hand setup
 	{
@@ -183,9 +184,6 @@ void ProjectManager::initGlobalScene() {
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_YELLOW));
 		otherHead = new Transform(model_cube, mat);
 		otherHead->name = "Other Player's Head";
-
-		otherHead->scale(0.4f);
-		otherHead->translate(glm::vec3(0, 10, 0));
 
 		sceneGlobal->addTransform(otherHead);
 	}
@@ -337,6 +335,7 @@ bool a_press = false;
 void ProjectManager::update(double deltaTime) {
 	networkingSetup();
 	sendPlayerData();
+	receivePackets();
 	//TODO - handle audio
 	//TODO - handle scene changes (maybe use enum with a switch statement)
 	sceneGlobal->update(deltaTime);
@@ -355,6 +354,7 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 
 void ProjectManager::updateHead(glm::mat4 hmd) {
 	head->setToWorld(hmd);
+	head->scale(0.1f);
 }
 
 void ProjectManager::updateLightCameraPos(glm::mat4 eye){
@@ -379,6 +379,7 @@ void ProjectManager::testing() {
 void ProjectManager::networkingSetup() {
 	//Has networking setup begun?
 	if (startedNetwork) return;	
+
 	//If not, is user attempting to begin?
 	if (Input::getButtonA()) {	//TODO - change how to host/join server
 		//Start Server

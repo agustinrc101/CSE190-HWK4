@@ -8,7 +8,7 @@
 #define LOCAL_HOST "127.0.0.1"
 #define DEFAULT_IP "128.54.70.52"	//TODO Change with computer changes 
 #define DEFAULT_PORT 54000
-#define MAX_PACKET_SIZE 256	//Change to actual packet size (maybe)
+#define MAX_PACKET_SIZE 72	//Change to actual packet size (maybe)
 
 enum PacketType {
 	TEST = -1,		
@@ -25,10 +25,10 @@ enum PacketDataType {
 };
 
 struct Packet {
-	PacketType type;
-	PacketDataType dataType;
+	PacketType type;			//4 bytes
+	PacketDataType dataType;	//4 bytes
 
-	glm::mat4 toWorld;
+	glm::mat4 toWorld;			//64 bytes
 
 	void serialize(char * data) {
 		memcpy(data, this, sizeof(Packet));

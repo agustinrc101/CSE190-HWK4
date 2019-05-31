@@ -112,12 +112,15 @@ void Client::clientLoop(void *) {
 					std::cout << "Received TEST packet" << std::endl;
 					break;
 				case INIT:			//Handle init
+					std::cout << "Received INIT packet" << std::endl;
 					i += sizeof(Packet);
 				case EXIT:			//Handle exit
+					std::cout << "Received EXIT packet" << std::endl;
 					i += sizeof(Packet);
 					client->packets.push_back(packet);
 					break;
 				case PLAYER_DATA:	//Handle player data
+					std::cout << "Received PLAYER_DATA packet" << std::endl;
 					i += sizeof(Packet);
 					client->playerDataPackets.push_back(packet);
 					break;
