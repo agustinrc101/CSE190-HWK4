@@ -34,6 +34,8 @@ private:
 	void serverConnect();
 	void clientConnect();
 	void stopNetworking();
+	void sendPlayerData();
+	void receivePackets();
 
 	void testing();
 };

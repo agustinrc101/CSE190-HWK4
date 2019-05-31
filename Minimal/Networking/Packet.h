@@ -2,8 +2,11 @@
 #define H_PACKET
 #pragma once
 
+#include <glm/glm.hpp>
+
+
 #define LOCAL_HOST "127.0.0.1"
-#define DEFAULT_IP "128.54.70.52"	//TODO 
+#define DEFAULT_IP "128.54.70.52"	//TODO Change with computer changes 
 #define DEFAULT_PORT 54000
 #define MAX_PACKET_SIZE 256	//Change to actual packet size (maybe)
 
@@ -15,29 +18,25 @@ enum PacketType {
 
 };
 
+enum PacketDataType {
+	HEAD = 0,
+	HAND_LEFT = 1,
+	HAND_RIGHT = 2,
+};
+
 struct Packet {
 	PacketType type;
+	PacketDataType dataType;
 
-	virtual void serialize(char * data) {
+	glm::mat4 toWorld;
+
+	void serialize(char * data) {
 		memcpy(data, this, sizeof(Packet));
 	}
 
-	virtual void deserialize(char * data) {
+	void deserialize(char * data) {
 		memcpy(this, data, sizeof(Packet));
 	}
-};
-
-struct PacketPlayerData : Packet {
-	PacketType type;
-	
-	void serialize(char * data) override {
-		memcpy(data, this, sizeof(PacketPlayerData));
-	}
-
-	void deserialize(char * data) override {
-		memcpy(this, data, sizeof(PacketPlayerData));
-	}
-	
 };
 
 

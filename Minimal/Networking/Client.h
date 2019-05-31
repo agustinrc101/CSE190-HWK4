@@ -11,6 +11,8 @@
 #include <process.h>
 #pragma comment(lib, "WS2_32.lib")
 
+#include <vector>
+
 #include "Packet.h"
 
 class Client{
@@ -23,10 +25,16 @@ public:
 
 	static void sendPacket(Packet packet);
 	void sendPacket();
+	void sendPlayerDataPacket(glm::mat4 t, PacketDataType type);
+
+	std::vector<Packet> getPlayerPackets() { clearPDPacket = true;  return playerDataPackets; }
 
 private:
 	SOCKET sock;
 	bool connected;
+	bool clearPDPacket = false;
+	std::vector<Packet> packets;
+	std::vector<Packet> playerDataPackets;
 
 	bool connectToServer(std::string ip);
 	bool connectionErrorHelper();

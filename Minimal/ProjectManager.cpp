@@ -54,6 +54,10 @@ Transform * player;
 Transform * head;
 Transform * handL; 
 Transform * handR;
+Transform * otherHead;
+Transform * otherHandL;
+Transform * otherHandR;
+
 
 //Debug
 Lines * lines;
@@ -121,31 +125,25 @@ void ProjectManager::initSceneGraphs() {
 
 void ProjectManager::initGlobalScene() {
 	sceneGlobal = new SceneGraph(new Skybox(), 0);	//No parameters on Skybox and a 0 don't render a skybox
-
+	sceneGlobal->isActive = true;
 	//==================================
 	//Initialize sceneGlobal objects here
 	//==================================
 	//Right hand setup
 	{
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_CYAN));
-		handL = new Transform(model_sphere, mat);
-		handL->name = "Right Hand";
-
-		ComponentPrintPosition * c1 = new ComponentPrintPosition();
-		handL->addComponent(c1);
-		ComponentSendTestPacket * c2 = new ComponentSendTestPacket();
-		handL->addComponent(c2);
+		handR = new Transform(model_sphere, mat);
+		handR->name = "Right Hand";
 	}
 	//Left Hand setup
 	{
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_RED));
-		handR = new Transform(model_sphere, mat);
-		handR->name = "Left Hand";
+		handL = new Transform(model_sphere, mat);
+		handL->name = "Left Hand";
 	}
 	//Head setup
 	{
-		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_BLUE));
-		head = new Transform(model_sphere, mat);
+		head = new Transform();
 		head->name = "Head";
 	}
 	{
@@ -153,18 +151,44 @@ void ProjectManager::initGlobalScene() {
 		player = new Transform();
 		player->name = "Player";
 
-		ComponentRotate * c = new ComponentRotate(AXIS_Y_POSITIVE);
-		player->addComponent(c);
-
 		player->addChild(head);
 		player->addChild(handL);
 		player->addChild(handR);
+
+		ComponentSendTestPacket * c2 = new ComponentSendTestPacket();
+		head->addComponent(c2);
 		
-		sceneGlobal->addTransform(head);
+		sceneGlobal->addTransform(player);
 	}
 
 	//Other player setup
-	//TODO
+	//Right hand setup
+	{
+		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_GREEN));
+		otherHandR = new Transform(model_sphere, mat);
+		otherHandR->name = "Other Player's Right Hand";
+
+		sceneGlobal->addTransform(otherHandR);
+	}
+	//Left Hand setup
+	{
+		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_ORANGE));
+		otherHandL = new Transform(model_sphere, mat);
+		otherHandL->name = "Other Player's Left Hand";
+
+		sceneGlobal->addTransform(otherHandL);
+	}
+	//Head setup
+	{
+		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_YELLOW));
+		otherHead = new Transform(model_cube, mat);
+		otherHead->name = "Other Player's Head";
+
+		otherHead->scale(0.4f);
+		otherHead->translate(glm::vec3(0, 10, 0));
+
+		sceneGlobal->addTransform(otherHead);
+	}
 }
 
 void ProjectManager::initMenuScene() {
@@ -312,7 +336,7 @@ void ProjectManager::draw(glm::mat4 headPose, glm::mat4 projection, int eye) {
 bool a_press = false;
 void ProjectManager::update(double deltaTime) {
 	networkingSetup();
-	//TODO - handle networking packets
+	sendPlayerData();
 	//TODO - handle audio
 	//TODO - handle scene changes (maybe use enum with a switch statement)
 	sceneGlobal->update(deltaTime);
@@ -380,4 +404,34 @@ void ProjectManager::clientConnect() {
 void ProjectManager::stopNetworking(){
 	startedNetwork = false;
 
+}
+
+void ProjectManager::sendPlayerData() {
+	if (startedNetwork) {
+		client->sendPlayerDataPacket(head->getToWorld(), HEAD);
+		client->sendPlayerDataPacket(handL->getToWorld(), HAND_LEFT);
+		client->sendPlayerDataPacket(handR->getToWorld(), HAND_RIGHT);
+	}
+}
+
+void ProjectManager::receivePackets() {
+	std::vector<Packet> packets = client->getPlayerPackets();
+
+	for (int i = 0; i < packets.size(); i++) {
+		Packet packet = packets[i];
+		switch (packet.dataType) {
+		case HEAD:
+			otherHead->setToWorld(packet.toWorld);
+			break;
+		case HAND_LEFT:
+			otherHandL->setToWorld(packet.toWorld);
+			break;
+		case HAND_RIGHT:
+			otherHandR->setToWorld(packet.toWorld);
+			break;
+		default:
+			std::cerr << "got trash" << std::endl;
+			break;
+		}
+	}
 }

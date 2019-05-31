@@ -90,6 +90,11 @@ bool Client::connectionErrorHelper() {
 void Client::clientLoop(void *) {
 	//Receiving Packets
 	while (client->connected) {
+		if (client->clearPDPacket) {
+			client->playerDataPackets.clear();
+			client->clearPDPacket = false;
+		}
+
 		char data[MAX_PACKET_SIZE];
 		ZeroMemory(data, MAX_PACKET_SIZE);
 		Packet packet;
@@ -108,15 +113,13 @@ void Client::clientLoop(void *) {
 					break;
 				case INIT:			//Handle init
 					i += sizeof(Packet);
-					//TODO
-					break;
 				case EXIT:			//Handle exit
 					i += sizeof(Packet);
-					//TODO
+					client->packets.push_back(packet);
 					break;
 				case PLAYER_DATA:	//Handle player data
-					i += sizeof(PacketPlayerData);
-					//TODO
+					i += sizeof(Packet);
+					client->playerDataPackets.push_back(packet);
 					break;
 				default:			//Ignore unkown packets
 					i++;
@@ -150,6 +153,20 @@ void Client::sendPacket() {
 
 	Packet packet;
 	packet.type = TEST;
+	packet.serialize(buf);
+
+	int sendResult = send(sock, buf, sizeof(Packet), 0);
+	if (sendResult == SOCKET_ERROR)
+		std::cerr << "Error sending packet, Err#" << WSAGetLastError() << std::endl;
+}
+
+void Client::sendPlayerDataPacket(glm::mat4 t, PacketDataType type) {
+	char buf[sizeof(Packet)];
+
+	Packet packet;
+	packet.type = PLAYER_DATA;
+	packet.dataType = type;
+	packet.toWorld = t;
 	packet.serialize(buf);
 
 	int sendResult = send(sock, buf, sizeof(Packet), 0);
