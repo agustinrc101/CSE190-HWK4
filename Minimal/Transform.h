@@ -13,6 +13,8 @@
 
 class Transform {
 public:
+	Transform * parent = 0;
+
 	bool isActive = true;
 	std::string name = "Transform";
 
@@ -41,11 +43,15 @@ public:
 
 	//Getters
 	glm::mat4 getToWorld() { return toWorld; }
+	glm::mat4 getCompleteToWorld() { 
+		if(parent != 0) return parent->getCompleteToWorld() * toWorld; 
+		else return glm::mat4(1.0);
+	}
 	glm::vec3 getPosition() { return glm::vec3(toWorld[3][0], toWorld[3][1], toWorld[3][2]) ; }
 	glm::quat getRotation() { return glm::quat_cast(toWorld); }
 
 	//Others
-	void addChild(Transform * child) { children.emplace_back(child); }
+	void addChild(Transform * child) { children.emplace_back(child); child->parent = this; }
 	void addComponent(Component * u);
 
 private:

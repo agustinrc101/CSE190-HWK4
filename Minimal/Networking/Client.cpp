@@ -90,11 +90,6 @@ bool Client::connectionErrorHelper() {
 void Client::clientLoop(void *) {
 	//Receiving Packets
 	while (client->connected) {
-		if (client->clearPDPacket) {
-			client->playerDataPackets.clear();
-			client->clearPDPacket = false;
-		}
-
 		char data[MAX_PACKET_SIZE];
 		ZeroMemory(data, MAX_PACKET_SIZE);
 		Packet packet;
@@ -120,7 +115,6 @@ void Client::clientLoop(void *) {
 					client->packets.push_back(packet);
 					break;
 				case PLAYER_DATA:	//Handle player data
-					std::cout << "Received PLAYER_DATA packet" << std::endl;
 					i += sizeof(Packet);
 					client->playerDataPackets.push_back(packet);
 					break;
@@ -137,6 +131,16 @@ void Client::clientLoop(void *) {
 
 	//Kills this thread
 	_endthread();
+}
+
+std::vector<Packet> Client::getPlayerPackets() {
+	std::vector<Packet> p = playerDataPackets;
+	
+	std::cout << playerDataPackets.size() << std::endl;
+	playerDataPackets.clear();
+	std::cout << p.size() << std::endl;
+
+	return p;
 }
 
 //Packet sending

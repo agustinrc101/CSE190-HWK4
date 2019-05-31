@@ -27,12 +27,11 @@ public:
 	void sendPacket();
 	void sendPlayerDataPacket(glm::mat4 t, PacketDataType type);
 
-	std::vector<Packet> getPlayerPackets() { clearPDPacket = true;  return playerDataPackets; }
+	std::vector<Packet> getPlayerPackets();
 
 private:
 	SOCKET sock;
 	bool connected;
-	bool clearPDPacket = false;
 	std::vector<Packet> packets;
 	std::vector<Packet> playerDataPackets;
 

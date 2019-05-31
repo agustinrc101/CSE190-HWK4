@@ -334,8 +334,10 @@ void ProjectManager::draw(glm::mat4 headPose, glm::mat4 projection, int eye) {
 bool a_press = false;
 void ProjectManager::update(double deltaTime) {
 	networkingSetup();
-	sendPlayerData();
-	receivePackets();
+	if (startedNetwork) {
+		sendPlayerData();
+		receivePackets();
+	}
 	//TODO - handle audio
 	//TODO - handle scene changes (maybe use enum with a switch statement)
 	sceneGlobal->update(deltaTime);
@@ -408,11 +410,9 @@ void ProjectManager::stopNetworking(){
 }
 
 void ProjectManager::sendPlayerData() {
-	if (startedNetwork) {
-		client->sendPlayerDataPacket(head->getToWorld(), HEAD);
-		client->sendPlayerDataPacket(handL->getToWorld(), HAND_LEFT);
-		client->sendPlayerDataPacket(handR->getToWorld(), HAND_RIGHT);
-	}
+		client->sendPlayerDataPacket(head->getCompleteToWorld(), HEAD);
+		client->sendPlayerDataPacket(handL->getCompleteToWorld(), HAND_LEFT);
+		client->sendPlayerDataPacket(handR->getCompleteToWorld(), HAND_RIGHT);
 }
 
 void ProjectManager::receivePackets() {
