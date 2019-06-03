@@ -48,7 +48,7 @@
     <ClCompile Include="Networking\Client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Physics.cpp">
+    <ClCompile Include="Sounds.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -153,7 +153,7 @@
     <ClInclude Include="Components\ComponentPogoMovement.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Physics.h">
+    <ClInclude Include="Sounds.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

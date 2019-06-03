@@ -20,6 +20,8 @@
 //Networking
 #include "Networking/Server.h"
 #include "Networking/Client.h"
+//Sound
+#include "Sounds.h"
 
 //Init Shaders
 GLint Shaders::colorShader = 0;
@@ -41,6 +43,9 @@ Client * Client::client = 0;
 Client * client;
 bool startedNetwork = false;
 bool Server::serverOn = false;
+
+//Init Sound
+Sounds * sound;
 
 //Init SceneGraph
 SceneGraph * sceneGlobal;
@@ -307,7 +312,7 @@ void ProjectManager::initScene1() {
 }
 
 void ProjectManager::initAudio() {
-	//TODO
+	sound = new Sounds();
 }
 
 void ProjectManager::initProject() {
