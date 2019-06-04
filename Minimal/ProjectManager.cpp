@@ -73,6 +73,7 @@ ProjectManager::~ProjectManager() {
 	//Stop Server and client
 	Server::stopServer();
 	delete(client);
+
 	//Delete SceneGraph	(also deletes transforms, models, and components) --> make sure to use every declared model/component/transform
 	delete(sceneGlobal);
 	delete(sceneMenu);
@@ -83,6 +84,7 @@ ProjectManager::~ProjectManager() {
 	Shaders::deleteShaders();
 	//Delete textures
 	Textures::deleteTextures();
+	delete(sound);
 }
 
 ProjectManager::ProjectManager() {
