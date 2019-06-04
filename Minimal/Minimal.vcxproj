@@ -159,9 +159,13 @@
     <None Include="shaders\skybox.vert" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Components\ComponentCollisionCheckTest.h" />
     <ClInclude Include="Components\ComponentPogoMovement.h" />
+    <ClInclude Include="Components\ComponentRigidBodyBox.h" />
+    <ClInclude Include="Components\ComponentRigidBodyPlane.h" />
     <ClInclude Include="Components\ComponentSendTestPacket.h" />
     <ClInclude Include="Components\ComponentHeader.h" />
+    <ClInclude Include="Components\ComponentRigidBodySphere.h" />
     <ClInclude Include="Networking\Client.h" />
     <ClInclude Include="Components\Component.h" />
     <ClInclude Include="Components\ComponentTest1.h" />

@@ -263,6 +263,17 @@ void ProjectManager::initScene1() {
 	//Initialize scene1 objects here
 	//==================================
 	{
+		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureGrass());
+		Transform * transform = new Transform(model_plane, mat);
+
+		transform->translate(glm::vec3(0, -1.7f, 0));
+		
+		ComponentRigidBodyPlane * col = new ComponentRigidBodyPlane(50);
+		transform->addComponent(col);
+
+		scene1->addTransform(transform);
+	}
+	{
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureSteam());
 		Transform * transform = new Transform(model_sphere, mat);
 
@@ -291,10 +302,10 @@ void ProjectManager::initScene1() {
 		Transform * transform = new Transform(model_cube, mat);
 
 		transform->scale(0.1f);
-		transform->translate(glm::vec3(-3, 0, -5));
+		transform->translate(glm::vec3(-3, 100, -5));
 
-		ComponentRotate * c = new ComponentRotate(AXIS_Y_NEGATIVE);
-		transform->addComponent(c);
+		ComponentRigidBodyBox * col = new ComponentRigidBodyBox(glm::vec3(1.25f));
+		transform->addComponent(col);
 
 		scene1->addTransform(transform);
 	}
@@ -305,18 +316,19 @@ void ProjectManager::initScene1() {
 		transform->scale(0.1f);
 		transform->translate(glm::vec3(0, 3, -5));
 
-		ComponentRotate * c = new ComponentRotate(AXIS_X_NEGATIVE + AXIS_Z_POSITIVE);
-		transform->addComponent(c);
+		{
+			mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_CYAN), Textures::getTextureSteam());
+			Transform * child = new Transform(model_sphere, mat);
+
+			child->translate(glm::vec3(0, 7, -5));
+
+			ComponentRigidBodySphere * col = new ComponentRigidBodySphere(0.1f);
+			child->addComponent(col);
+
+			transform->addChild(child);
+		}
 
 		scene1->addTransform(transform);
-	}
-	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureGrass());
-		Transform * t = new Transform(model_plane, mat);
-
-		t->translate(glm::vec3(0, -1.7f, 0));
-
-		scene1->addTransform(t);
 	}
 }
 
@@ -335,20 +347,24 @@ void ProjectManager::draw(glm::mat4 headPose, glm::mat4 projection, int eye) {
 	scene1->draw(headPose, projection);
 	//Debug Draw
 	lines->draw(headPose, projection, glm::mat4(1));
+
 }
 
-bool a_press = false;
 void ProjectManager::update(double deltaTime) {
-	networkingSetup();
+	physics->update(deltaTime);
+	
+	//TODO - handle scene changes (maybe use enum with a switch statement)
+	
+	sceneGlobal->update(deltaTime);
+	sceneMenu->update(deltaTime);
+	scene1->update(deltaTime);
+	
 	if (startedNetwork) {
 		sendPlayerData();
 		receivePackets();
 	}
-	//TODO - handle audio
-	//TODO - handle scene changes (maybe use enum with a switch statement)
-	sceneGlobal->update(deltaTime);
-	sceneMenu->update(deltaTime);
-	scene1->update(deltaTime);
+	else 
+		networkingSetup();
 
 	testing();
 }

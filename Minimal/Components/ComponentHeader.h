@@ -9,5 +9,9 @@
 #include "ComponentMoveTest.h"
 #include "ComponentSendTestPacket.h"
 #include "ComponentPogoMovement.h"
+#include "ComponentCollisionCheckTest.h"
+#include "ComponentRigidBodySphere.h"
+#include "ComponentRigidBodyPlane.h"
+#include "ComponentRigidBodyBox.h"
 
 #endif

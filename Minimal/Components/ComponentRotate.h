@@ -3,7 +3,7 @@
 #pragma once
 
 #include <iostream>
-#include "Transform.h"
+#include "../Transform.h"
 #include "Component.h"
 #include "Definitions.h"
 

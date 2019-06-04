@@ -4,17 +4,19 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <vector>
+#include "btBulletDynamicsCommon.h"
 
 #include "Definitions.h"
 #include "Material.h"
 #include "Model.h"
 #include "Components/Component.h"
-#include <vector>
 
 class Transform {
 public:
 	Transform * parent = 0;
 	Material * material = NULL;
+	btRigidBody * rigidBody = 0;
 
 	bool isActive = true;
 	std::string name = "Transform";
@@ -61,6 +63,12 @@ public:
 		else return getCompleteToWorld()[3];
 	}
 	glm::quat getRotation() { return glm::quat_cast(toWorld); }
+	glm::vec3 toLocalPoint(glm::vec3 v) {
+		if (parent != 0)
+			return parent->toLocalPoint(v) - parent->getPosition();
+		else
+			return v;
+	}
 
 	//Others
 	void addChild(Transform * child) { children.emplace_back(child); child->parent = this; }

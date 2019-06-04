@@ -162,5 +162,17 @@
     <ClInclude Include="Physics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Components\ComponentCollisionCheckTest.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\ComponentRigidBodySphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\ComponentRigidBodyPlane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Components\ComponentRigidBodyBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
