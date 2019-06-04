@@ -484,7 +484,7 @@ public:
     _session = nullptr;
   }
 };
-#include <Windows.h>
+
 class RiftApp : public GlfwApp, public RiftManagerApp{
 public:
 

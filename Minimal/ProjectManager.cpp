@@ -22,6 +22,8 @@
 #include "Networking/Client.h"
 //Sound
 #include "Sounds.h"
+//Physics
+#include "Physics.h"
 
 //Init Shaders
 GLint Shaders::colorShader = 0;
@@ -43,9 +45,13 @@ Client * Client::client = 0;
 Client * client;
 bool startedNetwork = false;
 bool Server::serverOn = false;
+//Init Physics
+Physics * Physics::physics = 0;
 
 //Init Sound
 Sounds * sound;
+//Physics
+Physics * physics;
 
 //Init SceneGraph
 SceneGraph * sceneGlobal;
@@ -85,6 +91,7 @@ ProjectManager::~ProjectManager() {
 	//Delete textures
 	Textures::deleteTextures();
 	delete(sound);
+	delete(physics);
 }
 
 ProjectManager::ProjectManager() {
@@ -100,7 +107,7 @@ ProjectManager::ProjectManager() {
 }
 
 void ProjectManager::initBulletPhysics() {
-
+	physics = new Physics();
 }
 
 void ProjectManager::initShadersAndLighting() {
