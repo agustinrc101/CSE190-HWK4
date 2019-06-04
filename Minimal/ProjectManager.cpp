@@ -266,7 +266,8 @@ void ProjectManager::initScene1() {
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureGrass());
 		Transform * transform = new Transform(model_plane, mat);
 
-		transform->translate(glm::vec3(0, -1.7f, 0));
+		//transform->translate(glm::vec3(0, -1.7f, 0));
+		transform->translate(glm::vec3(0, 0, 0));
 		
 		ComponentRigidBodyPlane * col = new ComponentRigidBodyPlane(100);
 		transform->addComponent(col);
@@ -275,7 +276,7 @@ void ProjectManager::initScene1() {
 	}
 	{
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_RED), Textures::getTextureSteam());
-		Transform * transform = new Transform(model_sphere, mat);
+		Transform * transform = new Transform(model_sphere, mat, false);
 
 		//transform->scale(0.1f);
 		transform->translate(glm::vec3(0, 0, -10));
@@ -299,24 +300,24 @@ void ProjectManager::initScene1() {
 	}
 	{
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureGrip2Albedo());
-		Transform * transform = new Transform(model_cube, mat);
+		Transform * transform = new Transform(model_cube, mat, false);
 
 		transform->scale(0.1f);
-		transform->translate(glm::vec3(-3, 5, -5));
+		transform->translate(glm::vec3(-1, 1, 0));
 
-		ComponentRigidBodyBox * col = new ComponentRigidBodyBox(glm::vec3(1.25f));
+		ComponentRigidBodyBox * col = new ComponentRigidBodyBox(glm::vec3(0.2f));
 		transform->addComponent(col);
 
 		scene1->addTransform(transform);
 	}
 	{
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_CYAN), Textures::getTextureSteam());
-		Transform * transform = new Transform(model_sphere, mat);
+		Transform * transform = new Transform(model_sphere, mat, false);
 
-		transform->scale(0.1f);
-		transform->translate(glm::vec3(0, 10, -5));
+		transform->scale(0.3f);
+		transform->translate(glm::vec3(0, 2, -0.2f));
 
-		ComponentRigidBodySphere * col = new ComponentRigidBodySphere(0.1f);
+		ComponentRigidBodySphere * col = new ComponentRigidBodySphere(0.3f);
 		transform->addComponent(col);
 
 		scene1->addTransform(transform);

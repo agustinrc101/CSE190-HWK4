@@ -34,35 +34,14 @@ protected:
 
 	void Start() override {
 		rigidbody = transform->rigidBody = Physics::addSphereCollider(colliderSize, transform->getPosition(false));
-
-		//btTransform t = bullet::fromGlm(transform->getCompleteToWorld());
-		//rigidbody->setWorldTransform(t);
-
-		//rigidbody->getMotionState()->setWorldTransform(t);
 	}
 
 	void update() {
-		//btTransform t;
-
-		//Gets bullet rigidbody
-		//rigidbody->getMotionState()->getWorldTransform(t);
-
-		//Transforms from bullet to mat4
-		//glm::mat4 m = bullet::ToGlm(t);
-
-		//transforms new position to local position
-		//m[3] = glm::vec4(transform->toLocalPoint(m[3]), 1);	
-
-		//transform->setToWorld(m);
-		
-			
-			
 		glm::vec3 pos = bullet::ToGlm(rigidbody->getCenterOfMassPosition());
 		glm::quat rot = bullet::ToGlm(rigidbody->getOrientation());
 
 		transform->setPosition(pos, false);
-		
-
+		transform->setRotation(rot);
 	}
 
 };

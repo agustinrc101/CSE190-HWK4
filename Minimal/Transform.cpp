@@ -9,10 +9,11 @@ Transform::~Transform() {
 	for (int i = 0; i < components.size(); i++)	delete &components[i];
 }
 
-Transform::Transform(Model * m, Material * mat){
+Transform::Transform(Model * m, Material * mat, bool UseToWorld){
 	//Inits variables
 	model = m;
 	material = mat;
+	useToWorld = UseToWorld;
 }
 
 void Transform::addComponent(Component * component){
@@ -24,7 +25,7 @@ void Transform::addComponent(Component * component){
 
 void Transform::draw(glm::mat4 headPose, glm::mat4 projection, glm::mat4 parent) {
 	if (isActive) {
-		glm::mat4 M = parent * toWorld;
+		glm::mat4 M = parent * getToWorld();
 
 		//Draw if this transform has a model
 		if (model != NULL)

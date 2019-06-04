@@ -34,18 +34,11 @@ protected:
 	}
 
 	void update() {
-		btTransform t;
+		glm::vec3 pos = bullet::ToGlm(rigidbody->getCenterOfMassPosition());
+		glm::quat rot = bullet::ToGlm(rigidbody->getOrientation());
 
-		//Gets bullet rigidbody
-		rigidbody->getMotionState()->getWorldTransform(t);
-
-		//Transforms from bullet to mat4
-		glm::mat4 m = bullet::ToGlm(t);
-
-		//transforms new position to local position
-		m[3] = glm::vec4(transform->toLocalPoint(m[3]), 1);
-
-		transform->setToWorld(m);		//TODO - Scale might be lost
+		transform->setPosition(pos, false);
+		transform->setRotation(rot);
 	}
 
 };
