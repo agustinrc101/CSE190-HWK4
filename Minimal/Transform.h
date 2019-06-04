@@ -67,7 +67,6 @@ public:
 
 				translationMatrix[3] = glm::vec4(p - parentGlobalPos, 1.0f);
 			}
-			
 		}
 	}
 	void setRotation(glm::quat q, bool localSpace = true) {
