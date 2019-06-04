@@ -268,17 +268,17 @@ void ProjectManager::initScene1() {
 
 		transform->translate(glm::vec3(0, -1.7f, 0));
 		
-		ComponentRigidBodyPlane * col = new ComponentRigidBodyPlane(50);
+		ComponentRigidBodyPlane * col = new ComponentRigidBodyPlane(100);
 		transform->addComponent(col);
 
 		scene1->addTransform(transform);
 	}
 	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureSteam());
+		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_RED), Textures::getTextureSteam());
 		Transform * transform = new Transform(model_sphere, mat);
 
-		transform->scale(0.1f);
-		transform->translate(glm::vec3(0, 0, -5));
+		//transform->scale(0.1f);
+		transform->translate(glm::vec3(0, 0, -10));
 
 		ComponentRotate * c = new ComponentRotate(AXIS_X_POSITIVE + AXIS_Z_NEGATIVE);
 		transform->addComponent(c);
@@ -302,7 +302,7 @@ void ProjectManager::initScene1() {
 		Transform * transform = new Transform(model_cube, mat);
 
 		transform->scale(0.1f);
-		transform->translate(glm::vec3(-3, 100, -5));
+		transform->translate(glm::vec3(-3, 5, -5));
 
 		ComponentRigidBodyBox * col = new ComponentRigidBodyBox(glm::vec3(1.25f));
 		transform->addComponent(col);
@@ -310,23 +310,14 @@ void ProjectManager::initScene1() {
 		scene1->addTransform(transform);
 	}
 	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_ORANGE), Textures::getTextureSteam());
+		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_CYAN), Textures::getTextureSteam());
 		Transform * transform = new Transform(model_sphere, mat);
 
 		transform->scale(0.1f);
-		transform->translate(glm::vec3(0, 3, -5));
+		transform->translate(glm::vec3(0, 10, -5));
 
-		{
-			mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_CYAN), Textures::getTextureSteam());
-			Transform * child = new Transform(model_sphere, mat);
-
-			child->translate(glm::vec3(0, 7, -5));
-
-			ComponentRigidBodySphere * col = new ComponentRigidBodySphere(0.1f);
-			child->addComponent(col);
-
-			transform->addChild(child);
-		}
+		ComponentRigidBodySphere * col = new ComponentRigidBodySphere(0.1f);
+		transform->addComponent(col);
 
 		scene1->addTransform(transform);
 	}

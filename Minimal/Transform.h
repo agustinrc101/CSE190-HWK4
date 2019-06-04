@@ -51,6 +51,14 @@ public:
 			toWorld[3] = glm::vec4(p - parentGlobalPos, 1.0f);
 		}
 	}
+	void setRotation(glm::quat q, bool localSpace = true) {
+		if (localSpace) {
+			
+		}
+		else {
+
+		}
+	}
 
 	//Getters
 	glm::mat4 getToWorld() { return toWorld; }
@@ -64,10 +72,16 @@ public:
 	}
 	glm::quat getRotation() { return glm::quat_cast(toWorld); }
 	glm::vec3 toLocalPoint(glm::vec3 v) {
-		if (parent != 0)
-			return parent->toLocalPoint(v) - parent->getPosition();
-		else
-			return v;
+		glm::vec3 parentGlobalPos = getPosition(false);
+		parentGlobalPos = parentGlobalPos - (glm::vec3)toWorld[3];
+
+		return (v - parentGlobalPos);
+		
+		
+		//if (parent != 0)
+		//	return parent->toLocalPoint(v) - parent->getPosition();
+		//else
+		//	return v;
 	}
 
 	//Others
@@ -76,6 +90,11 @@ public:
 
 private:
 	glm::mat4 toWorld = glm::mat4(1);
+
+	glm::mat4 translationMatrix = glm::mat4(1);
+	glm::mat4 rotationMatrix = glm::mat4(1);
+	glm::mat4 scaleMatrix = glm::mat4(1);
+
 	Model * model = NULL;
 	std::vector<Transform *> children;
 	std::vector<std::unique_ptr<Component>> components;

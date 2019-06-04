@@ -118,7 +118,7 @@ btRigidBody* Physics::addSphereCollider(float radius, glm::vec3 position) {
 	if (isDynamic)
 		shape->calculateLocalInertia(mass, localInertia);
 
-	startTransform.setOrigin(btVector3(2, 10, 0));
+	startTransform.setOrigin(btVector3(position.x, position.y, position.z));
 
 	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
@@ -138,8 +138,9 @@ btRigidBody* Physics::addSphereCollider(float radius, glm::vec3 position) {
 ///Adds object
 btRigidBody* Physics::addBoxCollider(glm::vec3 size, glm::vec3 position) {
 	//create a dynamic rigidbody
+	glm::vec3 half = size / 2.0f;
 
-	btCollisionShape* shape = new btBoxShape(btVector3(size.x,size.y,size.z));
+	btCollisionShape* shape = new btBoxShape(btVector3(half.x, half.y, half.z));
 
 	//Create Dynamic Objects
 	btTransform startTransform;
@@ -154,7 +155,7 @@ btRigidBody* Physics::addBoxCollider(glm::vec3 size, glm::vec3 position) {
 	if (isDynamic)
 		shape->calculateLocalInertia(mass, localInertia);
 
-	startTransform.setOrigin(btVector3(2, 10, 0));
+	startTransform.setOrigin(btVector3(position.x, position.y, position.z));
 
 	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
