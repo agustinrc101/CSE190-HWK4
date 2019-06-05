@@ -17,12 +17,12 @@ limitations under the License.
 
 ************************************************************************************/
 
+#include <Windows.h>
+
 #include <iostream>
 #include <memory>
 #include <exception>
 #include <algorithm>
-
-#include <Windows.h>
 
 #define __STDC_FORMAT_MACROS 1
 

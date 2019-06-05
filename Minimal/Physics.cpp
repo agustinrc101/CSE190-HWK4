@@ -1,4 +1,5 @@
 #include "Physics.h"
+#include "Input.h"
 
 Physics::~Physics() {
 	//delete dynamics world
@@ -37,10 +38,17 @@ Physics::Physics(){
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
 	dynamicsWorld->setGravity(btVector3(0, -10, 0));
+
+	//Debug Drawing
+	debugDrawer = new BulletDebugDrawer_OpenGL();
+	dynamicsWorld->setDebugDrawer(debugDrawer);
 }
 
 void Physics::draw(glm::mat4 headPose, glm::mat4 projection) {
-	//dynamicsWorld->debugDrawWorld();
+	if (Input::getIndexTriggerL() || Input::getIndexTriggerR()) {		//TODO remove this
+		debugDrawer->SetMatrices(headPose, projection);
+		dynamicsWorld->debugDrawWorld();
+	}
 }
 
 void Physics::update(double deltaTime) {
@@ -99,7 +107,7 @@ btRigidBody* Physics::addPlaneCollider(float size, glm::vec3 position, glm::vec3
 }
 
 ///Adds sphere collider object
-btRigidBody* Physics::addSphereCollider(float radius, glm::vec3 position) {
+btRigidBody* Physics::addSphereCollider(float radius, glm::vec3 position, float Mass) {
 	//create a dynamic rigidbody
 
 	//btCollisionShape* colShape = new btBoxShape(btVector3(1,1,1));
@@ -109,7 +117,7 @@ btRigidBody* Physics::addSphereCollider(float radius, glm::vec3 position) {
 	btTransform startTransform;
 	startTransform.setIdentity();
 
-	btScalar mass(1.0f);
+	btScalar mass(Mass);
 
 	//rigidbody is dynamic if and only if mass is non zero, otherwise static
 	bool isDynamic = (mass != 0.f);
@@ -136,7 +144,7 @@ btRigidBody* Physics::addSphereCollider(float radius, glm::vec3 position) {
 }
 
 ///Adds object
-btRigidBody* Physics::addBoxCollider(glm::vec3 size, glm::vec3 position) {
+btRigidBody* Physics::addBoxCollider(glm::vec3 size, glm::vec3 position, float Mass) {
 	//create a dynamic rigidbody
 	glm::vec3 half = size / 2.0f;
 
@@ -146,7 +154,7 @@ btRigidBody* Physics::addBoxCollider(glm::vec3 size, glm::vec3 position) {
 	btTransform startTransform;
 	startTransform.setIdentity();
 
-	btScalar mass(1.0f);
+	btScalar mass(Mass);
 
 	//rigidbody is dynamic if and only if mass is non zero, otherwise static
 	bool isDynamic = (mass != 0.f);

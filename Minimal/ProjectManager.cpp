@@ -339,7 +339,7 @@ void ProjectManager::draw(glm::mat4 headPose, glm::mat4 projection, int eye) {
 	scene1->draw(headPose, projection);
 	//Debug Draw
 	lines->draw(headPose, projection, glm::mat4(1));
-
+	physics->draw(headPose, projection);
 }
 
 void ProjectManager::update(double deltaTime) {
