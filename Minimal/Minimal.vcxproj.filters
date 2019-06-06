@@ -174,5 +174,8 @@
     <ClInclude Include="Components\ComponentRigidBodyBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Components\ComponentRigidBodyStick.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

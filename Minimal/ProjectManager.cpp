@@ -161,6 +161,9 @@ void ProjectManager::initGlobalScene() {
 		handR = new Transform(model_sphere, mat);
 		handR->name = "Right Hand";
 
+		ComponentRigidBodyStick * col = new ComponentRigidBodyStick(0.10f);
+		handR->addComponent(col);
+
 		mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureStick());
 		Transform * stick = new Transform(model_stick, mat);
 
@@ -266,8 +269,8 @@ void ProjectManager::initScene1() {
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureGrass());
 		Transform * transform = new Transform(model_plane, mat);
 
-		//transform->translate(glm::vec3(0, -1.7f, 0));
-		transform->translate(glm::vec3(0, 0, 0));
+		transform->translate(glm::vec3(0, -1.7f, 0));	//ACTUAL GROUND POS
+		//transform->translate(glm::vec3(0, -.4f, 0));	//DEBUG GROUND POS
 		
 		ComponentRigidBodyPlane * col = new ComponentRigidBodyPlane(100);
 		transform->addComponent(col);
@@ -315,7 +318,7 @@ void ProjectManager::initScene1() {
 		Transform * transform = new Transform(model_sphere, mat, false);
 
 		transform->scale(0.3f);
-		transform->translate(glm::vec3(0, 2, -0.2f));
+		transform->translate(glm::vec3(-2, 100, -0.8f));
 
 		ComponentRigidBodySphere * col = new ComponentRigidBodySphere(0.3f);
 		transform->addComponent(col);
@@ -366,6 +369,8 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 	handL->scale(0.015f);
 	handR->setToWorld(right);
 	handR->scale(0.015f);
+
+	physics->newRColPos(handR->getCol()->getPosition(false));
 }
 
 void ProjectManager::updateHead(glm::mat4 hmd) {

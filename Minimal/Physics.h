@@ -148,11 +148,13 @@ public:
 	void draw(glm::mat4 headPose, glm::mat4 projection);
 
 	static btRigidBody* addPlaneCollider(float size, glm::vec3 position, glm::vec3 axis = AXIS_Y_POSITIVE);
-	static btRigidBody* addSphereCollider(float radius, glm::vec3 position, float Mass = 1.0f);
+	static btRigidBody* addSphereCollider(float radius, glm::vec3 position, float Mass = 0.1f);
 	static btRigidBody* addBoxCollider(glm::vec3 size, glm::vec3 position, float Mass = 1.0f);
-
+	static btRigidBody* addStickCollider(float radius, glm::vec3 position);
 	static btRigidBody* getRigidbody(int index);
 	static int getCollisionObjectCount() { return physics->dynamicsWorld->getNumCollisionObjects(); }
+
+	void newRColPos(glm::vec3 position);
 
 private:
 	BulletDebugDrawer_OpenGL * debugDrawer;

@@ -14,7 +14,7 @@
 
 class ComponentRigidBodySphere : public Component {
 public:
-	ComponentRigidBodySphere(float radius, float Mass = 1.0f) : colliderSize(radius), mass(Mass) {}
+	ComponentRigidBodySphere(float radius) : colliderSize(radius) {}
 	~ComponentRigidBodySphere() {}
 
 	void Init(Transform * p) {
@@ -31,10 +31,9 @@ protected:
 	btRigidBody * rigidbody;
 
 	float colliderSize;
-	float mass;
 
 	void Start() override {
-		rigidbody = transform->rigidBody = Physics::addSphereCollider(colliderSize, transform->getPosition(false), mass);
+		rigidbody = transform->rigidBody = Physics::addSphereCollider(colliderSize, transform->getPosition(false));
 	}
 
 	void update() {
