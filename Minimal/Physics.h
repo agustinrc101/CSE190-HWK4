@@ -155,6 +155,7 @@ public:
 	static int getCollisionObjectCount() { return physics->dynamicsWorld->getNumCollisionObjects(); }
 
 	void newRColPos(glm::vec3 position);
+	void newLColPos(glm::vec3 position);
 
 private:
 	BulletDebugDrawer_OpenGL * debugDrawer;

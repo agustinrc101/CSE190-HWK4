@@ -186,6 +186,9 @@ void ProjectManager::initGlobalScene() {
 		handL = new Transform(model_sphere, mat);
 		handL->name = "Left Hand";
 
+		ComponentRigidBodyStick * col = new ComponentRigidBodyStick(0.10001f);
+		handL->addComponent(col);
+
 		mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureStick());
 		Transform * stick = new Transform(model_stick, mat);
 
@@ -405,6 +408,8 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 	handR->scale(0.015f);
 
 	physics->newRColPos(handR->getCol()->getPosition(false));
+	physics->newLColPos(handL->getCol()->getPosition(false));
+	
 }
 
 void ProjectManager::updateHead(glm::mat4 hmd) {
