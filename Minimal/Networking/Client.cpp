@@ -6,6 +6,7 @@ Client::Client(){
 }
 
 Client::~Client(){
+	
 	connected = false;
 	//Clean up winsock
 	closesocket(sock);
@@ -107,10 +108,10 @@ void Client::clientLoop(void *) {
 					std::cout << "Received TEST packet" << std::endl;
 					break;
 				case INIT:			//Handle init
-					std::cout << "Received INIT packet" << std::endl;
+					client->initReceived = true;
 					i += sizeof(Packet);
 				case EXIT:			//Handle exit
-					std::cout << "Received EXIT packet" << std::endl;
+					client->initReceived = false;
 					i += sizeof(Packet);
 					client->packets.push_back(packet);
 					break;
@@ -158,6 +159,18 @@ void Client::sendPacket() {
 
 	Packet packet;
 	packet.type = TEST;
+	packet.serialize(buf);
+
+	int sendResult = send(sock, buf, sizeof(Packet), 0);
+	if (sendResult == SOCKET_ERROR)
+		std::cerr << "Error sending packet, Err#" << WSAGetLastError() << std::endl;
+}
+
+void Client::sendPacket(PacketType type) {
+	char buf[sizeof(Packet)];
+
+	Packet packet;
+	packet.type = type;
 	packet.serialize(buf);
 
 	int sendResult = send(sock, buf, sizeof(Packet), 0);

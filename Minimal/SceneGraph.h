@@ -8,6 +8,11 @@
 #include "Skybox.h"
 #include "Transform.h"
 
+enum Scenes {
+	SCENE_MENU = 0,
+	SCENE_1 = 1,
+};
+
 class SceneGraph{
 public:
 	bool isActive = true;

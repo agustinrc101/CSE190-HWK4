@@ -177,5 +177,8 @@
     <ClInclude Include="Components\ComponentRigidBodyStick.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Components\ComponentPlayerRotation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
