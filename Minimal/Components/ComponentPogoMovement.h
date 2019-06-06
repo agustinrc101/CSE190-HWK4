@@ -96,7 +96,7 @@ private:
 	}
 
 	void handleArmDownState() {
-		if (collider->getPosition(false).y > -0.5f) {
+		if (collider->getPosition(false).y > -0.3f) {
 			hand->material->color = storedColor;
 			state = IDLE;
 		}

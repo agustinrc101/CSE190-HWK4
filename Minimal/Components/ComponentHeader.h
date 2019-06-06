@@ -13,5 +13,6 @@
 #include "ComponentRigidBodySphere.h"
 #include "ComponentRigidBodyPlane.h"
 #include "ComponentRigidBodyBox.h"
+#include "ComponentRigidBodyStick.h"
 
 #endif

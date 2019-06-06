@@ -93,7 +93,7 @@
       <PreprocessorDefinitions>_MBCS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>BulletCollision.lib;BulletDynamics.lib;BulletSoftBody.lib;LinearMath.lib;LibOVR.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;LibOVR.lib;opengl32.lib;glu32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)lib;$(SolutionDir)BulletPhysics\bin;$(SolutionDir)lib\Win64;%$(SolutionDir)\Include\Win32$(SolutionDir)BulletPhysics\bin;$(SolutionDir)\lib</AdditionalLibraryDirectories>
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
@@ -163,6 +163,7 @@
     <ClInclude Include="Components\ComponentPogoMovement.h" />
     <ClInclude Include="Components\ComponentRigidBodyBox.h" />
     <ClInclude Include="Components\ComponentRigidBodyPlane.h" />
+    <ClInclude Include="Components\ComponentRigidBodyStick.h" />
     <ClInclude Include="Components\ComponentSendTestPacket.h" />
     <ClInclude Include="Components\ComponentHeader.h" />
     <ClInclude Include="Components\ComponentRigidBodySphere.h" />

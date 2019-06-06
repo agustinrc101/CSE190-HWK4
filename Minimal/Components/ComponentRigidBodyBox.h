@@ -11,7 +11,7 @@
 
 class ComponentRigidBodyBox : public Component {
 public:
-	ComponentRigidBodyBox(glm::vec3 size, float Mass = 1.0f) : colliderSize(size), mass(Mass) {}
+	ComponentRigidBodyBox(glm::vec3 size) : colliderSize(size) {}
 	~ComponentRigidBodyBox() {}
 
 	void Init(Transform * p) {
@@ -28,10 +28,9 @@ protected:
 	btRigidBody * rigidbody;
 
 	glm::vec3 colliderSize;
-	float mass;
 
 	void Start() override {
-		rigidbody = transform->rigidBody = Physics::addBoxCollider(colliderSize, transform->getPosition(false), mass);
+		rigidbody = transform->rigidBody = Physics::addBoxCollider(colliderSize, transform->getPosition(false));
 	}
 
 	void update() {

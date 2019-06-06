@@ -89,6 +89,7 @@ public:
 		else return getCompleteToWorld()[3];
 	}
 	glm::quat getRotation() { return glm::quat_cast(getToWorld()); }
+	Transform* getCol() { return children[children.size()-1]; }
 	glm::vec3 toLocalPoint(glm::vec3 v) {
 		glm::vec3 parentGlobalPos = getPosition(false);
 		parentGlobalPos = parentGlobalPos - (glm::vec3)getToWorld()[3];
