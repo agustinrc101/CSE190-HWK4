@@ -17,7 +17,7 @@ public:
 	~ComponentRigidBodyStick() {}
 	int up = 0;
 	glm::vec3 velo;
-	
+  
 	void Init(Transform * p) {
 		transform = p;
 		Start();
@@ -29,18 +29,17 @@ public:
 	}
 
 	glm::vec3 getlinVelo() {
-		return velo;
+		return 7.0f * velo;
 	}
-
-	
-
 protected:
 	Transform * transform;
 	Transform * stickTransform;
 	btRigidBody * rigidbody;
+	std::vector<glm::vec3> allPos;
+	glm::vec3 lastPos = glm::vec3(0);
+	glm::vec3 tempVelocity = glm::vec3(0);
+	bool firstFrame = true;
 	bool left;
-
-
 	glm::vec3 colliderSize;
 
 	void Start() override {
@@ -56,7 +55,6 @@ protected:
 			rigidbody->getCollisionShape()->setUserIndex(LAYER_STICK_RIGHT);
 	}
 
-	
 
 private:
 	std::vector<glm::vec3> allPos;
@@ -67,14 +65,10 @@ private:
 	bool firstFrame = true;
 
 	glm::vec3 getVelocity() {						//CALCULATES VELOCITY (POSITION OVER A SECOND
-
-		
-
-		if (clock() / CLOCKS_PER_SEC > up) {
+		if ((clock() / CLOCKS_PER_SEC) * 15 > up) {
 			//std::cout << clock() / CLOCKS_PER_SEC << endl;
 			up++;
 			for (int i = 0; i < allPos.size(); i++) {
-
 				tempVelocity += allPos[i];
 			}
 			allPos.clear();
@@ -92,16 +86,12 @@ private:
 		return tempVelocity;
 
 	}
-	
-	void update() {
-		for (int i = 9; i > 1; i--) {
-			positions[i] = positions[i - 1];
-		}
 
-		positions[0] = transform->getPosition(false);
+	void update() {
+	
 
 		velo = getVelocity();								//GETS VELOCITY
-		if(!firstFrame)										//GETS LAST FRAME
+		if (!firstFrame)										//GETS LAST FRAME
 			lastPos = transform->getPosition(false);
 
 		firstFrame = false;

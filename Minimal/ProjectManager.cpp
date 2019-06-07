@@ -71,8 +71,8 @@ Transform * otherHead;
 Transform * otherHandL;
 Transform * otherHandR;
 //Components
-ComponentRigidBodyStick * handLStick;
-ComponentRigidBodyStick * handRStick;
+ComponentRigidBodyStick * stickL;
+ComponentRigidBodyStick * stickR;
 //Scene Management
 Scenes curScene = SCENE_MENU;
 
@@ -173,8 +173,8 @@ void ProjectManager::initGlobalScene() {
 		stick->scale(glm::vec3(0.5f, 0.7f, 0.5f));
 		stick->translate(glm::vec3(0, -175, 0));
 
-		handRStick = new ComponentRigidBodyStick(glm::vec3(0.05f, 0.75f, 0.05f), stick, false);
-		handR->addComponent(handRStick);
+		stickR = new ComponentRigidBodyStick(glm::vec3(0.10f, 0.10f, 0.10f), stick, false);
+		handR->addComponent(stickR);
 
 		colliderR = new Transform();
 
@@ -197,8 +197,8 @@ void ProjectManager::initGlobalScene() {
 		stick->scale(glm::vec3(0.5f, 0.7f, 0.5f));
 		stick->translate(glm::vec3(0, -175, 0));
 
-		handLStick = new ComponentRigidBodyStick(glm::vec3(0.05f, 0.75f, 0.05f), stick, true);
-		handL->addComponent(handLStick);
+		stickL = new ComponentRigidBodyStick(glm::vec3(0.10, 0.10f, 0.10f), stick, true);
+		handL->addComponent(stickL);
 
 		colliderL = new Transform();
 
@@ -363,6 +363,8 @@ void ProjectManager::initScene1() {
 		Transform * transform = new Transform(model_sphere, mat, false);
 
 		transform->scale(0.3f);
+
+    //transform->translate(glm::vec3(-2, 10, -0.8f));
 		transform->translate(glm::vec3(0, 10, -1.f));
 
 		ComponentRigidBodySphere * col = new ComponentRigidBodySphere(0.3f);
@@ -446,10 +448,9 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 	handR->setToWorld(right);
 	handR->scale(0.015f);
 
-	glm::vec3 offset = glm::vec3(-0.5f, 0, 0);
+	//glm::vec3 offset = glm::vec3(-0.5f, 0, 0);  //Offset position
 	physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(right), handRStick->getlinVelo());
 	physics->newLColPos(handL->getChild(1)->getPosition(false), glm::quat_cast(left), handLStick->getlinVelo());
-	
 }
 
 void ProjectManager::updateHead(glm::mat4 hmd) {
