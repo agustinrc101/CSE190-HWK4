@@ -159,7 +159,6 @@
     <None Include="shaders\skybox.vert" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Components\ComponentBallProperties.h" />
     <ClInclude Include="Components\ComponentCollisionCheckTest.h" />
     <ClInclude Include="Components\ComponentPlayerRotation.h" />
     <ClInclude Include="Components\ComponentPogoMovement.h" />

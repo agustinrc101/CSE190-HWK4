@@ -8,6 +8,18 @@
 #include "btBulletDynamicsCommon.h"
 
 #include "Definitions.h"
+
+
+// Helper class; draws the world as seen by Bullet.
+// This is very handy to see it Bullet's world matches yours
+// How to use this class :
+// Declare an instance of the class :
+// 
+// dynamicsWorld->setDebugDrawer(&mydebugdrawer);
+// Each frame, call it :
+// mydebugdrawer.SetMatrices(ViewMatrix, ProjectionMatrix);
+// dynamicsWorld->debugDrawWorld();
+
 #include "Shaders.h"
 
 namespace bullet {
@@ -54,15 +66,6 @@ namespace bullet {
 };
 
 class BulletDebugDrawer_OpenGL : public btIDebugDraw {
-// Helper class; draws the world as seen by Bullet.
-// This is very handy to see it Bullet's world matches yours
-// How to use this class :
-// Declare an instance of the class :
-// 
-// dynamicsWorld->setDebugDrawer(&mydebugdrawer);
-// Each frame, call it :
-// mydebugdrawer.SetMatrices(ViewMatrix, ProjectionMatrix);
-// dynamicsWorld->debugDrawWorld();
 public:
 
 	BulletDebugDrawer_OpenGL() {}
@@ -137,7 +140,6 @@ private:
 class Physics{
 public:
 	static Physics * physics;
-	btDiscreteDynamicsWorld* dynamicsWorld;
 
 	Physics();
 	~Physics();
@@ -145,15 +147,15 @@ public:
 	void update(double deltaTime);
 	void draw(glm::mat4 headPose, glm::mat4 projection);
 
-	static btRigidBody* addPlaneCollider(float size, glm::vec3 position, glm::vec3 axis = AXIS_Y_NEGATIVE);
+	static btRigidBody* addPlaneCollider(float size, glm::vec3 position, glm::vec3 axis = AXIS_Y_POSITIVE);
 	static btRigidBody* addSphereCollider(float radius, glm::vec3 position, float Mass = 0.1f);
 	static btRigidBody* addBoxCollider(glm::vec3 size, glm::vec3 position, float Mass = 1.0f);
-	static btRigidBody* addStickCollider(glm::vec3 size, glm::vec3 position, bool leftHand);
+	static btRigidBody* addStickCollider(float radius, glm::vec3 position);
 	static btRigidBody* getRigidbody(int index);
 	static int getCollisionObjectCount() { return physics->dynamicsWorld->getNumCollisionObjects(); }
 
-	void newRColPos(glm::vec3 position, glm::quat orientation, glm::vec3 velocity);
-	void newLColPos(glm::vec3 position, glm::quat orientation, glm::vec3 velocity);
+	void newRColPos(glm::vec3 position, glm::vec3 velocity);
+	void newLColPos(glm::vec3 position, glm::vec3 velocity);
 
 private:
 	BulletDebugDrawer_OpenGL * debugDrawer;
@@ -164,6 +166,7 @@ private:
 	btCollisionDispatcher* dispatcher;
 	btBroadphaseInterface* overlappingPairCache;
 	btSequentialImpulseConstraintSolver* solver;
+	btDiscreteDynamicsWorld* dynamicsWorld;
 	btAlignedObjectArray<btCollisionShape*> collisionShapes;
 
 };

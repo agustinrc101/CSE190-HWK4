@@ -15,6 +15,5 @@
 #include "ComponentRigidBodyBox.h"
 #include "ComponentRigidBodyStick.h"
 #include "ComponentPlayerRotation.h"
-#include "ComponentBallProperties.h"
 
 #endif

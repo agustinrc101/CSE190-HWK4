@@ -6,8 +6,6 @@
 
 class ProjectManager {
 public:
-	static ProjectManager * project;
-
 	ProjectManager();
 	~ProjectManager();
 
@@ -19,8 +17,6 @@ public:
 
 	glm::vec3 getPlayerPosition();
 	glm::quat getPlayerRotation();
-	glm::vec3 getLeftHandPosition();
-	glm::vec3 getRightHandPosition();
 
 private:
 	void initBulletPhysics();

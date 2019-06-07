@@ -177,7 +177,6 @@ glm::vec2 Input::stickR = glm::vec2(0, 0);
 glm::vec2 Input::stickL = glm::vec2(0, 0);
 bool Input::buttonStickL = false;
 bool Input::buttonStickR = false;
-ProjectManager * ProjectManager::project = 0;
 
 namespace glfw
 {

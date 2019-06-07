@@ -50,13 +50,7 @@
 #define MATH_PI 3.1415926535897932384626433832795f
 
 //Enums
-enum ObjectLayer {
-	LAYER_NULL = -1,
-	LAYER_GROUND = 0,
-	LAYER_BALL = 1,
-	LAYER_STICK_LEFT = 2,
-	LAYER_STICK_RIGHT = 3,
-};
+
 
 //========
 //PRINTING
