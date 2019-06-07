@@ -180,5 +180,8 @@
     <ClInclude Include="Components\ComponentPlayerRotation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Components\ComponentBallProperties.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

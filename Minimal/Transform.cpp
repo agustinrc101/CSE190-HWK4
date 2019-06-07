@@ -46,3 +46,11 @@ void Transform::update(double deltaTime) {
 			children[i]->update(deltaTime);
 	}
 }
+
+void Transform::LateInit() {
+	for (int i = 0; i < components.size(); i++)
+		components[i]->LateInit();
+	//Call this transform's children
+	for (int i = 0; i < children.size(); i++)
+		children[i]->LateInit();
+}

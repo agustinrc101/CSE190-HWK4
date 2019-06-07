@@ -54,26 +54,12 @@ void Physics::draw(glm::mat4 headPose, glm::mat4 projection) {
 
 void Physics::update(double deltaTime) {
 	dynamicsWorld->stepSimulation((btScalar)deltaTime);
-
-	//print positions of all objects
-	for (int j = dynamicsWorld->getNumCollisionObjects() - 1; j >= 0; j--){
-		btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[j];
-		btRigidBody* body = btRigidBody::upcast(obj);
-		btTransform trans;
-		if (body && body->getMotionState()){
-			body->getMotionState()->getWorldTransform(trans);
-		}
-		else{
-			trans = obj->getWorldTransform();
-		}
-	}
 }
-void Physics::newRColPos(glm::vec3 position) {
+
+void Physics::newRColPos(glm::vec3 position, glm::quat orientation, glm::vec3 velocity) {
 	btTransform newPos;
-	btQuaternion ori;
-	ori = btQuaternion(0, 0, 0, 1);
 	newPos.setOrigin(btVector3(position.x, position.y, position.z));
-	newPos.setRotation(ori);
+	newPos.setRotation(bullet::fromGlm(orientation));
 	if (rHandCol) {
 		
 		//rHandCol->clearForces();
@@ -81,15 +67,15 @@ void Physics::newRColPos(glm::vec3 position) {
 		//rHandCol->setLinearVelocity(zeroVector);
 		
 			rHandCol->setWorldTransform(newPos);
+			rHandCol->setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
 		
 	}
 }
-void Physics::newLColPos(glm::vec3 position) {
+
+void Physics::newLColPos(glm::vec3 position, glm::quat orientation, glm::vec3 velocity) {
 	btTransform newPos;
-	btQuaternion ori;
-	ori = btQuaternion(0, 0, 0, 1);
 	newPos.setOrigin(btVector3(position.x, position.y, position.z));
-	newPos.setRotation(ori);
+	newPos.setRotation(bullet::fromGlm(orientation));
 	if (lHandCol) {
 		
 		//rHandCol->clearForces();
@@ -97,9 +83,9 @@ void Physics::newLColPos(glm::vec3 position) {
 		//rHandCol->setLinearVelocity(zeroVector);
 		
 			lHandCol->setWorldTransform(newPos);
-		
 	}
 }
+
 ///Adds box plane collider object
 btRigidBody* Physics::addPlaneCollider(float size, glm::vec3 position, glm::vec3 axis) {
 	float sideLength = size / 2.0f;
@@ -110,7 +96,7 @@ btRigidBody* Physics::addPlaneCollider(float size, glm::vec3 position, glm::vec3
 	//Position
 	btTransform groundTransform;
 	groundTransform.setIdentity();
-	groundTransform.setOrigin(btVector3(position.x - (sideLength * axis.x), position.y - (sideLength * axis.y), position.z - (sideLength * axis.z)));
+	groundTransform.setOrigin(btVector3(position.x + (sideLength * axis.x), position.y + (sideLength * axis.y), position.z + (sideLength * axis.z)));
 
 	//Specify mass (for gravity)
 	btScalar mass(0.0f);
@@ -122,13 +108,17 @@ btRigidBody* Physics::addPlaneCollider(float size, glm::vec3 position, glm::vec3
 	if (isDynamic)	
 		shape->calculateLocalInertia(mass, localInertia);
 
+	shape->setUserIndex(LAYER_NULL);
+
 	//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
-	//make its rigidbody accessible
-	shape->setUserPointer((void*)body);
+	//body->setRestitution(1.0f);
+	//body->setFriction(0.75f);	
+	//body->setRollingFriction(0.75f);
+
 	//add to collisionshapes
 	physics->collisionShapes.push_back(shape);
 	//add the body to the dynamics world
@@ -138,13 +128,11 @@ btRigidBody* Physics::addPlaneCollider(float size, glm::vec3 position, glm::vec3
 	return body;
 }
 
-btRigidBody* Physics::addStickCollider(float radius, glm::vec3 position) {
+btRigidBody* Physics::addStickCollider(glm::vec3 size, glm::vec3 position, bool leftHand) {
 	//create a dynamic rigidbody
 
-
-	//btCollisionShape* colShape = new btBoxShape(btVector3(1,1,1));
-	//btCollisionShape* shape = new btSphereShape(btScalar(radius));
-	btCollisionShape* shape = new btCylinderShape(btVector3(radius*3, 2.0f, radius*3));
+	btCollisionShape* shape = new btCylinderShape(bullet::fromGlm(size));
+	//btCollisionShape* shape = new btSphereShape(.1f);
 	//Create Dynamic Objects
 	btTransform startTransform;
 	startTransform.setIdentity();
@@ -158,18 +146,21 @@ btRigidBody* Physics::addStickCollider(float radius, glm::vec3 position) {
 	if (isDynamic)
 		shape->calculateLocalInertia(mass, localInertia);
 
+	shape->setUserIndex(LAYER_NULL);
+
 	startTransform.setOrigin(btVector3(position.x, position.y, position.z));
 
 	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
-	//body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-	if (radius == .1f)
+	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+	if (!leftHand)
 		rHandCol = body;
 	else
 		lHandCol = body;
-	
+	//body->setRestitution(1.0f);
+	//body->setFriction(0.75f);
 	//make its rigidbody accessible
 	shape->setUserPointer((void*)body);
 	//add to collisionshapes
@@ -194,7 +185,7 @@ btRigidBody* Physics::addSphereCollider(float radius, glm::vec3 position, float 
 	btTransform startTransform;
 	startTransform.setIdentity();
 
-	btScalar mass(Mass);
+	btScalar mass(1.0f);
 
 	//rigidbody is dynamic if and only if mass is non zero, otherwise static
 	bool isDynamic = (mass != 0.f);
@@ -203,6 +194,8 @@ btRigidBody* Physics::addSphereCollider(float radius, glm::vec3 position, float 
 	if (isDynamic)
 		shape->calculateLocalInertia(mass, localInertia);
 
+	shape->setUserIndex(LAYER_NULL);
+
 	startTransform.setOrigin(btVector3(position.x, position.y, position.z));
 
 	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
@@ -210,8 +203,7 @@ btRigidBody* Physics::addSphereCollider(float radius, glm::vec3 position, float 
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 	body->setActivationState(4);
-	//make its rigidbody accessible
-	shape->setUserPointer((void*)body);
+	//body->setFriction(0.75f);
 	//add to collisionshapes
 	physics->collisionShapes.push_back(shape);
 	//add the body to the dynamics world
@@ -240,6 +232,8 @@ btRigidBody* Physics::addBoxCollider(glm::vec3 size, glm::vec3 position, float M
 	if (isDynamic)
 		shape->calculateLocalInertia(mass, localInertia);
 
+	shape->setUserIndex(LAYER_NULL);
+
 	startTransform.setOrigin(btVector3(position.x, position.y, position.z));
 
 	//using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
@@ -247,8 +241,6 @@ btRigidBody* Physics::addBoxCollider(glm::vec3 size, glm::vec3 position, float M
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 
-	//make its rigidbody accessible
-	shape->setUserPointer((void*)body);
 	//add to collisionshapes
 	physics->collisionShapes.push_back(shape);
 	//add the body to the dynamics world

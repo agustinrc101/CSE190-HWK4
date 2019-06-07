@@ -24,6 +24,7 @@ public:
 	void update(double deltaTime);
 
 	void addTransform(Transform * t);
+	void LateInit();
 
 private:
 	Skybox * skybox;
