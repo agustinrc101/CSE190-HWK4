@@ -154,7 +154,8 @@ public:
 	static btRigidBody* getRigidbody(int index);
 	static int getCollisionObjectCount() { return physics->dynamicsWorld->getNumCollisionObjects(); }
 
-	void newRColPos(glm::vec3 position);
+	void newRColPos(glm::vec3 position, glm::vec3 velocity);
+	void newLColPos(glm::vec3 position, glm::vec3 velocity);
 
 private:
 	BulletDebugDrawer_OpenGL * debugDrawer;

@@ -1,6 +1,7 @@
 #include "Physics.h"
 #include "Input.h"
 btRigidBody* rHandCol;
+btRigidBody* lHandCol;
 Physics::~Physics() {
 	//delete dynamics world
 	delete dynamicsWorld;
@@ -67,7 +68,7 @@ void Physics::update(double deltaTime) {
 		}
 	}
 }
-void Physics::newRColPos(glm::vec3 position) {
+void Physics::newRColPos(glm::vec3 position, glm::vec3 velocity) {
 	btTransform newPos;
 	btQuaternion ori;
 	ori = btQuaternion(0, 0, 0, 1);
@@ -80,6 +81,24 @@ void Physics::newRColPos(glm::vec3 position) {
 		//rHandCol->setLinearVelocity(zeroVector);
 		
 			rHandCol->setWorldTransform(newPos);
+			
+		
+	}
+}
+void Physics::newLColPos(glm::vec3 position, glm::vec3 velocity) {
+	btTransform newPos;
+	btQuaternion ori;
+	ori = btQuaternion(0, 0, 0, 1);
+	newPos.setOrigin(btVector3(position.x, position.y, position.z));
+	newPos.setRotation(ori);
+	if (lHandCol) {
+		
+		//rHandCol->clearForces();
+		//btVector3 zeroVector(0, 0, 0);
+		//rHandCol->setLinearVelocity(zeroVector);
+		
+			lHandCol->setWorldTransform(newPos);
+			lHandCol->setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
 		
 	}
 }
@@ -110,6 +129,9 @@ btRigidBody* Physics::addPlaneCollider(float size, glm::vec3 position, glm::vec3
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
+	//body->setRestitution(1.0f);
+	body->setFriction(0.75f);
+	//body->setRollingFriction(0.75f);
 	//make its rigidbody accessible
 	shape->setUserPointer((void*)body);
 	//add to collisionshapes
@@ -126,13 +148,13 @@ btRigidBody* Physics::addStickCollider(float radius, glm::vec3 position) {
 
 
 	//btCollisionShape* colShape = new btBoxShape(btVector3(1,1,1));
-	btCollisionShape* shape = new btSphereShape(btScalar(radius));
-
+	//btCollisionShape* shape = new btSphereShape(btScalar(radius));
+	btCollisionShape* shape = new btSphereShape(.3);
 	//Create Dynamic Objects
 	btTransform startTransform;
 	startTransform.setIdentity();
 
-	btScalar mass(10.0f);
+	btScalar mass(100.0f);
 
 	//rigidbody is dynamic if and only if mass is non zero, otherwise static
 	bool isDynamic = (mass != 0.f);
@@ -148,7 +170,13 @@ btRigidBody* Physics::addStickCollider(float radius, glm::vec3 position) {
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-	rHandCol = body;
+	//body->setRestitution(1.0f);
+	body->setFriction(0.75f);
+	//body->setRollingFriction(0.75f);
+	if (radius == .1f)
+		rHandCol = body;
+	else
+		lHandCol = body;
 	
 	//make its rigidbody accessible
 	shape->setUserPointer((void*)body);
@@ -189,7 +217,10 @@ btRigidBody* Physics::addSphereCollider(float radius, glm::vec3 position, float 
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
-
+	body->setActivationState(4);
+	//body->setRestitution(1.0f);
+	//body->setFriction(0.75f);	
+	//body->setRollingFriction(0.75f);
 	//make its rigidbody accessible
 	shape->setUserPointer((void*)body);
 	//add to collisionshapes

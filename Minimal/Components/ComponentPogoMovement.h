@@ -96,7 +96,7 @@ private:
 	}
 
 	void handleArmDownState() {
-		if (collider->getPosition(false).y > -0.3f) {
+		if (collider->getPosition(false).y > -1.3f) {
 			hand->material->color = storedColor;
 			state = IDLE;
 		}
@@ -105,7 +105,7 @@ private:
 		glm::vec3 dir = prevHandPosition - hand->getPosition(false);
 		dir.y = 0;
 		dir.z = dir.z;
-
+	
 		transform->translate(dir);
 
 		//Lock

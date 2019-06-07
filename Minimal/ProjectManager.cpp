@@ -70,6 +70,11 @@ Transform * handR;
 Transform * otherHead;
 Transform * otherHandL;
 Transform * otherHandR;
+//Scene Management
+Scenes curScene = SCENE_MENU;
+
+ComponentRigidBodyStick * stickL;
+ComponentRigidBodyStick * stickR;
 
 
 //Debug
@@ -161,8 +166,8 @@ void ProjectManager::initGlobalScene() {
 		handR = new Transform(model_sphere, mat);
 		handR->name = "Right Hand";
 
-		ComponentRigidBodyStick * col = new ComponentRigidBodyStick(0.10f);
-		handR->addComponent(col);
+		stickR = new ComponentRigidBodyStick(0.10f);
+		handR->addComponent(stickR);
 
 		mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureStick());
 		Transform * stick = new Transform(model_stick, mat);
@@ -185,6 +190,9 @@ void ProjectManager::initGlobalScene() {
 		handL = new Transform(model_sphere, mat);
 		handL->name = "Left Hand";
 
+		stickL = new ComponentRigidBodyStick(0.10001f);
+		handL->addComponent(stickL);
+
 		mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureStick());
 		Transform * stick = new Transform(model_stick, mat);
 
@@ -206,19 +214,24 @@ void ProjectManager::initGlobalScene() {
 	}
 	//Player parent
 	{
+		//Crete transform
 		Material * mat = new Material();
 		player = new Transform();
 		player->name = "Player";
-
+		//Add children
 		player->addChild(head);
 		player->addChild(handL);
 		player->addChild(handR);
 
+		//Pogo Movement
 		ComponentPogoMovement * c1 = new ComponentPogoMovement(head, handR, colliderR);
 		player->addComponent(c1);
 		c1 = new ComponentPogoMovement(head, handL, colliderL);
 		player->addComponent(c1);
-		
+		//Player Rotation
+		ComponentPlayerRotation * c2 = new ComponentPlayerRotation();
+		player->addComponent(c2);
+		//Add to scene
 		sceneGlobal->addTransform(player);
 	}
 
@@ -228,6 +241,7 @@ void ProjectManager::initGlobalScene() {
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_GREEN));
 		otherHandR = new Transform(model_sphere, mat);
 		otherHandR->name = "Other Player's Right Hand";
+		otherHandR->isActive = false;
 		sceneGlobal->addTransform(otherHandR);
 
 	}
@@ -236,7 +250,7 @@ void ProjectManager::initGlobalScene() {
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_ORANGE));
 		otherHandL = new Transform(model_sphere, mat);
 		otherHandL->name = "Other Player's Left Hand";
-
+		otherHandL->isActive = false;
 		sceneGlobal->addTransform(otherHandL);
 	}
 	//Head setup
@@ -244,7 +258,7 @@ void ProjectManager::initGlobalScene() {
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_YELLOW));
 		otherHead = new Transform(model_cube, mat);
 		otherHead->name = "Other Player's Head";
-
+		otherHead->isActive = false;
 		sceneGlobal->addTransform(otherHead);
 	}
 }
@@ -318,7 +332,7 @@ void ProjectManager::initScene1() {
 		Transform * transform = new Transform(model_sphere, mat, false);
 
 		transform->scale(0.3f);
-		transform->translate(glm::vec3(-2, 100, -0.8f));
+		transform->translate(glm::vec3(-2, 10, -0.8f));
 
 		ComponentRigidBodySphere * col = new ComponentRigidBodySphere(0.3f);
 		transform->addComponent(col);
@@ -340,6 +354,21 @@ void ProjectManager::draw(glm::mat4 headPose, glm::mat4 projection, int eye) {
 	sceneGlobal->draw(headPose, projection);
 	sceneMenu->draw(headPose, projection);
 	scene1->draw(headPose, projection);
+
+	/*
+	switch (curScene) {
+	case(SCENE_MENU):
+		sceneMenu->draw(headPose, projection);
+		break;
+	case(SCENE_1):
+		scene1->draw(headPose, projection);
+		break;
+	default:
+		curScene = SCENE_MENU;
+		break;
+	}
+	*/
+
 	//Debug Draw
 	lines->draw(headPose, projection, glm::mat4(1));
 	physics->draw(headPose, projection);
@@ -347,12 +376,24 @@ void ProjectManager::draw(glm::mat4 headPose, glm::mat4 projection, int eye) {
 
 void ProjectManager::update(double deltaTime) {
 	physics->update(deltaTime);
-	
-	//TODO - handle scene changes (maybe use enum with a switch statement)
-	
 	sceneGlobal->update(deltaTime);
 	sceneMenu->update(deltaTime);
 	scene1->update(deltaTime);
+
+	//TODO - handle scene changes (maybe use enum with a switch statement)
+	/*
+	switch (curScene) {
+	case(SCENE_MENU):
+		sceneMenu->update(deltaTime);
+		break;
+	case(SCENE_1):
+		scene1->update(deltaTime);
+		break;
+	default:
+		curScene = SCENE_MENU;
+		break;
+	}
+	*/
 	
 	if (startedNetwork) {
 		sendPlayerData();
@@ -370,7 +411,9 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 	handR->setToWorld(right);
 	handR->scale(0.015f);
 
-	physics->newRColPos(handR->getCol()->getPosition(false));
+	physics->newRColPos(handR->getCol()->getPosition(false), stickR->getlinVelo());
+	physics->newLColPos(handL->getCol()->getPosition(false), stickL->getlinVelo());
+	
 }
 
 void ProjectManager::updateHead(glm::mat4 hmd) {
@@ -404,12 +447,12 @@ void ProjectManager::networkingSetup() {
 	if (startedNetwork) return;	
 
 	//If not, is user attempting to begin?
-	if (Input::getButtonA()) {	//TODO - change how to host/join server
+	if (Input::getButtonStickL()) {	//TODO - change how to host/join server
 		//Start Server
 		startedNetwork = true;
 		serverConnect();
 	}
-	else if (Input::getButtonX()) {
+	else if (Input::getButtonStickR()) {
 		//Connect to server
 		startedNetwork = true;
 		clientConnect();
@@ -437,23 +480,41 @@ void ProjectManager::sendPlayerData() {
 }
 
 void ProjectManager::receivePackets() {
-	std::vector<Packet> packets = client->getPlayerPackets();
+	//Init and Exit Packets
+	{
+		if (client->getInitPacket()) {	//Init Packet
+			otherHandL->isActive = true;
+			otherHandR->isActive = true;
+			otherHead->isActive = true;
+		}
+		else {							//Exit Packet
+			otherHandL->isActive = false;
+			otherHandR->isActive = false;
+			otherHead->isActive = false;
+		}
+	}
 
-	for (int i = 0; i < packets.size(); i++) {
-		Packet packet = packets[i];
-		switch (packet.dataType) {
-		case HEAD:
-			otherHead->setToWorld(packet.toWorld);
-			break;
-		case HAND_LEFT:
-			otherHandL->setToWorld(packet.toWorld);
-			break;
-		case HAND_RIGHT:
-			otherHandR->setToWorld(packet.toWorld);
-			break;
-		default:
-			std::cerr << "got trash" << std::endl;
-			break;
+	//Player Packets
+	{
+		std::vector<Packet> packets = client->getPlayerPackets();
+
+		for (int i = 0; i < packets.size(); i++) {
+			Packet packet = packets[i];
+			switch (packet.dataType) {
+			case HEAD:
+				otherHead->setToWorld(packet.toWorld);
+				break;
+			case HAND_LEFT:
+				otherHandL->setToWorld(packet.toWorld);
+				break;
+			case HAND_RIGHT:
+				otherHandR->setToWorld(packet.toWorld);
+				break;
+			default:
+				std::cerr << "got trash" << std::endl;
+				break;
+			}
 		}
 	}
 }
+

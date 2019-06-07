@@ -14,5 +14,6 @@
 #include "ComponentRigidBodyPlane.h"
 #include "ComponentRigidBodyBox.h"
 #include "ComponentRigidBodyStick.h"
+#include "ComponentPlayerRotation.h"
 
 #endif

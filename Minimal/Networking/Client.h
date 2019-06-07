@@ -25,13 +25,16 @@ public:
 
 	static void sendPacket(Packet packet);
 	void sendPacket();
+	void sendPacket(PacketType type);
 	void sendPlayerDataPacket(glm::mat4 t, PacketDataType type);
 
 	std::vector<Packet> getPlayerPackets();
+	bool getInitPacket() { return initReceived; }
 
 private:
 	SOCKET sock;
 	bool connected;
+	bool initReceived = false;
 	std::vector<Packet> packets;
 	std::vector<Packet> playerDataPackets;
 
