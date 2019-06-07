@@ -43,7 +43,6 @@ protected:
 
 		lastPos = transform->getPosition(false);
 
-
 		rigidbody = transform->rigidBody = Physics::addStickCollider(colliderSize, stickTransform->getPosition(), left);
 
 		if(left)

@@ -2,6 +2,7 @@
 #include "Input.h"
 btRigidBody* rHandCol;
 btRigidBody* lHandCol;
+
 Physics::~Physics() {
 	//delete dynamics world
 	delete dynamicsWorld;
@@ -118,10 +119,10 @@ btRigidBody* Physics::addPlaneCollider(float size, glm::vec3 position, glm::vec3
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
-	//body->setRestitution(1.0f);
+	body->setRestitution(1.0f);
 
 	body->setFriction(0.75f);
-	//body->setRollingFriction(0.75f);
+	body->setRollingFriction(0.075f);
 	//make its rigidbody accessible
 
 	//add to collisionshapes
@@ -144,7 +145,7 @@ btRigidBody* Physics::addStickCollider(glm::vec3 size, glm::vec3 position, bool 
 	btTransform startTransform;
 	startTransform.setIdentity();
 
-	btScalar mass(1.0f);
+	btScalar mass(10.0f);
 
 	//rigidbody is dynamic if and only if mass is non zero, otherwise static
 	bool isDynamic = (mass != 0.f);
