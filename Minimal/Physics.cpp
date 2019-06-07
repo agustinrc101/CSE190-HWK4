@@ -56,19 +56,6 @@ void Physics::update(double deltaTime) {
 	dynamicsWorld->stepSimulation((btScalar)deltaTime);
 }
 
-void Physics::newRColPos(glm::vec3 position, glm::quat orientation, glm::vec3 velocity) {
-	btTransform newPos;
-	newPos.setOrigin(btVector3(position.x, position.y, position.z));
-	newPos.setRotation(bullet::fromGlm(orientation));
-	if (rHandCol) {
-		
-		//rHandCol->clearForces();
-		//btVector3 zeroVector(0, 0, 0);
-		//rHandCol->setLinearVelocity(zeroVector);
-		
-			rHandCol->setWorldTransform(newPos);
-	}
-}
 
 void Physics::newLColPos(glm::vec3 position, glm::quat orientation, glm::vec3 velocity) {
 	btTransform newPos;
@@ -151,7 +138,7 @@ btRigidBody* Physics::addStickCollider(glm::vec3 size, glm::vec3 position, bool 
 
 	//btCollisionShape* colShape = new btBoxShape(btVector3(1,1,1));
 	//btCollisionShape* shape = new btSphereShape(btScalar(radius));
-	btCollisionShape* shape = new btSphereShape(.3);
+	btCollisionShape* shape = new btSphereShape(0.3);
 
 	//Create Dynamic Objects
 	btTransform startTransform;

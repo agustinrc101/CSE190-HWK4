@@ -369,7 +369,7 @@ void ProjectManager::initScene1() {
 
 		ComponentRigidBodySphere * col = new ComponentRigidBodySphere(0.3f);
 		transform->addComponent(col);
-		ComponentBallProperties * c1 = new ComponentBallProperties(handLStick, handRStick);
+		ComponentBallProperties * c1 = new ComponentBallProperties(stickL, stickR);
 		transform->addComponent(c1);
 
 		scene1->addTransform(transform);
@@ -449,8 +449,8 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 	handR->scale(0.015f);
 
 	//glm::vec3 offset = glm::vec3(-0.5f, 0, 0);  //Offset position
-	physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(right), handRStick->getlinVelo());
-	physics->newLColPos(handL->getChild(1)->getPosition(false), glm::quat_cast(left), handLStick->getlinVelo());
+	physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(right), stickR->getlinVelo());
+	physics->newLColPos(handL->getChild(1)->getPosition(false), glm::quat_cast(left), stickR->getlinVelo());
 }
 
 void ProjectManager::updateHead(glm::mat4 hmd) {

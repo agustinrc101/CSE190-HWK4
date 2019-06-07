@@ -35,10 +35,7 @@ protected:
 	Transform * transform;
 	Transform * stickTransform;
 	btRigidBody * rigidbody;
-	std::vector<glm::vec3> allPos;
-	glm::vec3 lastPos = glm::vec3(0);
-	glm::vec3 tempVelocity = glm::vec3(0);
-	bool firstFrame = true;
+
 	bool left;
 	glm::vec3 colliderSize;
 
