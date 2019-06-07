@@ -89,7 +89,7 @@ public:
 		else return getCompleteToWorld()[3];
 	}
 	glm::quat getRotation() { return glm::quat_cast(getToWorld()); }
-	Transform* getCol() { return children[children.size()-1]; }
+	Transform* getChild(int index) { if (index >= children.size() || index < 0) return 0; else return children[index]; }
 	glm::vec3 toLocalPoint(glm::vec3 v) {
 		glm::vec3 parentGlobalPos = getPosition(false);
 		parentGlobalPos = parentGlobalPos - (glm::vec3)getToWorld()[3];
@@ -100,6 +100,7 @@ public:
 	//Others
 	void addChild(Transform * child) { children.emplace_back(child); child->parent = this; }
 	void addComponent(Component * u);
+	void LateInit();
 
 private:
 	glm::mat4 toWorld = glm::mat4(1);

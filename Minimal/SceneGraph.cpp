@@ -26,3 +26,8 @@ void SceneGraph::update(double deltaTime) {
 void SceneGraph::addTransform(Transform * t) {
 	transforms.emplace_back(t);
 }
+
+void SceneGraph::LateInit() {
+	for (int i = 0; i < transforms.size(); i++)
+		transforms[i]->LateInit();
+}

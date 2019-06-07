@@ -70,12 +70,11 @@ Transform * handR;
 Transform * otherHead;
 Transform * otherHandL;
 Transform * otherHandR;
-//Scene Management
-Scenes curScene = SCENE_MENU;
-
+//Components
 ComponentRigidBodyStick * stickL;
 ComponentRigidBodyStick * stickR;
-
+//Scene Management
+Scenes curScene = SCENE_MENU;
 
 //Debug
 Lines * lines;
@@ -100,6 +99,8 @@ ProjectManager::~ProjectManager() {
 }
 
 ProjectManager::ProjectManager() {
+	project = this;
+
 	initBulletPhysics();
 	initShadersAndLighting();
 	initTextures();
@@ -166,14 +167,14 @@ void ProjectManager::initGlobalScene() {
 		handR = new Transform(model_sphere, mat);
 		handR->name = "Right Hand";
 
-		stickR = new ComponentRigidBodyStick(0.10f);
-		handR->addComponent(stickR);
-
 		mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureStick());
 		Transform * stick = new Transform(model_stick, mat);
 
 		stick->scale(glm::vec3(0.5f, 0.7f, 0.5f));
 		stick->translate(glm::vec3(0, -175, 0));
+
+		stickR = new ComponentRigidBodyStick(glm::vec3(0.10f, 0.10f, 0.10f), stick, false);
+		handR->addComponent(stickR);
 
 		colliderR = new Transform();
 
@@ -190,14 +191,14 @@ void ProjectManager::initGlobalScene() {
 		handL = new Transform(model_sphere, mat);
 		handL->name = "Left Hand";
 
-		stickL = new ComponentRigidBodyStick(0.10001f);
-		handL->addComponent(stickL);
-
 		mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureStick());
 		Transform * stick = new Transform(model_stick, mat);
 
 		stick->scale(glm::vec3(0.5f, 0.7f, 0.5f));
 		stick->translate(glm::vec3(0, -175, 0));
+
+		stickL = new ComponentRigidBodyStick(glm::vec3(0.10, 0.10f, 0.10f), stick, true);
+		handL->addComponent(stickL);
 
 		colliderL = new Transform();
 
@@ -261,6 +262,9 @@ void ProjectManager::initGlobalScene() {
 		otherHead->isActive = false;
 		sceneGlobal->addTransform(otherHead);
 	}
+
+
+	sceneGlobal->LateInit();
 }
 
 void ProjectManager::initMenuScene() {
@@ -272,6 +276,8 @@ void ProjectManager::initMenuScene() {
 	{
 
 	}
+
+	sceneMenu->LateInit();
 }
 
 void ProjectManager::initScene1() {
@@ -286,9 +292,34 @@ void ProjectManager::initScene1() {
 		transform->translate(glm::vec3(0, -1.7f, 0));	//ACTUAL GROUND POS
 		//transform->translate(glm::vec3(0, -.4f, 0));	//DEBUG GROUND POS
 		
-		ComponentRigidBodyPlane * col = new ComponentRigidBodyPlane(100);
+		ComponentRigidBodyPlane * col = new ComponentRigidBodyPlane(40);
 		transform->addComponent(col);
 
+		scene1->addTransform(transform);
+	}
+	{
+		Transform * transform = new Transform();
+		transform->translate(glm::vec3(20, 0, 0));
+		ComponentRigidBodyPlane * plane = new ComponentRigidBodyPlane(40, AXIS_X_POSITIVE);
+		//transform->addComponent(plane);
+		scene1->addTransform(transform);
+
+		transform = new Transform();
+		transform->translate(glm::vec3(-20, 0, 0));
+		plane = new ComponentRigidBodyPlane(40, AXIS_X_NEGATIVE);
+		//transform->addComponent(plane);
+		scene1->addTransform(transform);
+
+		transform = new Transform();
+		transform->translate(glm::vec3(0, 0, 20));
+		plane = new ComponentRigidBodyPlane(40, AXIS_Z_POSITIVE);
+		//transform->addComponent(plane);
+		scene1->addTransform(transform);
+
+		transform = new Transform();
+		transform->translate(glm::vec3(0, 0, -20));
+		plane = new ComponentRigidBodyPlane(40, AXIS_Z_NEGATIVE);
+		//transform->addComponent(plane);
 		scene1->addTransform(transform);
 	}
 	{
@@ -332,13 +363,19 @@ void ProjectManager::initScene1() {
 		Transform * transform = new Transform(model_sphere, mat, false);
 
 		transform->scale(0.3f);
-		transform->translate(glm::vec3(-2, 10, -0.8f));
+
+    //transform->translate(glm::vec3(-2, 10, -0.8f));
+		transform->translate(glm::vec3(0, 10, -1.f));
 
 		ComponentRigidBodySphere * col = new ComponentRigidBodySphere(0.3f);
 		transform->addComponent(col);
+		ComponentBallProperties * c1 = new ComponentBallProperties(handLStick, handRStick);
+		transform->addComponent(c1);
 
 		scene1->addTransform(transform);
 	}
+
+	scene1->LateInit();
 }
 
 void ProjectManager::initAudio() {
@@ -411,9 +448,9 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 	handR->setToWorld(right);
 	handR->scale(0.015f);
 
-	physics->newRColPos(handR->getCol()->getPosition(false), stickR->getlinVelo());
-	physics->newLColPos(handL->getCol()->getPosition(false), stickL->getlinVelo());
-	
+	//glm::vec3 offset = glm::vec3(-0.5f, 0, 0);  //Offset position
+	physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(right), handRStick->getlinVelo());
+	physics->newLColPos(handL->getChild(1)->getPosition(false), glm::quat_cast(left), handLStick->getlinVelo());
 }
 
 void ProjectManager::updateHead(glm::mat4 hmd) {
@@ -431,6 +468,14 @@ glm::vec3 ProjectManager::getPlayerPosition() {
 
 glm::quat ProjectManager::getPlayerRotation() {
 	return player->getRotation();
+}
+
+glm::vec3 ProjectManager::getLeftHandPosition() {
+	return handL->getPosition(false);
+}
+
+glm::vec3 ProjectManager::getRightHandPosition() {
+	return handR->getPosition(false);
 }
 
 void ProjectManager::testing() {

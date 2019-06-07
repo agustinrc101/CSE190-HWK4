@@ -13,13 +13,15 @@
 
 class ComponentRigidBodyStick : public Component {
 public:
-	ComponentRigidBodyStick(float size) : colliderSize(size) {}
+	ComponentRigidBodyStick(glm::vec3 size, Transform * stick, bool leftHand) : colliderSize(size), stickTransform(stick), left(leftHand) {}
 	~ComponentRigidBodyStick() {}
 	int up = 0;
 	glm::vec3 velo;
+  
 	void Init(Transform * p) {
 		transform = p;
 		Start();
+		
 	}
 
 	void Update(double deltaTime) override {
@@ -31,29 +33,42 @@ public:
 	}
 protected:
 	Transform * transform;
+	Transform * stickTransform;
 	btRigidBody * rigidbody;
 	std::vector<glm::vec3> allPos;
 	glm::vec3 lastPos = glm::vec3(0);
 	glm::vec3 tempVelocity = glm::vec3(0);
-
 	bool firstFrame = true;
-	float colliderSize;
+	bool left;
+	glm::vec3 colliderSize;
 
 	void Start() override {
-		rigidbody = transform->rigidBody = Physics::addStickCollider(colliderSize, transform->getPosition(false));
+
+		lastPos = transform->getPosition(false);
+
+
+		rigidbody = transform->rigidBody = Physics::addStickCollider(colliderSize, stickTransform->getPosition(), left);
+
+		if(left)
+			rigidbody->getCollisionShape()->setUserIndex(LAYER_STICK_LEFT);
+		else
+			rigidbody->getCollisionShape()->setUserIndex(LAYER_STICK_RIGHT);
 	}
 
 
+private:
+	std::vector<glm::vec3> allPos;
+	glm::vec3 positions[10] = {glm::vec3(0),glm::vec3(0),glm::vec3(0),glm::vec3(0),glm::vec3(0),glm::vec3(0),glm::vec3(0),glm::vec3(0),glm::vec3(0),glm::vec3(0)};
+	glm::vec3 lastPos = glm::vec3(0); 
+	glm::vec3 tempVelocity = glm::vec3(0);
+	
+	bool firstFrame = true;
 
 	glm::vec3 getVelocity() {						//CALCULATES VELOCITY (POSITION OVER A SECOND
-
-
-
 		if ((clock() / CLOCKS_PER_SEC) * 15 > up) {
 			//std::cout << clock() / CLOCKS_PER_SEC << endl;
 			up++;
 			for (int i = 0; i < allPos.size(); i++) {
-				
 				tempVelocity += allPos[i];
 			}
 			allPos.clear();

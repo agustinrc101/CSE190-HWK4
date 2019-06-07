@@ -12,7 +12,7 @@
 
 class ComponentRigidBodyPlane : public Component {
 public:
-	ComponentRigidBodyPlane(float size) : colliderSize(size) {}
+	ComponentRigidBodyPlane(float size, glm::vec3 Axis=AXIS_Y_NEGATIVE) : colliderSize(size), axis(Axis) {}
 	~ComponentRigidBodyPlane() {}
 
 	void Init(Transform * p) {
@@ -29,9 +29,10 @@ protected:
 	btRigidBody * rigidbody;
 
 	float colliderSize;
+	glm::vec3 axis;
 
 	void Start() override {
-		rigidbody = transform->rigidBody = Physics::addPlaneCollider(colliderSize, transform->getPosition(false));
+		rigidbody = transform->rigidBody = Physics::addPlaneCollider(colliderSize, transform->getPosition(false), axis);
 	}
 
 	void update() {
