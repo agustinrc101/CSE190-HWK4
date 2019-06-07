@@ -173,7 +173,7 @@ void ProjectManager::initGlobalScene() {
 		stick->scale(glm::vec3(0.5f, 0.7f, 0.5f));
 		stick->translate(glm::vec3(0, -175, 0));
 
-		stickR = new ComponentRigidBodyStick(glm::vec3(0.10f, 0.10f, 0.10f), stick, false);
+		stickR = new ComponentRigidBodyStick(glm::vec3(0.10f, 0.10f, 0.10f), false);
 		handR->addComponent(stickR);
 
 		colliderR = new Transform();
@@ -197,7 +197,7 @@ void ProjectManager::initGlobalScene() {
 		stick->scale(glm::vec3(0.5f, 0.7f, 0.5f));
 		stick->translate(glm::vec3(0, -175, 0));
 
-		stickL = new ComponentRigidBodyStick(glm::vec3(0.10, 0.10f, 0.10f), stick, true);
+		stickL = new ComponentRigidBodyStick(glm::vec3(0.10, 0.10f, 0.10f), true);
 		handL->addComponent(stickL);
 
 		colliderL = new Transform();
@@ -263,7 +263,6 @@ void ProjectManager::initGlobalScene() {
 		sceneGlobal->addTransform(otherHead);
 	}
 
-
 	sceneGlobal->LateInit();
 }
 
@@ -323,49 +322,13 @@ void ProjectManager::initScene1() {
 		scene1->addTransform(transform);
 	}
 	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_RED), Textures::getTextureSteam());
-		Transform * transform = new Transform(model_sphere, mat, false);
-
-		//transform->scale(0.1f);
-		transform->translate(glm::vec3(0, 0, -10));
-
-		ComponentRotate * c = new ComponentRotate(AXIS_X_POSITIVE + AXIS_Z_NEGATIVE);
-		transform->addComponent(c);
-
-		scene1->addTransform(transform);
-	}
-	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_BLUE), Textures::getTextureGrip1Albedo());
-		Transform * transform = new Transform(model_cube, mat);
-
-		transform->scale(0.1f);
-		transform->translate(glm::vec3(3, 0, -5));
-
-		ComponentRotate * c = new ComponentRotate(AXIS_Y_POSITIVE);
-		transform->addComponent(c);
-
-		scene1->addTransform(transform);
-	}
-	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureGrip2Albedo());
-		Transform * transform = new Transform(model_cube, mat, false);
-
-		transform->scale(0.1f);
-		transform->translate(glm::vec3(-1, 1, 0));
-
-		ComponentRigidBodyBox * col = new ComponentRigidBodyBox(glm::vec3(0.2f));
-		transform->addComponent(col);
-
-		scene1->addTransform(transform);
-	}
-	{
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_CYAN), Textures::getTextureSteam());
 		Transform * transform = new Transform(model_sphere, mat, false);
 
 		transform->scale(0.3f);
 
-    //transform->translate(glm::vec3(-2, 10, -0.8f));
-		transform->translate(glm::vec3(0, 10, -1.f));
+		//transform->translate(glm::vec3(-2, 10, -0.8f));
+		transform->translate(glm::vec3(-1.5, 0, -0.7f));
 
 		ComponentRigidBodySphere * col = new ComponentRigidBodySphere(0.3f);
 		transform->addComponent(col);
