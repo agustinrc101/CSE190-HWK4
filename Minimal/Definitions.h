@@ -20,12 +20,14 @@
 #define TEXTURE_GRIP2_ALBEDO "textures/Grip2/Grip2_Albedo.png"
 #define TEXTURE_GRASS "textures/grass.jpg"
 #define TEXTURE_STICK "models/stick/stick.jpg"
+#define TEXTURE_ROBOT "models/robot/ROBOT.png"
 
 //Models
 #define MODEL_SPHERE "models/sphere.obj"
 #define MODEL_CUBE "models/cube.obj"
 #define MODEL_PLANE "models/plane.obj"
 #define MODEL_STICK "models/stick/stick.obj"
+#define MODEL_ROBOT "models/robot/ROBOT.obj"
 
 //Colors
 #define COLOR_RED 1, 0, 0
