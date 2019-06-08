@@ -456,9 +456,8 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 	handR->scale(glm::vec3(0.015f));
 
 
-	//glm::vec3 offset = glm::vec3(-0.5f, 0, 0);  //Offset position
-	physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(glm::mat3(handR->getChild(1)->getCompleteToWorld())), stickR->getlinVelo());
-	physics->newLColPos(handL->getChild(1)->getPosition(false), glm::quat_cast(glm::mat3(handR->getChild(1)->getCompleteToWorld())), stickR->getlinVelo());
+	physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(player->getCompleteToWorld() * right), stickR->getlinVelo());
+	physics->newLColPos(handL->getChild(1)->getPosition(false), glm::quat_cast(player->getCompleteToWorld() * left), stickL->getlinVelo());
 }
 
 void ProjectManager::updateHead(glm::mat4 hmd) {
