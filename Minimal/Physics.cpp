@@ -253,7 +253,7 @@ btRigidBody* Physics::addBoxCollider(glm::vec3 size, glm::vec3 position, float M
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
-
+	
 	//add to collisionshapes
 	physics->collisionShapes.push_back(shape);
 	//add the body to the dynamics world

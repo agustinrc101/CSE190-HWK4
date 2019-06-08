@@ -40,6 +40,7 @@ GLuint Textures::textureGrip1Albedo = 0;
 GLuint Textures::textureGrip2Albedo = 0;
 GLuint Textures::textureStick = 0;
 GLuint Textures::textureGrass = 0;
+GLuint Textures::textureRobot = 0;
 //Init Networking
 Client * Client::client = 0;
 Client * client;
@@ -71,7 +72,7 @@ Transform * otherHead;
 Transform * otherHandL;
 Transform * otherHandR;
 //Components
-glm::vec3 stickSize = glm::vec3(0.075f, 0.6f, 0.075f);
+glm::vec3 stickSize = glm::vec3(0.075f, 1.0f, 0.075f);
 ComponentRigidBodyStick * stickL;
 ComponentRigidBodyStick * stickR;
 //Scene Management
