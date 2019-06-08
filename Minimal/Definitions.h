@@ -30,6 +30,7 @@
 #define MODEL_ROBOT "models/robot/ROBOT.obj"
 #define MODEL_HAND_RIGHT "models/hand/handR.obj"
 #define MODEL_HAND_LEFT "models/hand/handL.obj"
+#define MODEL_GOAL "models/goal/goal.obj"
 
 //Audio Files
 #define AUDIO_FUNERAL "Sound/67032__robinhood76__00892-funeral-silencium-trumpet.wav"

@@ -31,28 +31,20 @@ public:
 
 			if ((obA->getCollisionShape()->getUserIndex() == LAYER_BALL) || (obB->getCollisionShape()->getUserIndex() == LAYER_BALL)) {
 				if ((obA->getCollisionShape()->getUserIndex() == LAYER_STICK_LEFT) || (obB->getCollisionShape()->getUserIndex() == LAYER_STICK_LEFT)) {
-					//rigidbody->setLinearVelocity(rigidbody->getLinearVelocity() + bullet::fromGlm(ProjectManager::project->getStickVelocity(true)));
-					
 					if(!hasCollidedL)
 						rigidbody->setLinearVelocity(rigidbody->getLinearVelocity() + bullet::fromGlm(ProjectManager::project->getStickVelocity(true)));
 					hasCollidedL = true;
 					isCollidingL = true;
 				}
 				else if((obA->getCollisionShape()->getUserIndex() == LAYER_STICK_RIGHT) || (obB->getCollisionShape()->getUserIndex() == LAYER_STICK_RIGHT)) {
-					//rigidbody->setLinearVelocity(rigidbody->getLinearVelocity() + bullet::fromGlm(ProjectManager::project->getStickVelocity(false)));
 					if (!hasCollidedR)
 						rigidbody->setLinearVelocity(rigidbody->getLinearVelocity() + bullet::fromGlm(ProjectManager::project->getStickVelocity(false)));
 					hasCollidedR = true;
 					isCollidingR = true;
 				}
-				else {
-					//isCollidingL = isCollidingR = false;
-				}
 			}
 			///////GROUND MOVEMENT COLLISION/////////
 			if ((obA->getCollisionShape()->getUserIndex() == LAYER_GROUND_MOVEMENT) || (obB->getCollisionShape()->getUserIndex() == LAYER_GROUND_MOVEMENT)) {
-				//std::cout << "Object A: " << obA->getCollisionShape()->getUserIndex() << ", Object B: " << obB->getCollisionShape()->getUserIndex() << std::endl;
-
 				if ((obA->getCollisionShape()->getUserIndex() == LAYER_STICK_LEFT) || (obB->getCollisionShape()->getUserIndex() == LAYER_STICK_LEFT)) {
 					stickL->touchingGround = true;
 					//cout << "ON GROUND" << endl;
@@ -73,12 +65,10 @@ public:
 		}
 
 		if (!isCollidingL && hasCollidedL) {
-			//rigidbody->setLinearVelocity(rigidbody->getLinearVelocity() + bullet::fromGlm(ProjectManager::project->getStickVelocity(true)));
 			hasCollidedL = false;
 			//hasCollidedR = false;
 		}
 		else if (!isCollidingR && hasCollidedR) {
-			//rigidbody->setLinearVelocity(rigidbody->getLinearVelocity() + bullet::fromGlm(ProjectManager::project->getStickVelocity(false)));
 			hasCollidedR = false;
 		}
 
@@ -109,9 +99,9 @@ protected:
 
 	void Start() override {
 		rigidbody = transform->rigidBody;
-		rigidbody->setRestitution(0.5f);		//Bouncyness
-		rigidbody->setFriction(0.5f);			//Friction
-		//rigidbody->setRollingFriction(0.075f);	//Rolling Friction
+		rigidbody->setRestitution(0.5f);			//Bouncyness
+		rigidbody->setFriction(0.5f);				//Friction
+		//rigidbody->setRollingFriction(0.075f);		//Rolling Friction
 
 		rigidbody->getCollisionShape()->setUserIndex(LAYER_BALL);
 	}

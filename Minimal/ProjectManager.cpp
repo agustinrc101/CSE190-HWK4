@@ -67,10 +67,11 @@ Model * model_stick;
 Model * model_robot;
 Model * model_hand_left;
 Model * model_hand_right;
+Model * model_goal;
 //Declare Important Objects
 Transform * player;
 Transform * head;
-Transform * handL; 
+Transform * handL;
 Transform * handR;
 Transform * handLModel;
 Transform * handRModel;
@@ -78,6 +79,7 @@ Transform * otherHead;
 Transform * otherHandL;
 Transform * otherHandR;
 //Components
+glm::vec3 groundPosition = glm::vec3(0, -1.7f, 0);
 glm::vec3 stickSize = glm::vec3(0.075f, 1.0f, 0.075f);
 ComponentRigidBodyStick * stickL;
 ComponentRigidBodyStick * stickR;
@@ -133,7 +135,7 @@ void ProjectManager::initShadersAndLighting() {
 	Shaders::setSkyboxShader(LoadShaders(SHADER_SKYBOX_VERTEX, SHADER_SKYBOX_FRAGMENT));
 }
 
-void ProjectManager::initTextures(){
+void ProjectManager::initTextures() {
 	Textures::setTextureSkybox(LoadCubeMap(TEXTURE_SKYBOX_LEFT));
 	Textures::setTextureSteam(LoadTextures(TEXTURE_CUBE_STEAM));
 	Textures::setTextureGrip1Albedo(LoadTextures(TEXTURE_GRIP1_ALBEDO));
@@ -150,6 +152,7 @@ void ProjectManager::initModels() {
 	model_robot = new Model(MODEL_ROBOT);
 	model_hand_left = new Model(MODEL_HAND_LEFT);
 	model_hand_right = new Model(MODEL_HAND_RIGHT);
+	model_goal = new Model(MODEL_GOAL);
 }
 
 void ProjectManager::initObjects() {
@@ -192,10 +195,10 @@ void ProjectManager::initGlobalScene() {
 
 		colliderR->scale(5);
 		colliderR->translate(glm::vec3(0, -20, 0));
-		
+
 		handR->addChild(stick);
 		handR->addChild(colliderR);
-		
+
 	}
 	//Left Hand setup
 	{
@@ -305,32 +308,20 @@ void ProjectManager::initScene1() {
 	//==================================
 	//Initialize scene1 objects here
 	//==================================
+	//Gound
 	{
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureGrass());
 		Transform * transform = new Transform(model_plane, mat);
 
-		transform->translate(glm::vec3(0, 1.7f, 0));	//ACTUAL GROUND POS
+		transform->translate(groundPosition);	//ACTUAL GROUND POS
 		//transform->translate(glm::vec3(0, -.4f, 0));	//DEBUG GROUND POS
-		
+
 		ComponentRigidBodyPlane * col = new ComponentRigidBodyPlane(40);
 		transform->addComponent(col);
 
 		scene1->addTransform(transform);
 	}
-
-	//{
-	//	Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureGrass());	//Collider for stick for movement
-	//	Transform * transform = new Transform(model_plane, mat);
-
-	//	transform->translate(glm::vec3(0, -2.0f, 0));	//ACTUAL GROUND POS
-	//	//transform->translate(glm::vec3(0, -.4f, 0));	//DEBUG GROUND POS
-
-	//	ComponentRigidBodyPlane * col = new ComponentRigidBodyPlane(41);
-	//	transform->addComponent(col);
-
-	//	scene1->addTransform(transform);
-	//}
-
+	//Walls
 	{
 		Transform * transform = new Transform();
 		transform->translate(glm::vec3(20, 0, 0));
@@ -356,6 +347,7 @@ void ProjectManager::initScene1() {
 		//transform->addComponent(plane);
 		scene1->addTransform(transform);
 	}
+	//Ball
 	{
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_CYAN), Textures::getTextureSteam());
 		Transform * transform = new Transform(model_sphere, mat, false);
@@ -372,14 +364,14 @@ void ProjectManager::initScene1() {
 
 		scene1->addTransform(transform);
 	}
-
+	//Goalpost
 	{
-		//Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_GRAY));
-		//Transform * t = new Transform(model_hand, mat);
+		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_RED));
+		Transform * t = new Transform(model_goal, mat);
 
-		//t->translate(glm::vec3(0, 0, -0.2));
-		
-		//scene1->addTransform(t);
+		t->translate(glm::vec3(0, 0, -3) + groundPosition);
+
+		scene1->addTransform(t);
 	}
 
 	scene1->LateInit();
@@ -438,12 +430,12 @@ void ProjectManager::update(double deltaTime) {
 		break;
 	}
 	*/
-	
+
 	if (startedNetwork) {
 		sendPlayerData();
 		receivePackets();
 	}
-	else 
+	else
 		networkingSetup();
 
 	testing();
@@ -456,12 +448,12 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 		handRModel->setToWorld(right);
 		handRModel->scale(0.25f);
 	}
-	
+
 	handL->setToWorld(left);
 	handL->scale(glm::vec3(0.015f));
 	handR->setToWorld(right);
 	handR->scale(glm::vec3(0.015f));
-	
+
 
 	//glm::vec3 offset = glm::vec3(-0.5f, 0, 0);  //Offset position
 	physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(right), stickR->getlinVelo());
@@ -473,7 +465,7 @@ void ProjectManager::updateHead(glm::mat4 hmd) {
 	head->scale(0.1f);
 }
 
-void ProjectManager::updateLightCameraPos(glm::mat4 eye){
+void ProjectManager::updateLightCameraPos(glm::mat4 eye) {
 	Light::setCameraPos(eye[3]);
 }
 
@@ -511,7 +503,7 @@ void ProjectManager::testing() {
 
 void ProjectManager::networkingSetup() {
 	//Has networking setup begun?
-	if (startedNetwork) return;	
+	if (startedNetwork) return;
 
 	//If not, is user attempting to begin?
 	if (Input::getButtonStickL()) {	//TODO - change how to host/join server
@@ -535,15 +527,15 @@ void ProjectManager::clientConnect() {
 	client->joinServer();
 }
 
-void ProjectManager::stopNetworking(){
+void ProjectManager::stopNetworking() {
 	startedNetwork = false;
 
 }
 
 void ProjectManager::sendPlayerData() {
-		client->sendPlayerDataPacket(head->getCompleteToWorld(), HEAD);
-		client->sendPlayerDataPacket(handL->getCompleteToWorld(), HAND_LEFT);
-		client->sendPlayerDataPacket(handR->getCompleteToWorld(), HAND_RIGHT);
+	client->sendPlayerDataPacket(head->getCompleteToWorld(), HEAD);
+	client->sendPlayerDataPacket(handL->getCompleteToWorld(), HAND_LEFT);
+	client->sendPlayerDataPacket(handR->getCompleteToWorld(), HAND_RIGHT);
 }
 
 void ProjectManager::receivePackets() {
@@ -584,6 +576,8 @@ void ProjectManager::receivePackets() {
 		}
 	}
 }
+
+
 
 
 
