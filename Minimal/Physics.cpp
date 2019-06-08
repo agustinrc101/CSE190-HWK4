@@ -123,7 +123,7 @@ btRigidBody* Physics::addPlaneCollider(float size, glm::vec3 position, glm::vec3
 	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
 	
 	body->setRestitution(1.0f);
-	body->setFriction(0.4f);
+	body->setFriction(0.6f);
 	body->setRollingFriction(0.05f);
 	body->setSpinningFriction(0.15f);
 
@@ -166,7 +166,7 @@ btRigidBody* Physics::addStickCollider(glm::vec3 size, glm::vec3 position, bool 
 	btRigidBody* body = new btRigidBody(rbInfo);
 	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
   
-	body->setRestitution(1.0f);
+	//body->setRestitution(1.0f);
 	//body->setFriction(.10f);
   
 	if (!leftHand)
@@ -212,7 +212,7 @@ btRigidBody* Physics::addSphereCollider(float radius, glm::vec3 position, float 
 	btRigidBody* body = new btRigidBody(rbInfo);
 	body->setActivationState(4);
 	
-	body->setRestitution(1.0f);
+	//body->setRestitution(1.0f);
 	//body->setFriction(0.5f);	
 	
 	//body->setRollingFriction(0.05f);

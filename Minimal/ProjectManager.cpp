@@ -71,6 +71,7 @@ Transform * otherHead;
 Transform * otherHandL;
 Transform * otherHandR;
 //Components
+glm::vec3 stickSize = glm::vec3(0.075f, 0.6f, 0.075f);
 ComponentRigidBodyStick * stickL;
 ComponentRigidBodyStick * stickR;
 //Scene Management
@@ -158,6 +159,7 @@ void ProjectManager::initGlobalScene() {
 
 	Transform * colliderR;
 	Transform * colliderL;
+
 	//==================================
 	//Initialize sceneGlobal objects here
 	//==================================
@@ -173,7 +175,7 @@ void ProjectManager::initGlobalScene() {
 		stick->scale(glm::vec3(0.5f, 0.7f, 0.5f));
 		stick->translate(glm::vec3(0, -175, 0));
 
-		stickR = new ComponentRigidBodyStick(glm::vec3(.3f,.6f, .3f), false);
+		stickR = new ComponentRigidBodyStick(stickSize, false);
 		handR->addComponent(stickR);
 
 		colliderR = new Transform();
@@ -197,7 +199,7 @@ void ProjectManager::initGlobalScene() {
 		stick->scale(glm::vec3(0.5f, 0.7f, 0.5f));
 		stick->translate(glm::vec3(0, -175, 0));
 
-		stickL = new ComponentRigidBodyStick(glm::vec3(.3f, .6f, .3f), true);
+		stickL = new ComponentRigidBodyStick(stickSize, true);
 		handL->addComponent(stickL);
 
 		colliderL = new Transform();
@@ -451,11 +453,6 @@ glm::vec3 ProjectManager::getStickVelocity(bool left) {
 }
 
 void ProjectManager::testing() {
-	//Testing code here
-	if (Input::getButtonStickL()) {
-		print(handL->getToWorld());
-		print(handL->getCompleteToWorld());
-	}
 
 }
 
