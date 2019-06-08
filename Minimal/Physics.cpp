@@ -139,7 +139,7 @@ btRigidBody* Physics::addPlaneCollider(float size, glm::vec3 position, glm::vec3
 btRigidBody* Physics::addStickCollider(glm::vec3 size, glm::vec3 position, bool leftHand) {
 	//create a dynamic rigidbody
 
-	btCollisionShape* shape = new btBoxShape(bullet::fromGlm(1.5f * size));
+	btCollisionShape* shape = new btBoxShape(bullet::fromGlm(size));
 	//btCollisionShape* shape = new btSphereShape(btScalar(radius));
 	//btCollisionShape* shape = new btSphereShape(0.3);
 

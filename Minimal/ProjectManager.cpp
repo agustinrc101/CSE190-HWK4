@@ -325,12 +325,12 @@ void ProjectManager::initScene1() {
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_CYAN), Textures::getTextureSteam());
 		Transform * transform = new Transform(model_sphere, mat, false);
 
-		transform->scale(0.5f);
+		transform->scale(0.4f);
 
 		//transform->translate(glm::vec3(-2, 10, -0.8f));
 		transform->translate(glm::vec3(-1.5, 0, -0.7f));
 
-		ComponentRigidBodySphere * col = new ComponentRigidBodySphere(0.5f);
+		ComponentRigidBodySphere * col = new ComponentRigidBodySphere(0.4f);
 		transform->addComponent(col);
 		ComponentBallProperties * c1 = new ComponentBallProperties(stickL, stickR);
 		transform->addComponent(c1);

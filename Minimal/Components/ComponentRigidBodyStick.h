@@ -30,7 +30,7 @@ public:
 
 	glm::vec3 getlinVelo() {
 		//velo.y = 0.1f;
-		velo = 2.0f * 10.0f * velo;
+		velo = .5f * 10.0f * velo;
 	
 		return velo;
 	}
@@ -43,7 +43,7 @@ protected:
 
 	void Start() override {
 
-		lastPos = transform->getPosition(false);
+		lastPos = glm::vec3(0);
 
 		rigidbody = transform->rigidBody = Physics::addStickCollider(colliderSize, transform->getPosition(), left);
 
@@ -76,10 +76,10 @@ private:
 				tempVelocity += allPos[i];
 			}
 			allPos.clear();
-			allPos.push_back(transform->getPosition(false) - lastPos);
+			allPos.push_back(glm::vec3(bullet::ToGlm(rigidbody->getWorldTransform())[3]) - lastPos);
 		}
 		else {
-			allPos.push_back(transform->getPosition(false) - lastPos);
+			allPos.push_back(glm::vec3(bullet::ToGlm(rigidbody->getWorldTransform())[3]) - lastPos);
 		}
 		
 		return tempVelocity;
@@ -93,8 +93,11 @@ private:
 		velo = getVelocity(deltaTime);								//GETS VELOCITY
 	
 		if (!firstFrame)										//GETS LAST FRAME
-			lastPos = transform->getPosition(false);
+			lastPos = bullet::ToGlm(rigidbody->getWorldTransform())[3];
+			//lastPos = transform->getPosition(false);
 
+		
+		
 		firstFrame = false;
 
 		
