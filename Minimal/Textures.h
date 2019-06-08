@@ -20,7 +20,6 @@ class Textures{
 		static void setTextureGrass(GLuint t) { textureGrass = t; }
 		static void setTextureRobot(GLuint t) { textureRobot = t; }
 
-
 		//Setters
 		static GLuint getTextureSkybox(){ return textureSkybox; }
 		static GLuint getTextureSteam() { return textureSteam; }

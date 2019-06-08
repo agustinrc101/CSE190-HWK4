@@ -130,7 +130,7 @@ Sounds::Sounds() {
 	//	// check for errors
 	//}
 	int channel, sampleRate, bps, size;
-	char* data = loadWAV("67032__robinhood76__00892-funeral-silencium-trumpet.wav", channel, sampleRate, bps, size);
+	char* data = loadWAV("Sound/67032__robinhood76__00892-funeral-silencium-trumpet.wav", channel, sampleRate, bps, size);
 	ALCdevice* device = alcOpenDevice(NULL);
 	if (device == NULL)
 	{

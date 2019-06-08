@@ -1,4 +1,3 @@
-#pragma once
 #ifndef H_Sounds
 #define H_Sounds
 #pragma once

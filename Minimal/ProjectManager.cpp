@@ -41,6 +41,7 @@ GLuint Textures::textureGrip2Albedo = 0;
 GLuint Textures::textureStick = 0;
 GLuint Textures::textureGrass = 0;
 GLuint Textures::textureRobot = 0;
+
 //Init Networking
 Client * Client::client = 0;
 Client * client;
@@ -63,11 +64,15 @@ Model * model_sphere;
 Model * model_cube;
 Model * model_plane;
 Model * model_stick;
+Model * model_robot;
+Model * model_hand;
 //Declare Important Objects
 Transform * player;
 Transform * head;
 Transform * handL; 
 Transform * handR;
+Transform * handLModel;
+Transform * handRModel;
 Transform * otherHead;
 Transform * otherHandL;
 Transform * otherHandR;
@@ -141,6 +146,8 @@ void ProjectManager::initModels() {
 	model_cube = new Model(MODEL_CUBE);
 	model_plane = new Model(MODEL_PLANE);
 	model_stick = new Model(MODEL_STICK);
+	model_robot = new Model(MODEL_ROBOT);
+	model_hand = new Model(MODEL_HAND);
 }
 
 void ProjectManager::initObjects() {
@@ -216,9 +223,15 @@ void ProjectManager::initGlobalScene() {
 		head = new Transform();
 		head->name = "Head";
 	}
+	//Hand models
+	{
+		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_GREY));
+		handLModel = new Transform(model_hand, mat);
+		handRModel = new Transform(model_hand, mat);
+	}
 	//Player parent
 	{
-		//Crete transform
+		//Create transform
 		Material * mat = new Material();
 		player = new Transform();
 		player->name = "Player";
@@ -226,6 +239,8 @@ void ProjectManager::initGlobalScene() {
 		player->addChild(head);
 		player->addChild(handL);
 		player->addChild(handR);
+		player->addChild(handLModel);
+		player->addChild(handRModel);
 
 		//Pogo Movement
 		ComponentPogoMovement * c1 = new ComponentPogoMovement(head, handR, colliderR);
@@ -260,9 +275,10 @@ void ProjectManager::initGlobalScene() {
 	//Head setup
 	{
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_YELLOW));
-		otherHead = new Transform(model_cube, mat);
+		otherHead = new Transform(model_robot, mat);
 		otherHead->name = "Other Player's Head";
 		otherHead->isActive = false;
+
 		sceneGlobal->addTransform(otherHead);
 	}
 
@@ -341,6 +357,14 @@ void ProjectManager::initScene1() {
 		scene1->addTransform(transform);
 	}
 
+	{
+		//Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_GRAY));
+		//Transform * t = new Transform(model_hand, mat);
+
+		//t->translate(glm::vec3(0, 0, -0.2));
+		
+		//scene1->addTransform(t);
+	}
 
 	scene1->LateInit();
 }
@@ -410,10 +434,18 @@ void ProjectManager::update(double deltaTime) {
 }
 
 void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
+	{
+		handLModel->setToWorld(left);
+		handLModel->scale(0.25f);
+		handRModel->setToWorld(right);
+		handRModel->scale(0.25f);
+	}
+	
 	handL->setToWorld(left);
-	handL->scale(0.015f);
+	handL->scale(glm::vec3(0.015f));
 	handR->setToWorld(right);
-	handR->scale(0.015f);
+	handR->scale(glm::vec3(0.015f));
+	
 
 	//glm::vec3 offset = glm::vec3(-0.5f, 0, 0);  //Offset position
 	physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(right), stickR->getlinVelo());

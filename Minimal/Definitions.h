@@ -28,6 +28,10 @@
 #define MODEL_PLANE "models/plane.obj"
 #define MODEL_STICK "models/stick/stick.obj"
 #define MODEL_ROBOT "models/robot/ROBOT.obj"
+#define MODEL_HAND "models/hand/hand.obj"
+
+//Audio Files
+#define AUDIO_FUNERAL "Sound/67032__robinhood76__00892-funeral-silencium-trumpet.wav"
 
 //Colors
 #define COLOR_RED 1, 0, 0
@@ -39,6 +43,8 @@
 #define COLOR_CYAN 0, 1, 1
 #define COLOR_BLACK 0, 0, 0
 #define COLOR_WHITE 1, 1, 1
+#define COLOR_GRAY 0.4f, 0.4f, 0.4f
+#define COLOR_GREY 0.6f, 0.6f, 0.6f
 
 //Axes
 #define AXIS_X_POSITIVE glm::vec3(1, 0, 0)
