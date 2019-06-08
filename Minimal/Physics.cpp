@@ -54,7 +54,7 @@ void Physics::draw(glm::mat4 headPose, glm::mat4 projection) {
 }
 
 void Physics::update(double deltaTime) {
-	dynamicsWorld->stepSimulation((btScalar)deltaTime);
+	dynamicsWorld->stepSimulation((btScalar)deltaTime, 5);
 }
 
 
@@ -122,10 +122,10 @@ btRigidBody* Physics::addPlaneCollider(float size, glm::vec3 position, glm::vec3
 	btRigidBody* body = new btRigidBody(rbInfo);
 	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
 	
-	//body->setRestitution(1.0f);
-	//body->setFriction(0.75f);
-	//body->setRollingFriction(0.075f);
-	
+	body->setRestitution(1.0f);
+	body->setFriction(0.4f);
+	body->setRollingFriction(0.05f);
+	body->setSpinningFriction(0.15f);
 
 	//add to collisionshapes
 	physics->collisionShapes.push_back(shape);
@@ -139,9 +139,9 @@ btRigidBody* Physics::addPlaneCollider(float size, glm::vec3 position, glm::vec3
 btRigidBody* Physics::addStickCollider(glm::vec3 size, glm::vec3 position, bool leftHand) {
 	//create a dynamic rigidbody
 
-	//btCollisionShape* colShape = new btBoxShape(btVector3(1,1,1));
+	btCollisionShape* shape = new btBoxShape(bullet::fromGlm(size));
 	//btCollisionShape* shape = new btSphereShape(btScalar(radius));
-	btCollisionShape* shape = new btSphereShape(0.3);
+	//btCollisionShape* shape = new btSphereShape(0.3);
 
 	//Create Dynamic Objects
 	btTransform startTransform;
@@ -166,8 +166,8 @@ btRigidBody* Physics::addStickCollider(glm::vec3 size, glm::vec3 position, bool 
 	btRigidBody* body = new btRigidBody(rbInfo);
 	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
   
-	//body->setRestitution(1.0f);
-	//body->setFriction(0.75f);
+	body->setRestitution(1.0f);
+	//body->setFriction(.10f);
   
 	if (!leftHand)
 		rHandCol = body;
@@ -193,7 +193,7 @@ btRigidBody* Physics::addSphereCollider(float radius, glm::vec3 position, float 
 	btTransform startTransform;
 	startTransform.setIdentity();
 
-	btScalar mass(Mass);
+	btScalar mass(0.05f);
 
 	//rigidbody is dynamic if and only if mass is non zero, otherwise static
 	bool isDynamic = (mass != 0.f);
@@ -212,9 +212,10 @@ btRigidBody* Physics::addSphereCollider(float radius, glm::vec3 position, float 
 	btRigidBody* body = new btRigidBody(rbInfo);
 	body->setActivationState(4);
 	
-	body->setRestitution(0.5f);
-	body->setFriction(0.5f);	
-	body->setRollingFriction(0.05f);
+	body->setRestitution(1.0f);
+	//body->setFriction(0.5f);	
+	
+	//body->setRollingFriction(0.05f);
 	
 
 	//add to collisionshapes
@@ -228,9 +229,8 @@ btRigidBody* Physics::addSphereCollider(float radius, glm::vec3 position, float 
 ///Adds object
 btRigidBody* Physics::addBoxCollider(glm::vec3 size, glm::vec3 position, float Mass) {
 	//create a dynamic rigidbody
-	glm::vec3 half = size / 2.0f;
 
-	btCollisionShape* shape = new btBoxShape(btVector3(half.x, half.y, half.z));
+	btCollisionShape* shape = new btBoxShape(btVector3(size.x, size.y, size.z));
 
 	//Create Dynamic Objects
 	btTransform startTransform;

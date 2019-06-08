@@ -21,6 +21,8 @@ public:
 	glm::quat getPlayerRotation();
 	glm::vec3 getLeftHandPosition();
 	glm::vec3 getRightHandPosition();
+	glm::vec3 getStickVelocity(bool left);
+	
 
 private:
 	void initBulletPhysics();
