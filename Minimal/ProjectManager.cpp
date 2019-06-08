@@ -173,7 +173,7 @@ void ProjectManager::initGlobalScene() {
 		stick->scale(glm::vec3(0.5f, 0.7f, 0.5f));
 		stick->translate(glm::vec3(0, -175, 0));
 
-		stickR = new ComponentRigidBodyStick(glm::vec3(0.10f, 0.10f, 0.10f), false);
+		stickR = new ComponentRigidBodyStick(glm::vec3(.3f,.6f, .3f), false);
 		handR->addComponent(stickR);
 
 		colliderR = new Transform();
@@ -197,7 +197,7 @@ void ProjectManager::initGlobalScene() {
 		stick->scale(glm::vec3(0.5f, 0.7f, 0.5f));
 		stick->translate(glm::vec3(0, -175, 0));
 
-		stickL = new ComponentRigidBodyStick(glm::vec3(0.10, 0.10f, 0.10f), true);
+		stickL = new ComponentRigidBodyStick(glm::vec3(.3f, .6f, .3f), true);
 		handL->addComponent(stickL);
 
 		colliderL = new Transform();
@@ -325,18 +325,19 @@ void ProjectManager::initScene1() {
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_CYAN), Textures::getTextureSteam());
 		Transform * transform = new Transform(model_sphere, mat, false);
 
-		transform->scale(0.3f);
+		transform->scale(0.5f);
 
 		//transform->translate(glm::vec3(-2, 10, -0.8f));
 		transform->translate(glm::vec3(-1.5, 0, -0.7f));
 
-		ComponentRigidBodySphere * col = new ComponentRigidBodySphere(0.3f);
+		ComponentRigidBodySphere * col = new ComponentRigidBodySphere(0.5f);
 		transform->addComponent(col);
 		ComponentBallProperties * c1 = new ComponentBallProperties(stickL, stickR);
 		transform->addComponent(c1);
 
 		scene1->addTransform(transform);
 	}
+
 
 	scene1->LateInit();
 }
@@ -441,6 +442,14 @@ glm::vec3 ProjectManager::getRightHandPosition() {
 	return handR->getPosition(false);
 }
 
+glm::vec3 ProjectManager::getStickVelocity(bool left) {
+	if (left)
+		return stickL->getlinVelo();
+	else
+		return stickR->getlinVelo();
+
+}
+
 void ProjectManager::testing() {
 	//Testing code here
 	if (Input::getButtonStickL()) {
@@ -525,4 +534,6 @@ void ProjectManager::receivePackets() {
 		}
 	}
 }
+
+
 

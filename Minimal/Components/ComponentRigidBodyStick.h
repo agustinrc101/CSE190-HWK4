@@ -16,7 +16,7 @@ public:
 	ComponentRigidBodyStick(glm::vec3 size, bool leftHand) : colliderSize(size), left(leftHand) {}
 	~ComponentRigidBodyStick() {}
 	int up = 0;
-	glm::vec3 velo;
+	glm::vec3 velo = glm::vec3(0);
   
 	void Init(Transform * p) {
 		transform = p;
@@ -25,13 +25,13 @@ public:
 	}
 
 	void Update(double deltaTime) override {
-		update();
+		update(deltaTime);
 	}
 
 	glm::vec3 getlinVelo() {
-		velo.y = 0.01f;
-		velo = 10.0f * 10.0f * velo;
-
+		//velo.y = 0.1f;
+		velo = 2.0f * 10.0f * velo;
+	
 		return velo;
 	}
 protected:
@@ -56,40 +56,48 @@ protected:
 
 private:
 	std::vector<glm::vec3> allPos;
-	glm::vec3 positions[10] = {glm::vec3(0),glm::vec3(0),glm::vec3(0),glm::vec3(0),glm::vec3(0),glm::vec3(0),glm::vec3(0),glm::vec3(0),glm::vec3(0),glm::vec3(0)};
+	
 	glm::vec3 lastPos = glm::vec3(0); 
-	glm::vec3 tempVelocity = glm::vec3(0);
+	glm::vec3 tempVelocity = glm::vec3(1);
 	
 	bool firstFrame = true;
+	float curTime = 0.f;
 
-	glm::vec3 getVelocity() {						//CALCULATES VELOCITY (POSITION OVER A SECOND
-		if ((clock() / CLOCKS_PER_SEC) * 10.0f > up) {
-			up++;
+	glm::vec3 getVelocity(double deltaTime) {						//CALCULATES VELOCITY (POSITION OVER A SECOND
+		curTime += deltaTime;
+		//if ((clock() / CLOCKS_PER_SEC) * 10.0f > up) {
+		if(curTime >= 0.1f){
+			curTime = 0;
+			up+=10;
 			tempVelocity = glm::vec3(0);
+			
 			for (int i = 0; i < allPos.size(); i++) {
 
 				tempVelocity += allPos[i];
 			}
 			allPos.clear();
+			allPos.push_back(transform->getPosition(false) - lastPos);
 		}
 		else {
 			allPos.push_back(transform->getPosition(false) - lastPos);
 		}
-
+		
 		return tempVelocity;
+		
 
 	}
 
-	void update() {
+	void update(double deltaTime) {
 	
 
-		velo = getVelocity();								//GETS VELOCITY
+		velo = getVelocity(deltaTime);								//GETS VELOCITY
+	
 		if (!firstFrame)										//GETS LAST FRAME
 			lastPos = transform->getPosition(false);
 
 		firstFrame = false;
 
-		cout << velo.x << ", " << velo.y << ", " << velo.z << ", " << endl;
+		
 	}
 
 };

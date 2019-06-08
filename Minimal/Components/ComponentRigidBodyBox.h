@@ -30,7 +30,7 @@ protected:
 	glm::vec3 colliderSize;
 
 	void Start() override {
-		rigidbody = transform->rigidBody = Physics::addBoxCollider(colliderSize, transform->getPosition(false));
+		rigidbody = transform->rigidBody = Physics::addBoxCollider(colliderSize, glm::vec3(0));
 	}
 
 	void update() {
