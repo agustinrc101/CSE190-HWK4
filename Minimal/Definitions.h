@@ -28,7 +28,8 @@
 #define MODEL_PLANE "models/plane.obj"
 #define MODEL_STICK "models/stick/stick.obj"
 #define MODEL_ROBOT "models/robot/ROBOT.obj"
-#define MODEL_HAND "models/hand/hand.obj"
+#define MODEL_HAND_RIGHT "models/hand/handR.obj"
+#define MODEL_HAND_LEFT "models/hand/handL.obj"
 
 //Audio Files
 #define AUDIO_FUNERAL "Sound/67032__robinhood76__00892-funeral-silencium-trumpet.wav"

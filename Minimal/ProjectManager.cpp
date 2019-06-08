@@ -65,7 +65,8 @@ Model * model_cube;
 Model * model_plane;
 Model * model_stick;
 Model * model_robot;
-Model * model_hand;
+Model * model_hand_left;
+Model * model_hand_right;
 //Declare Important Objects
 Transform * player;
 Transform * head;
@@ -147,7 +148,8 @@ void ProjectManager::initModels() {
 	model_plane = new Model(MODEL_PLANE);
 	model_stick = new Model(MODEL_STICK);
 	model_robot = new Model(MODEL_ROBOT);
-	model_hand = new Model(MODEL_HAND);
+	model_hand_left = new Model(MODEL_HAND_LEFT);
+	model_hand_right = new Model(MODEL_HAND_RIGHT);
 }
 
 void ProjectManager::initObjects() {
@@ -226,8 +228,8 @@ void ProjectManager::initGlobalScene() {
 	//Hand models
 	{
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_GREY));
-		handLModel = new Transform(model_hand, mat);
-		handRModel = new Transform(model_hand, mat);
+		handLModel = new Transform(model_hand_left, mat);
+		handRModel = new Transform(model_hand_right, mat);
 	}
 	//Player parent
 	{
