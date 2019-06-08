@@ -309,7 +309,7 @@ void ProjectManager::initScene1() {
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureGrass());
 		Transform * transform = new Transform(model_plane, mat);
 
-		transform->translate(glm::vec3(0, -1.7f, 0));	//ACTUAL GROUND POS
+		transform->translate(glm::vec3(0, 1.7f, 0));	//ACTUAL GROUND POS
 		//transform->translate(glm::vec3(0, -.4f, 0));	//DEBUG GROUND POS
 		
 		ComponentRigidBodyPlane * col = new ComponentRigidBodyPlane(40);

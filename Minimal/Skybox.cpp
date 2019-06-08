@@ -22,7 +22,7 @@ Skybox::Skybox(GLuint tex) {
 	textureID = tex;
 	if (textureID == 0) return;
 
-	initVertices(20.0f);
+	initVertices(200.0f);
 	initCubeMap();
 }
 
