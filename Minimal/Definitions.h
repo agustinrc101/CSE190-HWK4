@@ -64,6 +64,7 @@ enum ObjectLayer {
 	LAYER_BALL = 1,
 	LAYER_STICK_LEFT = 2,
 	LAYER_STICK_RIGHT = 3,
+	LAYER_GROUND_MOVEMENT = 4,
 };
 
 //========

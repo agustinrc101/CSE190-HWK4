@@ -3,12 +3,13 @@
 #pragma once
 
 #include <iostream>
-#include "../Transform.h"
-#include "Component.h"
+//#include "../Transform.h"
+//#include "Component.h"
+#include "ComponentRigidBodyStick.h"
 
 class ComponentPogoMovement : public Component {
 public:
-	ComponentPogoMovement(Transform * theHead, Transform * theHand, Transform * pogoCollider) : head(theHead), hand(theHand), collider(pogoCollider)  {
+	ComponentPogoMovement(Transform * theHead, Transform * theHand, Transform * pogoCollider, ComponentRigidBodyStick * theStickCollider) : head(theHead), hand(theHand), collider(pogoCollider), stickCollider(theStickCollider)  {
 		storedColor = hand->material->color;
 	}
 	~ComponentPogoMovement() {}
@@ -19,6 +20,7 @@ public:
 	}
 
 	void Update(double deltaTime) override {
+		//std::cout << state << std::endl;
 		switch (state) {
 		case IDLE:
 			handleIdleState();
@@ -58,6 +60,7 @@ private:
 	Transform * head;
 	Transform * hand;
 	Transform * collider;
+	ComponentRigidBodyStick * stickCollider;
 
 	glm::vec3 storedColor;
 
@@ -71,7 +74,7 @@ private:
 	HandState handState = BOTH_IDLE;
 
 	void handleIdleState() {
-		if (hand->getPosition().y >= head->getPosition().y) {
+		if (hand->getPosition().y >= (head->getPosition().y / 1.5f)) {
 			handState = RIGHT;
 			hand->material->color = glm::vec3(COLOR_WHITE);
 			state = ARM_UP;
@@ -84,6 +87,7 @@ private:
 
 	void handleArmUpState() {
 		if (hand->getPosition().y < (head->getPosition().y - 0.15f) && collider->getPosition(false).y <= -1.0f) {
+		/*if(stickCollider->touchingGround){*/
 			hand->material->color = glm::vec3(COLOR_BLACK);
 			storedHandPosition = hand->getPosition(false);
 			prevHandPosition = hand->getPosition(false);
@@ -96,9 +100,10 @@ private:
 	}
 
 	void handleArmDownState() {
-		if (collider->getPosition(false).y > -1.3f) {
+		if (collider->getPosition(false).y > -1.2f) {
 			hand->material->color = storedColor;
 			state = IDLE;
+			
 		}
 
 
@@ -116,17 +121,16 @@ private:
 
 		if (testMinHorizontalDistance(hand->getPosition(false), head->getPosition(false))) {
 			hand->material->color = storedColor;
-			state = IDLE;
+			//state = IDLE;
+			//state = ARM_UP;
 		}
-		else if (hand->getPosition().y >= head->getPosition().y) {
+		else if (hand->getPosition().y >= head->getPosition().y * .7f) {
+		//else if (!stickCollider->touchingGround) {
 
 			hand->material->color = glm::vec3(COLOR_WHITE);
 			state = ARM_UP;
 		}
-		//else if (testMaxHorizontalDistance(handR->getPosition(false), head->getPosition(false))) {
-		//	handR->material->color = storedColorR;
-		//	state = IDLE;
-		//}
+		
 		else {
 			hand->material->color = glm::vec3(COLOR_BLACK);
 		}

@@ -49,6 +49,26 @@ public:
 					//isCollidingL = isCollidingR = false;
 				}
 			}
+			///////GROUND MOVEMENT COLLISION/////////
+			if ((obA->getCollisionShape()->getUserIndex() == LAYER_GROUND_MOVEMENT) || (obB->getCollisionShape()->getUserIndex() == LAYER_GROUND_MOVEMENT)) {
+				//std::cout << "Object A: " << obA->getCollisionShape()->getUserIndex() << ", Object B: " << obB->getCollisionShape()->getUserIndex() << std::endl;
+
+				if ((obA->getCollisionShape()->getUserIndex() == LAYER_STICK_LEFT) || (obB->getCollisionShape()->getUserIndex() == LAYER_STICK_LEFT)) {
+					stickL->touchingGround = true;
+					//cout << "ON GROUND" << endl;
+					
+				}
+				else if ((obA->getCollisionShape()->getUserIndex() == LAYER_STICK_RIGHT) || (obB->getCollisionShape()->getUserIndex() == LAYER_STICK_RIGHT)) {
+					stickR->touchingGround = true;
+					//cout << "ON GROUND" << endl;
+				}
+				else {
+					stickL->touchingGround = false;
+					stickR->touchingGround = false;
+					//cout << "NOT ON GROUND" << endl;
+				}
+			}
+			///////GROUND MOVEMENT COLLISION/////////
 			
 		}
 

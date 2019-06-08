@@ -114,7 +114,11 @@ btRigidBody* Physics::addPlaneCollider(float size, glm::vec3 position, glm::vec3
 	if (isDynamic)	
 		shape->calculateLocalInertia(mass, localInertia);
 
-	shape->setUserIndex(LAYER_NULL);
+	if(false/*size == 40*/)	//hard coded differentiations between ground colliders
+		shape->setUserIndex(LAYER_NULL);
+	else {
+		shape->setUserIndex(LAYER_GROUND_MOVEMENT);
+	}
 
 	//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);

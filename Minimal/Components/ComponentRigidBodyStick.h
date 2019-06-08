@@ -17,6 +17,7 @@ public:
 	~ComponentRigidBodyStick() {}
 	int up = 0;
 	glm::vec3 velo = glm::vec3(0);
+	bool touchingGround = false;
   
 	void Init(Transform * p) {
 		transform = p;
@@ -65,7 +66,6 @@ private:
 
 	glm::vec3 getVelocity(double deltaTime) {						//CALCULATES VELOCITY (POSITION OVER A SECOND
 		curTime += deltaTime;
-		//if ((clock() / CLOCKS_PER_SEC) * 10.0f > up) {
 		if(curTime >= 0.1f){
 			curTime = 0;
 			up+=10;

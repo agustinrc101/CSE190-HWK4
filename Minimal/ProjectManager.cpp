@@ -243,9 +243,9 @@ void ProjectManager::initGlobalScene() {
 		player->addChild(handRModel);
 
 		//Pogo Movement
-		ComponentPogoMovement * c1 = new ComponentPogoMovement(head, handR, colliderR);
+		ComponentPogoMovement * c1 = new ComponentPogoMovement(head, handR, colliderR, stickR);
 		player->addComponent(c1);
-		c1 = new ComponentPogoMovement(head, handL, colliderL);
+		c1 = new ComponentPogoMovement(head, handL, colliderL, stickL);
 		player->addComponent(c1);
 		//Player Rotation
 		ComponentPlayerRotation * c2 = new ComponentPlayerRotation();
@@ -315,6 +315,20 @@ void ProjectManager::initScene1() {
 
 		scene1->addTransform(transform);
 	}
+
+	//{
+	//	Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTextureGrass());	//Collider for stick for movement
+	//	Transform * transform = new Transform(model_plane, mat);
+
+	//	transform->translate(glm::vec3(0, -2.0f, 0));	//ACTUAL GROUND POS
+	//	//transform->translate(glm::vec3(0, -.4f, 0));	//DEBUG GROUND POS
+
+	//	ComponentRigidBodyPlane * col = new ComponentRigidBodyPlane(41);
+	//	transform->addComponent(col);
+
+	//	scene1->addTransform(transform);
+	//}
+
 	{
 		Transform * transform = new Transform();
 		transform->translate(glm::vec3(20, 0, 0));
