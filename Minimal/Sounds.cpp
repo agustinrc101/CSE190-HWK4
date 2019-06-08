@@ -79,58 +79,12 @@ unsigned int getFormat(int channel, int bps) {
 }
 
 
-Sounds::Sounds() {
+Sounds::Sounds(const char* filename) {
 
 	
-	//alGetError();
-
-	//deviceAL = alcOpenDevice(NULL);
-
-	//if (deviceAL == NULL)
-	//{
-	//	std::cout << ("Failed to init OpenAL device.") << std::endl;
-	//	return;
-	//}
-
-	//contextAL = alcCreateContext(deviceAL, NULL);
-	//AL_CHECK(alcMakeContextCurrent(contextAL));
-
-	//
-
-
-	//alGenSources((ALuint)1, &source);
-	//// check for errors
-
-	//// check for errors
-
-	//// ALsizei size, freq;
-	//// ALenum format;
-	//// ALvoid *data;
-	//// ALboolean loop = AL_FALSE;
-
-	//unsigned int bufferid, format;
-	//
-	//int chan, sampleRate, bps, size;
-	//ALvoid *data = loadWAV("h.wav", chan, sampleRate, bps, size);
-	//alGenBuffers(1, &sndBuffer);
-
-	//alBufferData(sndBuffer, getFormat(chan, bps), data, size, sampleRate);
-	//
-	//////wave to buffer
-
-	//alSourcei(source, AL_BUFFER, sndBuffer);
-
-	//alSourcePlay(source);
-	//// check for errors
-
-	//alGetSourcei(source, AL_SOURCE_STATE, &source_state);
-	//// check for errors
-	//while (source_state == AL_PLAYING) {
-	//	alGetSourcei(source, AL_SOURCE_STATE, &source_state);
-	//	// check for errors
-	//}
+	//"Sound/67032__robinhood76__00892-funeral-silencium-trumpet.wav"
 	int channel, sampleRate, bps, size;
-	char* data = loadWAV("Sound/67032__robinhood76__00892-funeral-silencium-trumpet.wav", channel, sampleRate, bps, size);
+	char* data = loadWAV(filename, channel, sampleRate, bps, size);
 	ALCdevice* device = alcOpenDevice(NULL);
 	if (device == NULL)
 	{
@@ -167,7 +121,7 @@ Sounds::Sounds() {
 		}
 	}
 	alBufferData(bufferid, format, data, size, sampleRate);
-	unsigned int sourceid;
+	
 	alGenSources(1, &sourceid);
 	alSourcei(sourceid, AL_BUFFER, bufferid);
 	if (( alGetError()) != AL_NO_ERROR)
@@ -175,15 +129,19 @@ Sounds::Sounds() {
 		std::cout<<"alSourceasdf;lasdjf;alsjdf" << std::endl;
 		
 	}
+	
+
+	
+
+};
+
+void Sounds::Play() {
 	alSourcePlay(sourceid);
 
 	while (source_state == AL_PLAYING) {
 		alGetSourcei(source, AL_SOURCE_STATE, &source_state);
 	}
-
-	
-
-};
+}
 
 Sounds::~Sounds() {
 	alDeleteSources(1, &source);

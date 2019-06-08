@@ -51,7 +51,8 @@ bool Server::serverOn = false;
 Physics * Physics::physics = 0;
 
 //Init Sound
-Sounds * sound;
+Sounds * sound_BG;
+Sounds * sound_Hit;
 //Physics
 Physics * physics;
 
@@ -104,7 +105,8 @@ ProjectManager::~ProjectManager() {
 	Shaders::deleteShaders();
 	//Delete textures
 	Textures::deleteTextures();
-	delete(sound);
+	delete(sound_BG);
+	delete(sound_Hit);
 	delete(physics);
 }
 
@@ -379,7 +381,9 @@ void ProjectManager::initScene1() {
 }
 
 void ProjectManager::initAudio() {
-	sound = new Sounds();
+	sound_BG = new Sounds("Sound/67032__robinhood76__00892-funeral-silencium-trumpet.wav");
+
+	sound_BG->Play();
 }
 
 void ProjectManager::initProject() {
@@ -456,8 +460,9 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 	handR->scale(glm::vec3(0.015f));
 
 
-	physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(player->getCompleteToWorld() * right), stickR->getlinVelo());
-	physics->newLColPos(handL->getChild(1)->getPosition(false), glm::quat_cast(player->getCompleteToWorld() * left), stickL->getlinVelo());
+	//glm::vec3 offset = glm::vec3(-0.5f, 0, 0);  //Offset position
+	physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(glm::mat3(handR->getChild(1)->getCompleteToWorld())), stickR->getlinVelo());
+	physics->newLColPos(handL->getChild(1)->getPosition(false), glm::quat_cast(glm::mat3(handR->getChild(1)->getCompleteToWorld())), stickR->getlinVelo());
 }
 
 void ProjectManager::updateHead(glm::mat4 hmd) {

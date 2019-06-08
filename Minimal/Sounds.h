@@ -27,7 +27,9 @@ public:
 	ALuint source;
 	ALuint sndBuffer;
 	ALint source_state;
-	Sounds();
+	unsigned int sourceid;
+	Sounds(const char* fn);
+	void Play();
 	~Sounds();
 
 private:
