@@ -485,6 +485,10 @@ glm::quat ProjectManager::getPlayerRotation() {
 	return player->getRotation();
 }
 
+glm::mat4 ProjectManager::getPlayerToWorld() {
+	return player->getCompleteToWorld();
+}
+
 glm::vec3 ProjectManager::getLeftHandPosition() {
 	return handL->getPosition(false);
 }

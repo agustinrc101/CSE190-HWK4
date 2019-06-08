@@ -790,8 +790,7 @@ protected:
 		}
 		//==============================================================================DRAW
 		{	
-			glm::vec3 playerPos = projectManager->getPlayerPosition();
-			glm::quat playerRot = projectManager->getPlayerRotation();
+			glm::mat4 player = projectManager->getPlayerToWorld();
 
 			ovr::for_each_eye([&](ovrEyeType eye) {
 				//---------------------------------------------------Setup Variables
@@ -800,11 +799,8 @@ protected:
 				const auto& vp = _sceneLayer.Viewport[eye];
 				glViewport(vp.Pos.x, vp.Pos.y, vp.Size.w, vp.Size.h);
 				_sceneLayer.RenderPose[eye] = eyePoses[eye];
-
-				eyePoses[eye].Position = ovr::fromGlm(ovr::toGlm(eyePoses[eye].Position) + playerPos);
-				eyePoses[eye].Orientation = ovr::fromGlm(playerRot * ovr::toGlm(eyePoses[eye].Orientation));
 				//---------------------------------------------------View Matrix
-				glm::mat4 view = glm::inverse(ovr::toGlm(eyePoses[eye]));
+				glm::mat4 view = glm::inverse(player * ovr::toGlm(eyePoses[eye]));
 				glm::mat4 projection = _eyeProjections[eye];
 				//---------------------------------------------------Render Scene
 				projectManager->draw(view, projection, eye);

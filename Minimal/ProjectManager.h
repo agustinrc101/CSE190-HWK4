@@ -19,6 +19,7 @@ public:
 
 	glm::vec3 getPlayerPosition();
 	glm::quat getPlayerRotation();
+	glm::mat4 getPlayerToWorld();
 	glm::vec3 getLeftHandPosition();
 	glm::vec3 getRightHandPosition();
 	glm::vec3 getStickVelocity(bool left);

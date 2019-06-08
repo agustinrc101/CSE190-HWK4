@@ -18,7 +18,7 @@ public:
 	}
 
 	void Update(double deltaTime) override {
-		//playerRotation();
+		playerRotation();
 	}
 
 protected:
