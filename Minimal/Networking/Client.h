@@ -17,6 +17,8 @@
 
 class Client{
 public:
+	int player = 0;
+
 	Client();
 	~Client();
 

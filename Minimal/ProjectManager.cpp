@@ -323,25 +323,26 @@ void ProjectManager::initScene1() {
 	}
 	//Walls
 	{
-		Transform * transform = new Transform();
+		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_GRAY), Textures::getTextureGrip1Albedo());
+		Transform * transform = new Transform(model_plane, mat);
 		transform->translate(glm::vec3(20, 0, 0));
 		ComponentRigidBodyPlane * plane = new ComponentRigidBodyPlane(40, AXIS_X_POSITIVE);
-		//transform->addComponent(plane);
+		transform->addComponent(plane);
 		scene1->addTransform(transform);
 
-		transform = new Transform();
+		transform = new Transform(model_plane, mat);
 		transform->translate(glm::vec3(-20, 0, 0));
 		plane = new ComponentRigidBodyPlane(40, AXIS_X_NEGATIVE);
 		//transform->addComponent(plane);
 		scene1->addTransform(transform);
 
-		transform = new Transform();
+		transform = new Transform(model_plane, mat);
 		transform->translate(glm::vec3(0, 0, 20));
 		plane = new ComponentRigidBodyPlane(40, AXIS_Z_POSITIVE);
 		//transform->addComponent(plane);
 		scene1->addTransform(transform);
 
-		transform = new Transform();
+		transform = new Transform(model_plane, mat);
 		transform->translate(glm::vec3(0, 0, -20));
 		plane = new ComponentRigidBodyPlane(40, AXIS_Z_NEGATIVE);
 		//transform->addComponent(plane);
@@ -369,7 +370,7 @@ void ProjectManager::initScene1() {
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_RED));
 		Transform * t = new Transform(model_goal, mat);
 
-		t->translate(glm::vec3(0, 0, -3) + groundPosition);
+		t->translate(glm::vec3(0, 0, -7.5) + groundPosition);
 
 		scene1->addTransform(t);
 	}
@@ -456,8 +457,8 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 
 
 	//glm::vec3 offset = glm::vec3(-0.5f, 0, 0);  //Offset position
-	physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(right), stickR->getlinVelo());
-	physics->newLColPos(handL->getChild(1)->getPosition(false), glm::quat_cast(left), stickR->getlinVelo());
+	physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(glm::mat3(handR->getCompleteToWorld())), stickR->getlinVelo());
+	physics->newLColPos(handL->getChild(1)->getPosition(false), glm::quat_cast(glm::mat3(handR->getCompleteToWorld())), stickR->getlinVelo());
 }
 
 void ProjectManager::updateHead(glm::mat4 hmd) {
@@ -521,10 +522,12 @@ void ProjectManager::networkingSetup() {
 void ProjectManager::serverConnect() {
 	Server::startServer();
 	clientConnect();
+	client->player = 1;
 }
 
 void ProjectManager::clientConnect() {
 	client->joinServer();
+	client->player = 2;
 }
 
 void ProjectManager::stopNetworking() {
