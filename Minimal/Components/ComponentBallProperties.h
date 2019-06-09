@@ -48,10 +48,13 @@ public:
 			btPersistentManifold* contactManifold = Physics::physics->dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
 			const btCollisionObject* obA = contactManifold->getBody0();
 			const btCollisionObject* obB = contactManifold->getBody1();
-			
+			// std::cout << "Collision " << i << " num contacts: " << contactManifold->getNumContacts() << std::endl;
+			if (contactManifold->getNumContacts() > 1) {
+				std::cout << "collision hit" << std::endl;
+			}
 
-			if ((obA->getCollisionShape()->getUserIndex() == LAYER_BALL) || (obB->getCollisionShape()->getUserIndex() == LAYER_BALL)) {
-				if ((obA->getCollisionShape()->getUserIndex() == LAYER_STICK_LEFT) || (obB->getCollisionShape()->getUserIndex() == LAYER_STICK_LEFT)) {
+			if ((obA->getCollisionShape()->getUserIndex() == LAYER_BALL) || (obB->getCollisionShape()->getUserIndex() == LAYER_BALL) ) {
+				if (((obA->getCollisionShape()->getUserIndex() == LAYER_STICK_LEFT) || (obB->getCollisionShape()->getUserIndex() == LAYER_STICK_LEFT)) && contactManifold->getNumContacts() >= 1) {
 					if (!hasCollidedL) {
 						hasCollidedL = true;
 						
@@ -71,7 +74,7 @@ public:
 				else {
 					isCollidingL = false;
 				}
-				if((obA->getCollisionShape()->getUserIndex() == LAYER_STICK_RIGHT) || (obB->getCollisionShape()->getUserIndex() == LAYER_STICK_RIGHT)) {
+				if(((obA->getCollisionShape()->getUserIndex() == LAYER_STICK_RIGHT) || (obB->getCollisionShape()->getUserIndex() == LAYER_STICK_RIGHT)) && contactManifold->getNumContacts() >= 1) {
 					if (!hasCollidedR) {
 						hasCollidedR = true;
 						

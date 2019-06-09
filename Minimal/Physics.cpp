@@ -55,6 +55,7 @@ void Physics::draw(glm::mat4 headPose, glm::mat4 projection) {
 
 void Physics::update(double deltaTime) {
 	dynamicsWorld->stepSimulation((btScalar)deltaTime, 5);
+	dynamicsWorld->updateAabbs();
 }
 
 
@@ -71,6 +72,7 @@ void Physics::newLColPos(glm::vec3 position, glm::quat orientation, glm::vec3 ve
 		//lHandCol->setLinearVelocity(zeroVector);
 		lHandCol->setWorldTransform(newPos);
 		lHandCol->setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
+		
 		
 	}
 }
@@ -144,6 +146,9 @@ btRigidBody* Physics::addStickCollider(glm::vec3 size, glm::vec3 position, bool 
 	//create a dynamic rigidbody
 
 	btCollisionShape* shape = new btBoxShape(bullet::fromGlm(size));
+	btCollisionShape* shape2 = new btBoxShape(bullet::fromGlm(size));
+	
+	//ghostObject->setCollisionShape(new btSphereShape(5));
 	//btCollisionShape* shape = new btSphereShape(btScalar(radius));
 	//btCollisionShape* shape = new btSphereShape(0.3);
 
@@ -151,7 +156,7 @@ btRigidBody* Physics::addStickCollider(glm::vec3 size, glm::vec3 position, bool 
 	btTransform startTransform;
 	startTransform.setIdentity();
 
-	btScalar mass(100.0f);
+	btScalar mass(0.0f);
 
 	//rigidbody is dynamic if and only if mass is non zero, otherwise static
 	bool isDynamic = (mass != 0.f);
@@ -160,7 +165,7 @@ btRigidBody* Physics::addStickCollider(glm::vec3 size, glm::vec3 position, bool 
 	if (isDynamic)
 		shape->calculateLocalInertia(mass, localInertia);
 
-	shape->setUserIndex(LAYER_NULL);
+	
 
 	startTransform.setOrigin(btVector3(position.x, position.y, position.z));
 
@@ -169,17 +174,20 @@ btRigidBody* Physics::addStickCollider(glm::vec3 size, glm::vec3 position, bool 
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, shape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-  
+	
 	//body->setRestitution(1.0f);
 	//body->setFriction(.10f);
   
-	if (!leftHand)
+	if (!leftHand) {
 		rHandCol = body;
-	else
+	}
+	else {
 		lHandCol = body;
+	}
 
 	//add to collisionshapes
 	physics->collisionShapes.push_back(shape);
+	physics->collisionShapes.push_back(shape2);
 	//add the body to the dynamics world
 	physics->dynamicsWorld->addRigidBody(body);
 
@@ -206,7 +214,7 @@ btRigidBody* Physics::addSphereCollider(float radius, glm::vec3 position, float 
 	if (isDynamic)
 		shape->calculateLocalInertia(mass, localInertia);
 
-	shape->setUserIndex(LAYER_NULL);
+
 
 	startTransform.setOrigin(btVector3(position.x, position.y, position.z));
 
