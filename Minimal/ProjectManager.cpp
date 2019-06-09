@@ -356,39 +356,6 @@ void ProjectManager::initScene1() {
 
 		scene1->addTransform(transform);
 	}
-	//Walls
-	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_GRAY), Textures::getTexture(Textures::T_WINDOW));
-		Transform * transform = new Transform(model_plane, mat);
-		transform->translate(glm::vec3(-stageSize, 0, 0));
-		transform->rotate(90, AXIS_Z_POSITIVE);
-		transform->rotate(90, AXIS_Y_POSITIVE);
-		ComponentRigidBodyPlane * plane = new ComponentRigidBodyPlane(stageSize * 2, AXIS_X_NEGATIVE);
-		transform->addComponent(plane);
-		scene1->addTransform(transform);
-
-		transform = new Transform(model_plane, mat);
-		transform->translate(glm::vec3(stageSize, 0, 0));
-		transform->rotate(-90, AXIS_Z_POSITIVE);
-		transform->rotate(90, AXIS_Y_POSITIVE);
-		plane = new ComponentRigidBodyPlane(stageSize * 2, AXIS_X_POSITIVE);
-		transform->addComponent(plane);
-		scene1->addTransform(transform);
-
-		transform = new Transform(model_plane, mat);
-		transform->translate(glm::vec3(0, 0, stageSize));
-		transform->rotate(-90, AXIS_X_POSITIVE);
-		plane = new ComponentRigidBodyPlane(stageSize * 2, AXIS_Z_NEGATIVE);
-		transform->addComponent(plane);
-		scene1->addTransform(transform);
-
-		transform = new Transform(model_plane, mat);
-		transform->translate(glm::vec3(0, 0, -stageSize));
-		transform->rotate(90, AXIS_X_POSITIVE);
-		plane = new ComponentRigidBodyPlane(stageSize * 2, AXIS_Z_POSITIVE);
-		transform->addComponent(plane);
-		scene1->addTransform(transform);
-	}
 	//Ball
 	{
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_CYAN), Textures::getTexture(Textures::T_STEAM));
@@ -407,19 +374,17 @@ void ProjectManager::initScene1() {
 		scene1->addTransform(ball);
 	}
 	////Sun
-	//{
-	//	Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_ORANGE), Textures::getTexture(Textures::T_STEAM));
-	//	ball = new Transform(model_sphere, mat, false);
+	{
+		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_ORANGE), Textures::getTexture(Textures::T_STEAM));
+		ball = new Transform(model_sphere, mat, false);
 
-	//	ball->scale(10.4f);
+		ball->scale(10.4f);
 
-	//	//transform->translate(glm::vec3(-2, 10, -0.8f));
-	//	ball->translate(glm::vec3(30.5, 0, -0.7f));
+		//transform->translate(glm::vec3(-2, 10, -0.8f));
+		ball->translate(glm::vec3(30.5, 0, -0.7f));
 
-
-
-	//	scene1->addTransform(ball);
-	//}
+		scene1->addTransform(ball);
+	}
 	//Goalpost - RED
 	{
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_RED));
@@ -511,6 +476,39 @@ void ProjectManager::initScene1() {
 
 		scene1->addTransform(goal);
 	}
+	//Walls
+	{
+		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_GRAY), Textures::getTexture(Textures::T_WINDOW));
+		Transform * transform = new Transform(model_plane, mat);
+		transform->translate(glm::vec3(-stageSize, 0, 0));
+		transform->rotate(90, AXIS_Z_POSITIVE);
+		transform->rotate(90, AXIS_Y_POSITIVE);
+		ComponentRigidBodyPlane * plane = new ComponentRigidBodyPlane(stageSize * 2, AXIS_X_NEGATIVE);
+		transform->addComponent(plane);
+		scene1->addTransform(transform);
+
+		transform = new Transform(model_plane, mat);
+		transform->translate(glm::vec3(stageSize, 0, 0));
+		transform->rotate(-90, AXIS_Z_POSITIVE);
+		transform->rotate(90, AXIS_Y_POSITIVE);
+		plane = new ComponentRigidBodyPlane(stageSize * 2, AXIS_X_POSITIVE);
+		transform->addComponent(plane);
+		scene1->addTransform(transform);
+
+		transform = new Transform(model_plane, mat);
+		transform->translate(glm::vec3(0, 0, stageSize));
+		transform->rotate(-90, AXIS_X_POSITIVE);
+		plane = new ComponentRigidBodyPlane(stageSize * 2, AXIS_Z_NEGATIVE);
+		transform->addComponent(plane);
+		scene1->addTransform(transform);
+
+		transform = new Transform(model_plane, mat);
+		transform->translate(glm::vec3(0, 0, -stageSize));
+		transform->rotate(90, AXIS_X_POSITIVE);
+		plane = new ComponentRigidBodyPlane(stageSize * 2, AXIS_Z_POSITIVE);
+		transform->addComponent(plane);
+		scene1->addTransform(transform);
+	}
 
 	scene1->LateInit();
 }
@@ -600,7 +598,7 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 
 void ProjectManager::updateHead(glm::mat4 hmd) {
 	head->setToWorld(hmd);
-	head->scale(0.1f);
+	head->scale(0.25f);
 }
 
 void ProjectManager::updateLightCameraPos(glm::mat4 eye) {
@@ -657,11 +655,11 @@ void ProjectManager::serverConnect() {
 
 	handL->isActive = true;
 	handR->isActive = true;
-	handLModel->material->color = glm::vec3(COLOR_RED);
-	handRModel->material->color = glm::vec3(COLOR_RED);
-	otherHandL->material->color = glm::vec3(COLOR_BLUE);
-	otherHandR->material->color = glm::vec3(COLOR_BLUE);
-	otherHead->material->color = glm::vec3(COLOR_BLUE);
+	handLModel->material->color = glm::vec3(COLOR_FOCUS_RED);
+	handRModel->material->color = glm::vec3(COLOR_FOCUS_RED);
+	otherHandL->material->color = glm::vec3(COLOR_FOCUS_BLUE);
+	otherHandR->material->color = glm::vec3(COLOR_FOCUS_BLUE);
+	otherHead->material->color = glm::vec3(COLOR_FOCUS_BLUE);
 
 	startedNetwork = true;
 
@@ -674,11 +672,11 @@ void ProjectManager::clientConnect(bool isHost) {
 
 	handL->isActive = true;
 	handR->isActive = true;
-	handLModel->material->color = glm::vec3(COLOR_BLUE);
-	handRModel->material->color = glm::vec3(COLOR_BLUE);
-	otherHandL->material->color = glm::vec3(COLOR_RED);
-	otherHandR->material->color = glm::vec3(COLOR_RED);
-	otherHead->material->color = glm::vec3(COLOR_RED);
+	handLModel->material->color = glm::vec3(COLOR_FOCUS_BLUE);
+	handRModel->material->color = glm::vec3(COLOR_FOCUS_BLUE);
+	otherHandL->material->color = glm::vec3(COLOR_FOCUS_RED);
+	otherHandR->material->color = glm::vec3(COLOR_FOCUS_RED);
+	otherHead->material->color = glm::vec3(COLOR_FOCUS_RED);
 
 	startedNetwork = true;
 
@@ -704,6 +702,8 @@ void ProjectManager::sendPlayerData() {
 	client->sendPlayerDataPacket(head->getCompleteToWorld(), HEAD);
 	client->sendPlayerDataPacket(handL->getCompleteToWorld(), HAND_LEFT);
 	client->sendPlayerDataPacket(handR->getCompleteToWorld(), HAND_RIGHT);
+	if (client->player == 1)
+		client->sendPlayerDataPacket(ball->getCompleteToWorld(), BALL);
 }
 
 void ProjectManager::receivePackets() {

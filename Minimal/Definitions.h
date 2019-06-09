@@ -52,6 +52,8 @@
 #define COLOR_WHITE 1, 1, 1
 #define COLOR_GRAY 0.4f, 0.4f, 0.4f
 #define COLOR_GREY 0.6f, 0.6f, 0.6f
+#define COLOR_FOCUS_RED .3f, .3f, 1
+#define COLOR_FOCUS_BLUE .3f, .3f, 1
 
 //Axes
 #define AXIS_X_POSITIVE glm::vec3(1, 0, 0)
