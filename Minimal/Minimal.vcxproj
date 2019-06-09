@@ -153,10 +153,14 @@
     <None Include="packages.config" />
     <None Include="shaders\color.frag" />
     <None Include="shaders\color.vert" />
+    <None Include="shaders\colorGrad.frag" />
+    <None Include="shaders\colorGrad.vert" />
     <None Include="shaders\TextureShader.frag" />
     <None Include="shaders\TextureShader.vert" />
     <None Include="shaders\skybox.frag" />
     <None Include="shaders\skybox.vert" />
+    <None Include="shaders\TextureShaderGrad.frag" />
+    <None Include="shaders\TextureShaderGrad.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Components\ComponentBallProperties.h" />

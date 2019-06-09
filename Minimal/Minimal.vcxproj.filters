@@ -67,6 +67,10 @@
     <None Include="shaders\skybox.frag">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="shaders\colorGrad.frag" />
+    <None Include="shaders\colorGrad.vert" />
+    <None Include="shaders\TextureShaderGrad.frag" />
+    <None Include="shaders\TextureShaderGrad.vert" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shader.h">
