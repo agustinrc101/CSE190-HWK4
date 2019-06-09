@@ -25,9 +25,13 @@ public:
 	ALCdevice * deviceAL;
 	ALCcontext * contextAL;
 	ALuint source;
+	ALuint source2;
 	ALuint sndBuffer;
+	ALuint sndBuffer2;
 	ALint source_state;
+	ALint source_state2;
 	unsigned int sourceid;
+	unsigned int sourceid2;
 	Sounds(const char* fn);
 	void Play();
 	~Sounds();

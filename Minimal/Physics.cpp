@@ -177,7 +177,7 @@ btRigidBody* Physics::addStickCollider(glm::vec3 size, glm::vec3 position, bool 
 
 	//add to collisionshapes
 	physics->collisionShapes.push_back(shape);
-	physics->collisionShapes.push_back(shape2);
+	
 	//add the body to the dynamics world
 	physics->dynamicsWorld->addRigidBody(body);
 

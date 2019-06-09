@@ -63,7 +63,8 @@ unsigned int getFormat(int channel, int bps) {
 		if (bps == 8)
 		{
 			return AL_FORMAT_MONO8;
-		} else {
+		}
+		else {
 			return AL_FORMAT_MONO16;
 		}
 	}
@@ -81,10 +82,12 @@ unsigned int getFormat(int channel, int bps) {
 
 Sounds::Sounds(const char* filename) {
 
-	
-	//"Sound/67032__robinhood76__00892-funeral-silencium-trumpet.wav"
+
+	//
 	int channel, sampleRate, bps, size;
+	int channel2, sampleRate2, bps2, size2;
 	char* data = loadWAV(filename, channel, sampleRate, bps, size);
+	char* data2 = loadWAV("Sound/SDR2_OST_-_-2-03-_Beautiful_Ruin-vNYydvw13LM.wav", channel2, sampleRate2, bps2, size2);
 	ALCdevice* device = alcOpenDevice(NULL);
 	if (device == NULL)
 	{
@@ -100,47 +103,37 @@ Sounds::Sounds(const char* filename) {
 	alcMakeContextCurrent(context);
 
 	unsigned int bufferid, format;
+	unsigned int bufferid2, format2;
 	alGenBuffers(1, &bufferid);
-	if (channel == 1)
-	{
-		if (bps == 8)
-		{
-			format = AL_FORMAT_MONO8;
-		}
-		else {
-			format = AL_FORMAT_MONO16;
-		}
-	}
-	else {
-		if (bps == 8)
-		{
-			format = AL_FORMAT_STEREO8;
-		}
-		else {
-			format = AL_FORMAT_STEREO16;
-		}
-	}
+	alGenBuffers(1, &bufferid2);
+	format = getFormat(channel, bps);
+	format2 = getFormat(channel2, bps2);
 	alBufferData(bufferid, format, data, size, sampleRate);
-	
-	alGenSources(1, &sourceid);
-	alSourcei(sourceid, AL_BUFFER, bufferid);
-	if (( alGetError()) != AL_NO_ERROR)
-	{
-		std::cout<<"alSourceasdf;lasdjf;alsjdf" << std::endl;
-		
-	}
-	
+	alBufferData(bufferid2, format2, data2, size2, sampleRate2);
 
-	
+	alGenSources(1, &sourceid);
+	alGenSources(1, &sourceid2);
+	alSourcei(sourceid, AL_BUFFER, bufferid);
+	alSourcei(sourceid2, AL_BUFFER, bufferid2);
+	if ((alGetError()) != AL_NO_ERROR)
+	{
+		std::cout << "alSourceasdf;lasdjf;alsjdf" << std::endl;
+
+	}
+	alSourcePlay(sourceid2);
+	while (source_state2 == AL_PLAYING) {
+		alGetSourcei(source2, AL_SOURCE_STATE, &source_state2);
+	}
+
 
 };
 
 void Sounds::Play() {
 	alSourcePlay(sourceid);
 
-	/*while (source_state == AL_PLAYING) {
+	while (source_state == AL_PLAYING) {
 		alGetSourcei(source, AL_SOURCE_STATE, &source_state);
-	}*/
+	}
 }
 
 Sounds::~Sounds() {
@@ -179,6 +172,6 @@ inline void CheckOpenALError(const char* stmt, const char* fname, int line)
 	ALenum err = alGetError();
 	if (err != AL_NO_ERROR)
 	{
-		std::cout<<("OpenAL error %08x, (%s) at %s:%i - for %s", err, GetOpenALErrorString(err), fname, line, stmt);
+		std::cout << ("OpenAL error %08x, (%s) at %s:%i - for %s", err, GetOpenALErrorString(err), fname, line, stmt);
 	}
 };
