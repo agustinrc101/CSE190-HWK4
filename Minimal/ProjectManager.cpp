@@ -672,6 +672,9 @@ void ProjectManager::clientConnect(bool isHost) {
 
 	if (!isHost) {
 		//Move player
+		otherHandL->isActive = true;
+		otherHandR->isActive = true;
+		otherHead->isActive = true;
 		player->setToWorld(glm::mat4(1));
 		player->translate(glm::vec3(0, 0, -4));
 		player->rotate(180, AXIS_Y_POSITIVE);

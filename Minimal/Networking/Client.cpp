@@ -19,10 +19,12 @@ void Client::joinServer() {
 
 	if (connectToServer(DEFAULT_IP)) {
 		connected = true;
+		
 		_beginthread(clientLoop, 0, (void*)0);
 	}
 	else if (connectToServer(LOCAL_HOST)) {
 		connected = true;
+		sendPacket(INIT);
 		_beginthread(clientLoop, 0, (void*)0);
 	}
 }
