@@ -9,6 +9,8 @@
 
 class ComponentMoveTest : public Component {
 public:
+	bool isActive = true;
+
 	ComponentMoveTest(glm::vec3 direction, float moveTime = 1.0f, float moveSpeed = 1.0f)
 		: dir(direction), time(moveTime), speed(moveSpeed) {}
 	~ComponentMoveTest() {}

@@ -381,8 +381,9 @@ void ProjectManager::initScene1() {
 		//transform->translate(glm::vec3(-2, 10, -0.8f));
 		ball->translate(glm::vec3(0, 50, 0));
 
-		ComponentRigidBodySphere * col = new ComponentRigidBodySphere(0.4f);
-		ball->addComponent(col);
+		ComponentRigidBodySphere * rb = new ComponentRigidBodySphere(0.4f);
+		ball->addComponent(rb);
+
 		ComponentBallProperties * c1 = new ComponentBallProperties(stickL, stickR);
 		ball->addComponent(c1);
 
@@ -703,6 +704,9 @@ void ProjectManager::clientConnect(bool isHost) {
 		otherHandL->isActive = true;
 		otherHandR->isActive = true;
 		otherHead->isActive = true;
+		
+		ball->disableAllComponents();
+
 		player->setToWorld(glm::mat4(1));
 		player->translate(glm::vec3(0, 0, -4));
 		player->rotate(180, AXIS_Y_POSITIVE);

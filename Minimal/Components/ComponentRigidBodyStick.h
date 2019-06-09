@@ -13,6 +13,8 @@
 
 class ComponentRigidBodyStick : public Component {
 public:
+	bool isActive = true;
+
 	ComponentRigidBodyStick(glm::vec3 size, bool leftHand, bool thisPlayer = true) : colliderSize(size), left(leftHand), isPlayerSticks(thisPlayer) {}
 	~ComponentRigidBodyStick() {}
 	int up = 0;

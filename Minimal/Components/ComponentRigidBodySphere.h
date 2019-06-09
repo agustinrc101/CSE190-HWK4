@@ -14,6 +14,8 @@
 
 class ComponentRigidBodySphere : public Component {
 public:
+	bool isActive = true;
+
 	ComponentRigidBodySphere(float radius) : colliderSize(radius) {}
 	~ComponentRigidBodySphere() {}
 

@@ -11,6 +11,8 @@
 
 class ComponentCollisionCheckTest : public Component {
 public:
+	bool isActive = true;
+
 	ComponentCollisionCheckTest() {}
 	~ComponentCollisionCheckTest() {}
 

@@ -800,7 +800,7 @@ protected:
 				glViewport(vp.Pos.x, vp.Pos.y, vp.Size.w, vp.Size.h);
 				_sceneLayer.RenderPose[eye] = eyePoses[eye];
 				//---------------------------------------------------View Matrix
-				glm::mat4 view = glm::inverse(player * ovr::toGlm(eyePoses[eye]));
+				glm::mat4 view = glm::inverse(ovr::toGlm(eyePoses[eye]) * player);
 				glm::mat4 projection = _eyeProjections[eye];
 				//---------------------------------------------------Render Scene
 				projectManager->draw(view, projection, eye);

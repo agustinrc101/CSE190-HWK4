@@ -6,6 +6,8 @@ class Transform;
 
 class Component {
 public:
+	bool isActive = true;
+
 	Component() {}
 	virtual ~Component() {}
 

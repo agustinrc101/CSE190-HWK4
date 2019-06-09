@@ -10,6 +10,8 @@
 
 class ComponentSendTestPacket : public Component {
 public:
+	bool isActive = true;
+
 	ComponentSendTestPacket() {}
 	~ComponentSendTestPacket() {}
 

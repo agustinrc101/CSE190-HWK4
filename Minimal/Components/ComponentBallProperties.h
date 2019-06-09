@@ -13,6 +13,8 @@
 
 class ComponentBallProperties : public Component {
 public:
+	bool isActive = true;
+
 	ComponentBallProperties(ComponentRigidBodyStick * leftStick, ComponentRigidBodyStick * rightStick) : stickL(leftStick), stickR(rightStick) {}
 	~ComponentBallProperties() {}
 

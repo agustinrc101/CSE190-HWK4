@@ -9,6 +9,8 @@
 
 class ComponentPlayerRotation : public Component {
 public:
+	bool isActive = true;
+
 	ComponentPlayerRotation() {}
 	~ComponentPlayerRotation() {}
 

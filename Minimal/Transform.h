@@ -100,6 +100,7 @@ public:
 	//Others
 	void addChild(Transform * child) { children.emplace_back(child); child->parent = this; }
 	void addComponent(Component * u);
+	void disableAllComponents();
 	void LateInit();
 
 private:

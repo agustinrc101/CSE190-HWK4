@@ -9,6 +9,8 @@
 
 class ComponentRotate : public Component {
 public:
+	bool isActive = true;
+
 	ComponentRotate(glm::vec3 axisOfRotation = AXIS_Y_POSITIVE, float rotationSpeed = 1.0f, float rotationAngle = 45.0f)
 		: axis(axisOfRotation), speed(rotationSpeed), angle(rotationAngle) { }
 	~ComponentRotate() {}

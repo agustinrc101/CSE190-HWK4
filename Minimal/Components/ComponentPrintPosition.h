@@ -9,6 +9,8 @@
 
 class ComponentPrintPosition : public Component{
 	public:
+		bool isActive = true;
+
 		ComponentPrintPosition() {}
 		~ComponentPrintPosition(){}
 

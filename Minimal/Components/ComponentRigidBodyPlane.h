@@ -12,6 +12,8 @@
 
 class ComponentRigidBodyPlane : public Component {
 public:
+	bool isActive = true;
+
 	ComponentRigidBodyPlane(float size, glm::vec3 Axis=AXIS_Y_NEGATIVE) : colliderSize(size), axis(Axis) {}
 	~ComponentRigidBodyPlane() {}
 

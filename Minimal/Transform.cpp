@@ -39,8 +39,10 @@ void Transform::draw(glm::mat4 headPose, glm::mat4 projection, glm::mat4 parent)
 void Transform::update(double deltaTime) {
 	if (isActive) {
 		//Update this transform's components
-		for (int i = 0; i < components.size(); i++)
-			components[i]->Update(deltaTime);
+		for (int i = 0; i < components.size(); i++) {
+			if(components[i]->isActive)
+				components[i]->Update(deltaTime);
+		}
 		//Update this transform's children
 		for (int i = 0; i < children.size(); i++)
 			children[i]->update(deltaTime);
@@ -53,4 +55,9 @@ void Transform::LateInit() {
 	//Call this transform's children
 	for (int i = 0; i < children.size(); i++)
 		children[i]->LateInit();
+}
+
+void Transform::disableAllComponents() {
+	for (int i = 0; i < components.size(); i++)
+		components[i]->isActive = false;
 }

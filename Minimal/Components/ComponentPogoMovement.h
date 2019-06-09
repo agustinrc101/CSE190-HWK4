@@ -9,6 +9,8 @@
 
 class ComponentPogoMovement : public Component {
 public:
+	bool isActive = true;
+
 	ComponentPogoMovement(Transform * theHead, Transform * theHand, Transform * pogoCollider, ComponentRigidBodyStick * theStickCollider) : head(theHead), hand(theHand), collider(pogoCollider), stickCollider(theStickCollider)  {
 		storedColor = hand->material->color;
 	}

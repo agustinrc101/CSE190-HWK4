@@ -9,6 +9,8 @@
 
 class ComponentTest1 : public Component{
 	public:
+		bool isActive = true;
+
 		ComponentTest1(){}
 		~ComponentTest1(){}
 

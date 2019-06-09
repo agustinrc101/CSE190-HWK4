@@ -11,6 +11,8 @@
 
 class ComponentMenuCube : public Component {
 public:
+	bool isActive = true;
+
 	ComponentMenuCube(ConnectionType connectionType, float collisionRadius) : type(connectionType), radius(collisionRadius) {}
 	~ComponentMenuCube() {}
 

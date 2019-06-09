@@ -11,6 +11,8 @@
 
 class ComponentRigidBodyBox : public Component {
 public:
+	bool isActive = true;
+
 	ComponentRigidBodyBox(glm::vec3 size, bool Static = false) : colliderSize(size), isStatic(Static) {}
 	~ComponentRigidBodyBox() {}
 

@@ -9,6 +9,8 @@
 
 class ComponentGoal : public Component {
 public:
+	bool isActive = true;
+
 	ComponentGoal(Transform * Ball, glm::vec3 TopExtents, glm::vec3 BottomExtents) : ball(Ball), top(TopExtents), bottom(BottomExtents) {}
 	~ComponentGoal() {}
 
