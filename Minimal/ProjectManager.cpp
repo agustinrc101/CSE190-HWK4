@@ -406,20 +406,20 @@ void ProjectManager::initScene1() {
 
 		scene1->addTransform(ball);
 	}
-	//Sun
-	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_ORANGE), Textures::getTexture(Textures::T_STEAM));
-		ball = new Transform(model_sphere, mat, false);
+	////Sun
+	//{
+	//	Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_ORANGE), Textures::getTexture(Textures::T_STEAM));
+	//	ball = new Transform(model_sphere, mat, false);
 
-		ball->scale(0.4f);
+	//	ball->scale(10.4f);
 
-		//transform->translate(glm::vec3(-2, 10, -0.8f));
-		ball->translate(glm::vec3(-3.5, 0, -0.7f));
+	//	//transform->translate(glm::vec3(-2, 10, -0.8f));
+	//	ball->translate(glm::vec3(30.5, 0, -0.7f));
 
 
 
-		scene1->addTransform(ball);
-	}
+	//	scene1->addTransform(ball);
+	//}
 	//Goalpost - RED
 	{
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_RED));
