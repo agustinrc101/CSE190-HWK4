@@ -706,6 +706,7 @@ void ProjectManager::clientConnect(bool isHost) {
 		otherHandR->isActive = true;
 		otherHead->isActive = true;
 		
+		ball->setUseToWorld(true);
 		ball->disableAllComponents();
 
 		player->setToWorld(glm::mat4(1));
@@ -761,7 +762,6 @@ void ProjectManager::receivePackets() {
 				break;
 			case BALL:
 				ball->setToWorld(packet.toWorld);
-				print(ball->getCompleteToWorld());
 				break;
 			default:
 				std::cerr << "Unknown PlayerData packet type received" << std::endl; 

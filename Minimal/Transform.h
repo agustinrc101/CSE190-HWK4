@@ -77,6 +77,7 @@ public:
 			rotationMatrix = (glm::mat4)glm::toMat4(q);
 		}
 	}
+	void setUseToWorld(bool b) { useToWorld = b; }
 
 	//Getters
 	glm::mat4 getToWorld() { if (useToWorld)return toWorld; else return translationMatrix * rotationMatrix * scaleMatrix; }
