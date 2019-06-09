@@ -114,6 +114,7 @@ void Client::clientLoop(void *) {
 					std::cout << "Received INIT packet" << std::endl;
 					ProjectManager::project->initPacketReceived();
 					i += sizeof(Packet);
+					break;
 				case EXIT:			//Handle exit
 					std::cout << "Received EXIT packet" << std::endl;
 					ProjectManager::project->exitPacketReceived();
