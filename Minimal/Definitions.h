@@ -24,6 +24,7 @@
 #define TEXTURE_WINDOW "textures/window.png"
 #define TEXTURE_HOST "textures/host.png"
 #define TEXTURE_CONNECT "textures/connect.png"
+#define TEXTURE_OFFLINE "textures/offline.png"
 
 //Models
 #define MODEL_SPHERE "models/sphere.obj"

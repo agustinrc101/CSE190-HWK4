@@ -130,6 +130,7 @@ class Textures{
 			T_WINDOW = 7,
 			T_CONNECT = 8,
 			T_HOST = 9,
+			T_OFFLINE = 10,
 		};
 
 		//Init
@@ -143,6 +144,7 @@ class Textures{
 			Textures::textureWindow = LoadTextures(TEXTURE_WINDOW);
 			Textures::textureConnect = LoadTextures(TEXTURE_CONNECT);
 			Textures::textureHost = LoadTextures(TEXTURE_HOST);
+			Textures::textureOffline = LoadTextures(TEXTURE_OFFLINE);
 		}
 
 		//Getters
@@ -158,12 +160,10 @@ class Textures{
 			case T_WINDOW:	return textureWindow;
 			case T_CONNECT:	return textureConnect;
 			case T_HOST:	return textureHost;
+			case T_OFFLINE:	return textureOffline;
 			default:		return 0;
-			}
-			
+			}	
 		}
-
-		
 
 		//Delete textures
 		static void deleteTextures() {
@@ -176,6 +176,7 @@ class Textures{
 			glDeleteTextures(1, &textureWindow);
 			glDeleteTextures(1, &textureConnect);
 			glDeleteTextures(1, &textureHost);
+			glDeleteTextures(1, &textureOffline);
 		}
 
 	protected:
@@ -189,6 +190,7 @@ class Textures{
 		static GLuint textureWindow;
 		static GLuint textureConnect;
 		static GLuint textureHost;
+		static GLuint textureOffline;
 
 };
 
@@ -203,5 +205,6 @@ GLuint Textures::textureRobot = 0;
 GLuint Textures::textureWindow = 0;
 GLuint Textures::textureHost = 0;
 GLuint Textures::textureConnect = 0;
+GLuint Textures::textureOffline = 0;
 
 #endif

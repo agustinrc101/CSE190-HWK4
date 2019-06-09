@@ -208,7 +208,7 @@ void ProjectManager::initGlobalScene() {
 	}
 	//Hand models
 	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_RED), Textures::getTexture(Textures::T_GRIP2));
+		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTexture(Textures::T_GRIP2));
 		handLModel = new Transform(model_hand_left, mat);
 		handRModel = new Transform(model_hand_right, mat);
 	}
