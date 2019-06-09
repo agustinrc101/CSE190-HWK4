@@ -16,12 +16,33 @@ public:
 	ComponentBallProperties(ComponentRigidBodyStick * leftStick, ComponentRigidBodyStick * rightStick) : stickL(leftStick), stickR(rightStick) {}
 	~ComponentBallProperties() {}
 
+	//////Sound Properties/////
+	float delayTime = 0.3f;	
+	float delay = 0.0f;
+	bool hasHit = false;
+	float delay2 = 0.0f;
+	bool hasHit2 = false;
+	//////Sound Properties/////
+
 	void Init(Transform * p) {
 		transform = p;
 	}
 	int up = 0;
 	void Update(double deltaTime) override {
-		
+		if (hasHit) {
+			delay += deltaTime;
+			if (delay > delayTime) {
+				hasHit = false;
+				delay = 0;
+			}
+		}
+		if (hasHit2) {
+			delay2 += deltaTime;
+			if (delay2 > delayTime) {
+				hasHit2 = false;
+				delay2 = 0;
+			}
+		}
 		int numManifolds = Physics::physics->dynamicsWorld->getDispatcher()->getNumManifolds();
 		for (int i = 0; i < numManifolds; i++) {
 			btPersistentManifold* contactManifold = Physics::physics->dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
@@ -31,45 +52,58 @@ public:
 
 			if ((obA->getCollisionShape()->getUserIndex() == LAYER_BALL) || (obB->getCollisionShape()->getUserIndex() == LAYER_BALL)) {
 				if ((obA->getCollisionShape()->getUserIndex() == LAYER_STICK_LEFT) || (obB->getCollisionShape()->getUserIndex() == LAYER_STICK_LEFT)) {
-					if(!hasCollidedL)
-						rigidbody->setLinearVelocity(rigidbody->getLinearVelocity() + bullet::fromGlm(ProjectManager::project->getStickVelocity(true)));
-					hasCollidedL = true;
+					if (!hasCollidedL) {
+						hasCollidedL = true;
+						
+						cout << "hitl " << endl;
+						//rigidbody->setLinearVelocity(rigidbody->getLinearVelocity() + bullet::fromGlm(ProjectManager::project->getStickVelocity(true)));
+						if (!hasHit) {
+							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play();
+
+
+							hasHit = true;
+						}
+
+					}
+					
 					isCollidingL = true;
 				}
-				else if((obA->getCollisionShape()->getUserIndex() == LAYER_STICK_RIGHT) || (obB->getCollisionShape()->getUserIndex() == LAYER_STICK_RIGHT)) {
-					if (!hasCollidedR)
-						rigidbody->setLinearVelocity(rigidbody->getLinearVelocity() + bullet::fromGlm(ProjectManager::project->getStickVelocity(false)));
-					hasCollidedR = true;
+				else {
+					isCollidingL = false;
+				}
+				if((obA->getCollisionShape()->getUserIndex() == LAYER_STICK_RIGHT) || (obB->getCollisionShape()->getUserIndex() == LAYER_STICK_RIGHT)) {
+					if (!hasCollidedR) {
+						hasCollidedR = true;
+						
+						//rigidbody->setLinearVelocity(rigidbody->getLinearVelocity() + bullet::fromGlm(ProjectManager::project->getStickVelocity(false)));
+						cout << "hit2" << endl;
+						if (!hasHit2) {
+							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play();
+						
+							
+							hasHit2 = true;
+						}
+
+					}
+					
 					isCollidingR = true;
 				}
-			}
-			///////GROUND MOVEMENT COLLISION/////////
-			if ((obA->getCollisionShape()->getUserIndex() == LAYER_GROUND_MOVEMENT) || (obB->getCollisionShape()->getUserIndex() == LAYER_GROUND_MOVEMENT)) {
-				if ((obA->getCollisionShape()->getUserIndex() == LAYER_STICK_LEFT) || (obB->getCollisionShape()->getUserIndex() == LAYER_STICK_LEFT)) {
-					stickL->touchingGround = true;
-					//cout << "ON GROUND" << endl;
-					
-				}
-				else if ((obA->getCollisionShape()->getUserIndex() == LAYER_STICK_RIGHT) || (obB->getCollisionShape()->getUserIndex() == LAYER_STICK_RIGHT)) {
-					stickR->touchingGround = true;
-					//cout << "ON GROUND" << endl;
-				}
 				else {
-					stickL->touchingGround = false;
-					stickR->touchingGround = false;
-					//cout << "NOT ON GROUND" << endl;
+					isCollidingR = false;
 				}
+				
 			}
-			///////GROUND MOVEMENT COLLISION/////////
+			
 			
 		}
 
 		if (!isCollidingL && hasCollidedL) {
 			hasCollidedL = false;
-			//hasCollidedR = false;
+			
 		}
 		else if (!isCollidingR && hasCollidedR) {
 			hasCollidedR = false;
+			//ProjectManager::project->getSoundEffect(HIT_SOUND)->Play();
 		}
 
 		if (Input::getButtonA() || Input::getButtonX()) {

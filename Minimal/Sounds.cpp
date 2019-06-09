@@ -138,9 +138,9 @@ Sounds::Sounds(const char* filename) {
 void Sounds::Play() {
 	alSourcePlay(sourceid);
 
-	while (source_state == AL_PLAYING) {
+	/*while (source_state == AL_PLAYING) {
 		alGetSourcei(source, AL_SOURCE_STATE, &source_state);
-	}
+	}*/
 }
 
 Sounds::~Sounds() {
