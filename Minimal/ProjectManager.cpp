@@ -341,7 +341,7 @@ void ProjectManager::initMenuScene() {
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTexture(Textures::T_OFFLINE));
 		Transform * cube = new Transform(model_cube_repeat, mat);
 
-		cube->translate(glm::vec3(0, 0.2f, 0));
+		cube->translate(glm::vec3(0, 0.25f, 0));
 		cube->scale(0.1f);
 
 		cube->addComponent(new ComponentRotate(AXIS_Y_NEGATIVE + AXIS_X_NEGATIVE + AXIS_Z_POSITIVE, 1.5f));
@@ -614,6 +614,7 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 void ProjectManager::updateHead(glm::mat4 hmd) {
 	head->setToWorld(hmd);
 	head->scale(0.25f);
+	head->rotate(180, AXIS_Y_POSITIVE);
 }
 
 void ProjectManager::updateLightCameraPos(glm::mat4 eye) {
