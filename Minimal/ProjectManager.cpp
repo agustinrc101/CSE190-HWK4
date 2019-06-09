@@ -54,6 +54,7 @@ Model * model_sphere;
 Model * model_cube;
 Model * model_cube_repeat;
 Model * model_plane;
+//Model * model_tiled_plane;
 Model * model_stick;
 Model * model_robot;
 Model * model_hand_left;
@@ -122,6 +123,7 @@ void ProjectManager::initModels() {
 	model_sphere = new Model(MODEL_SPHERE);
 	model_cube = new Model(MODEL_CUBE);
 	model_plane = new Model(MODEL_PLANE);
+	//model_tiled_plane = new Model(MODEL_TILED_PLANE);
 	model_stick = new Model(MODEL_STICK);
 	model_robot = new Model(MODEL_ROBOT);
 	model_hand_left = new Model(MODEL_HAND_LEFT);
@@ -317,7 +319,7 @@ void ProjectManager::initMenuScene() {
 		cube->scale(0.1f);
 
 		cube->addComponent(new ComponentRotate(AXIS_Y_POSITIVE + AXIS_X_POSITIVE, 1.5f));
-		cube->addComponent(new ComponentMenuCube(true, 0.1f));
+		cube->addComponent(new ComponentMenuCube(HOST, 0.1f));
 
 		sceneMenu->addTransform(cube);
 	}
@@ -330,7 +332,20 @@ void ProjectManager::initMenuScene() {
 		cube->scale(0.1f);
 
 		cube->addComponent(new ComponentRotate(AXIS_Y_NEGATIVE + AXIS_X_NEGATIVE, 1.5f));
-		cube->addComponent(new ComponentMenuCube(false, 0.1f));
+		cube->addComponent(new ComponentMenuCube(JOIN, 0.1f));
+
+		sceneMenu->addTransform(cube);
+	}	
+	//Solo Cube
+	{
+		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTexture(Textures::T_OFFLINE));
+		Transform * cube = new Transform(model_cube_repeat, mat);
+
+		cube->translate(glm::vec3(0, 0.2f, 0));
+		cube->scale(0.1f);
+
+		cube->addComponent(new ComponentRotate(AXIS_Y_NEGATIVE + AXIS_X_NEGATIVE + AXIS_Z_POSITIVE, 1.5f));
+		cube->addComponent(new ComponentMenuCube(OFFLINE, 0.1f));
 
 		sceneMenu->addTransform(cube);
 	}
@@ -364,7 +379,7 @@ void ProjectManager::initScene1() {
 		ball->scale(0.4f);
 
 		//transform->translate(glm::vec3(-2, 10, -0.8f));
-		ball->translate(glm::vec3(-1.5, 0, -0.7f));
+		ball->translate(glm::vec3(0, 50, 0));
 
 		ComponentRigidBodySphere * col = new ComponentRigidBodySphere(0.4f);
 		ball->addComponent(col);
@@ -376,14 +391,14 @@ void ProjectManager::initScene1() {
 	////Sun
 	{
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_ORANGE), Textures::getTexture(Textures::T_STEAM));
-		ball = new Transform(model_sphere, mat, false);
+		Transform * sun = new Transform(model_sphere, mat, false);
 
-		ball->scale(10.4f);
+		sun->scale(10.4f);
 
-		//transform->translate(glm::vec3(-2, 10, -0.8f));
-		ball->translate(glm::vec3(30.5, 0, -0.7f));
+		//sun->translate(glm::vec3(-2, 10, -0.8f));
+		sun->translate(glm::vec3(30.5, 0, -0.7f));
 
-		scene1->addTransform(ball);
+		scene1->addTransform(sun);
 	}
 	//Goalpost - RED
 	{
@@ -586,7 +601,7 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 	handR->setToWorld(right);
 	handR->scale(glm::vec3(0.015f));
 
-	if (client->player == 1) {
+	if (client->player != 2) {
 		//This player's hand
 		physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(player->getCompleteToWorld() * right), stickR->getlinVelo());
 		physics->newLColPos(handL->getChild(1)->getPosition(false), glm::quat_cast(player->getCompleteToWorld() * left), stickL->getlinVelo());
@@ -693,6 +708,19 @@ void ProjectManager::clientConnect(bool isHost) {
 	}
 }
 
+void ProjectManager::offlineConnect() {
+	handL->isActive = true;
+	handR->isActive = true;
+	handLModel->material->color = glm::vec3(COLOR_FOCUS_RED);
+	handRModel->material->color = glm::vec3(COLOR_FOCUS_RED);
+	
+	//Move player
+	player->setToWorld(glm::mat4(1));
+	player->setPosition(glm::vec3(0, 0, 4));
+
+	changeScene(SCENE_1);
+}
+
 void ProjectManager::stopNetworking() {
 	startedNetwork = false;
 
@@ -741,8 +769,18 @@ void ProjectManager::initPacketReceived() {
 	//Move player
 	player->setToWorld(glm::mat4(1));
 	player->setPosition(glm::vec3(0, 0, 4));
+	
+	//Move Ball
+	btTransform bt;
+	bt.setIdentity();
+	bt.setOrigin(btVector3(0, 50, 0));
+	ball->rigidBody->setWorldTransform(bt);
+	ball->rigidBody->getMotionState()->setWorldTransform(bt);
+	glm::mat4 reset = glm::mat4(1);
+	reset[3] = glm::vec4(0, 0, 0, 1);
+	ball->setToWorld(reset);
 
-
+	ball->rigidBody->setLinearVelocity(btVector3(0, 0, 0));
 }
 
 void ProjectManager::exitPacketReceived() {

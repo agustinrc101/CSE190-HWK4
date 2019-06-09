@@ -11,7 +11,7 @@
 
 class ComponentMenuCube : public Component {
 public:
-	ComponentMenuCube(bool host, float collisionRadius) : isHosting(host), radius(collisionRadius) {}
+	ComponentMenuCube(ConnectionType connectionType, float collisionRadius) : type(connectionType), radius(collisionRadius) {}
 	~ComponentMenuCube() {}
 
 	void Init(Transform * p) {
@@ -22,7 +22,7 @@ public:
 	void Update(double deltaTime) override {
 		if ((glm::distance(transform->getPosition(false), ProjectManager::project->getLeftHandPosition()) < radius) ||
 			(glm::distance(transform->getPosition(false), ProjectManager::project->getRightHandPosition()) < radius)) {
-			beginNetwork();
+			begin();
 		}
 	}
 
@@ -34,12 +34,23 @@ protected:
 	}
 
 private:
-	bool isHosting;
+	ConnectionType type;
 	float radius;
 
-	void beginNetwork() {
-		if (isHosting) ProjectManager::project->serverConnect();
-		else ProjectManager::project->clientConnect(false);
+	void begin() {
+		switch (type) {
+		case HOST:
+			ProjectManager::project->serverConnect();
+			break;
+		case JOIN:
+			ProjectManager::project->clientConnect(false);
+			break;
+		case OFFLINE:
+			ProjectManager::project->offlineConnect();
+			break;
+		default:
+			break;
+		}
 	}
 };
 

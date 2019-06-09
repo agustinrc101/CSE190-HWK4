@@ -52,8 +52,6 @@ private:
 						std::cout << "goal my dude\n";
 						ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(0, 0, 0, scoreSound);
 						scored = true;
-						
-						
 					}
 				}
 			}

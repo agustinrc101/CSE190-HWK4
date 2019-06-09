@@ -9,7 +9,7 @@
 //#define STB_IMAGE_IMPLEMENTATION	//needs to be called ONCE before the first #include "stbi.image.h"
 #include "stb_image.h"
 
-static GLuint LoadTextures(const char * path) {
+static GLuint LoadTextures(const char * path, GLint parameter = GL_CLAMP_TO_EDGE) {
 	std::cout << "Loading textures: " << path << std::endl;
 	GLuint TEX = 0;
 	int width = 0;
@@ -39,8 +39,8 @@ static GLuint LoadTextures(const char * path) {
 
 	glGenerateMipmap(GL_TEXTURE_2D);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, parameter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, parameter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	GLfloat fLargest;
@@ -140,7 +140,7 @@ class Textures{
 			Textures::textureGrip1Albedo = LoadTextures(TEXTURE_GRIP1_ALBEDO);
 			Textures::textureGrip2Albedo = LoadTextures(TEXTURE_GRIP2_ALBEDO);
 			Textures::textureStick = LoadTextures(TEXTURE_STICK);
-			Textures::textureGrass = LoadTextures(TEXTURE_GRASS);
+			Textures::textureGrass = LoadTextures(TEXTURE_GRASS, GL_REPEAT);
 			Textures::textureWindow = LoadTextures(TEXTURE_WINDOW);
 			Textures::textureConnect = LoadTextures(TEXTURE_CONNECT);
 			Textures::textureHost = LoadTextures(TEXTURE_HOST);

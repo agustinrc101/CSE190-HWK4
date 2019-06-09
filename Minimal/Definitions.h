@@ -31,6 +31,7 @@
 #define MODEL_CUBE "models/cube.obj"
 #define MODEL_CUBE_REPEAT "models/cube_repeat.obj"
 #define MODEL_PLANE "models/plane.obj"
+#define MODEL_TILED_PLANE "models/tiled_plane.obj"
 #define MODEL_STICK "models/stick/stick.obj"
 #define MODEL_ROBOT "models/robot/ROBOT.obj"
 #define MODEL_HAND_RIGHT "models/hand/handR.obj"
@@ -52,8 +53,8 @@
 #define COLOR_WHITE 1, 1, 1
 #define COLOR_GRAY 0.4f, 0.4f, 0.4f
 #define COLOR_GREY 0.6f, 0.6f, 0.6f
-#define COLOR_FOCUS_RED .3f, .3f, 1
-#define COLOR_FOCUS_BLUE .3f, .3f, 1
+#define COLOR_FOCUS_RED 1, .5f, .5f
+#define COLOR_FOCUS_BLUE .75f, .75f, 1
 
 //Axes
 #define AXIS_X_POSITIVE glm::vec3(1, 0, 0)

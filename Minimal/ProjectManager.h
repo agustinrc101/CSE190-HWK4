@@ -33,6 +33,7 @@ public:
 	
 	void changeScene(Scenes scene);
 	
+	void offlineConnect();
 	void serverConnect();
 	void clientConnect(bool isHost);
 	void initPacketReceived();

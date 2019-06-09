@@ -15,6 +15,12 @@
 
 #include "Packet.h"
 
+enum ConnectionType {
+	HOST = 0,
+	JOIN = 1,
+	OFFLINE = 2,
+};
+
 class Client{
 public:
 	int player = 0;
