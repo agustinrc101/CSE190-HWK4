@@ -11,16 +11,19 @@
 
 class ComponentRigidBodyBox : public Component {
 public:
-	ComponentRigidBodyBox(glm::vec3 size) : colliderSize(size) {}
+	ComponentRigidBodyBox(glm::vec3 size, bool Static = false) : colliderSize(size), isStatic(Static) {}
 	~ComponentRigidBodyBox() {}
 
 	void Init(Transform * p) {
 		transform = p;
-		Start();
 	}
 
 	void Update(double deltaTime) override {
 		update();
+	}
+
+	void LateInit() override {
+		Start();
 	}
 
 protected:
@@ -28,12 +31,18 @@ protected:
 	btRigidBody * rigidbody;
 
 	glm::vec3 colliderSize;
+	bool isStatic;
 
 	void Start() override {
-		rigidbody = transform->rigidBody = Physics::addBoxCollider(colliderSize, glm::vec3(0));
+		if(isStatic)
+			rigidbody = transform->rigidBody = Physics::addBoxCollider(colliderSize, transform->getPosition(false), 0);
+		else
+			rigidbody = transform->rigidBody = Physics::addBoxCollider(colliderSize, transform->getPosition(false));
 	}
 
 	void update() {
+		if (isStatic) return;
+
 		glm::vec3 pos = bullet::ToGlm(rigidbody->getCenterOfMassPosition());
 		glm::quat rot = bullet::ToGlm(rigidbody->getOrientation());
 

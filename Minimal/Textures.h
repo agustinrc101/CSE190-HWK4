@@ -9,47 +9,6 @@
 //#define STB_IMAGE_IMPLEMENTATION	//needs to be called ONCE before the first #include "stbi.image.h"
 #include "stb_image.h"
 
-class Textures{
-	public:
-		//Getters
-		static void setTextureSkybox(GLuint t){ textureSkybox = t; }
-		static void setTextureSteam(GLuint t) { textureSteam = t; }
-		static void setTextureGrip1Albedo(GLuint t) { textureGrip1Albedo = t; }
-		static void setTextureGrip2Albedo(GLuint t) { textureGrip2Albedo = t; }
-		static void setTextureStick(GLuint t) { textureStick = t; }
-		static void setTextureGrass(GLuint t) { textureGrass = t; }
-		static void setTextureRobot(GLuint t) { textureRobot = t; }
-
-		//Setters
-		static GLuint getTextureSkybox(){ return textureSkybox; }
-		static GLuint getTextureSteam() { return textureSteam; }
-		static GLuint getTextureGrip1Albedo() { return textureGrip1Albedo; }
-		static GLuint getTextureGrip2Albedo() { return textureGrip2Albedo; }
-		static GLuint getTextureStick() { return textureStick; }
-		static GLuint getTextureGrass() { return textureGrass; }
-		static GLuint getTextureRobot() { return textureRobot; }
-
-		//Delete textures
-		static void deleteTextures() {
-			glDeleteTextures(1, &textureSkybox);
-			glDeleteTextures(1, &textureSteam);
-			glDeleteTextures(1, &textureGrip1Albedo);
-			glDeleteTextures(1, &textureGrip2Albedo);
-			glDeleteTextures(1, &textureStick);
-			glDeleteTextures(1, &textureRobot);
-		}
-
-	protected:
-		static GLuint textureSkybox;
-		static GLuint textureSteam;
-		static GLuint textureGrip1Albedo;
-		static GLuint textureGrip2Albedo;
-		static GLuint textureStick;
-		static GLuint textureGrass;
-		static GLuint textureRobot;
-
-};
-
 static GLuint LoadTextures(const char * path) {
 	std::cout << "Loading textures: " << path << std::endl;
 	GLuint TEX = 0;
@@ -65,7 +24,7 @@ static GLuint LoadTextures(const char * path) {
 	}
 
 	glGenTextures(1, &TEX);
-	
+
 	GLenum format;
 	if (nrcChannels == 1)
 		format = GL_RED;
@@ -110,7 +69,7 @@ static GLuint LoadCubeMap(std::string path) {
 
 	int width, height, nrcChannels;
 	for (unsigned int i = 0; i < faces.size(); i++) {
-		
+
 		switch (i) {
 		case 0:
 			std::cout << "\tLoading right texture...\n";
@@ -152,8 +111,85 @@ static GLuint LoadCubeMap(std::string path) {
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	
+
 	return TEX;
 }
+
+class Textures{
+
+	public:
+		enum Tex {
+			T_EMPTY = -1,
+			T_SKYBOX = 0,
+			T_STEAM = 1,
+			T_GRIP1 = 2,
+			T_GRIP2 = 3,
+			T_STICK = 4,
+			T_GRASS = 5,
+			T_ROBOT = 6,
+			T_WINDOW = 7,
+		};
+
+		//Init
+		static void init() {
+			Textures::textureSkybox = LoadCubeMap(TEXTURE_SKYBOX_LEFT);
+			Textures::textureSteam = LoadTextures(TEXTURE_CUBE_STEAM);
+			Textures::textureGrip1Albedo = LoadTextures(TEXTURE_GRIP1_ALBEDO);
+			Textures::textureGrip2Albedo = LoadTextures(TEXTURE_GRIP2_ALBEDO);
+			Textures::textureStick = LoadTextures(TEXTURE_STICK);
+			Textures::textureGrass = LoadTextures(TEXTURE_GRASS);
+			Textures::textureWindow = LoadTextures(TEXTURE_WINDOW);
+		}
+
+		//Getters
+		static GLuint getTexture(Tex tex = T_EMPTY) {
+			switch (tex) {
+			case T_SKYBOX:	return textureSkybox;
+			case T_STEAM:	return textureSteam;
+			case T_GRIP1:	return textureGrip1Albedo;
+			case T_GRIP2:	return textureGrip2Albedo;
+			case T_STICK:	return textureStick;
+			case T_GRASS:	return textureGrass;
+			case T_ROBOT:	return textureRobot;
+			case T_WINDOW:	return textureWindow;
+			default:		return 0;
+			}
+			
+		}
+
+		
+
+		//Delete textures
+		static void deleteTextures() {
+			glDeleteTextures(1, &textureSkybox);
+			glDeleteTextures(1, &textureSteam);
+			glDeleteTextures(1, &textureGrip1Albedo);
+			glDeleteTextures(1, &textureGrip2Albedo);
+			glDeleteTextures(1, &textureStick);
+			glDeleteTextures(1, &textureRobot);
+			glDeleteTextures(1, &textureWindow);
+		}
+
+	protected:
+		static GLuint textureSkybox;
+		static GLuint textureSteam;
+		static GLuint textureGrip1Albedo;
+		static GLuint textureGrip2Albedo;
+		static GLuint textureStick;
+		static GLuint textureGrass;
+		static GLuint textureRobot;
+		static GLuint textureWindow;
+
+};
+
+//Init Textures
+GLuint Textures::textureSteam = 0;
+GLuint Textures::textureSkybox = 0;
+GLuint Textures::textureGrip1Albedo = 0;
+GLuint Textures::textureGrip2Albedo = 0;
+GLuint Textures::textureStick = 0;
+GLuint Textures::textureGrass = 0;
+GLuint Textures::textureRobot = 0;
+GLuint Textures::textureWindow = 0;
 
 #endif

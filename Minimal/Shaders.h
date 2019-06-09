@@ -3,9 +3,17 @@
 #pragma once
 
 #include <GL/glew.h>
+#include "Shader.h"
 
 class Shaders{
 public:
+	//Init
+	static void init() {
+		Shaders::setColorShader(LoadShaders(SHADER_COLOR_VERTEX, SHADER_COLOR_FRAGMENT));
+		Shaders::setTextureShader(LoadShaders(SHADER_TEXTURE_VERTEX, SHADER_TEXTURE_FRAGMENT));
+		Shaders::setSkyboxShader(LoadShaders(SHADER_SKYBOX_VERTEX, SHADER_SKYBOX_FRAGMENT));
+	}
+
 	//Setters
 	static void setColorShader(GLint s) {colorShader = s;}
 	static void setTextureShader(GLint s) { textureShader = s;}

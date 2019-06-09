@@ -21,6 +21,7 @@
 #define TEXTURE_GRASS "textures/grass.jpg"
 #define TEXTURE_STICK "models/stick/stick.jpg"
 #define TEXTURE_ROBOT "models/robot/ROBOT.png"
+#define TEXTURE_WINDOW "textures/window.png"
 
 //Models
 #define MODEL_SPHERE "models/sphere.obj"
@@ -120,4 +121,5 @@ static glm::vec3 calculateNormal(glm::vec3 p0, glm::vec3 p1, glm::vec3 p2){
 	vn = glm::cross(vr, vu);
 	return glm::normalize(vn);	//normal
 }
+
 #endif

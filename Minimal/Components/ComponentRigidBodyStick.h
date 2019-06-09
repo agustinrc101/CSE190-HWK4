@@ -65,7 +65,7 @@ private:
 	float curTime = 0.f;
 
 	glm::vec3 getVelocity(double deltaTime) {						//CALCULATES VELOCITY (POSITION OVER A SECOND
-		curTime += deltaTime;
+		curTime += (float)deltaTime;
 		if(curTime >= 0.1f){
 			curTime = 0;
 			up+=10;
