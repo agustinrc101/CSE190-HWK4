@@ -73,6 +73,8 @@ private:
 	MovementState state = IDLE;
 	HandState handState = BOTH_IDLE;
 
+	int hitSound = 3;
+
 	void handleIdleState() {
 		if (hand->getPosition().y >= (head->getPosition().y / 1.5f)) {
 			handState = RIGHT;
@@ -92,7 +94,7 @@ private:
 			storedHandPosition = hand->getPosition(false);
 			prevHandPosition = hand->getPosition(false);
 			state = ARM_DOWN;
-
+			ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(collider->getPosition(false).x, collider->getPosition(false).y, collider->getPosition(false).z, hitSound);
 		}
 		else {
 			hand->material->color = glm::vec3(COLOR_WHITE);
