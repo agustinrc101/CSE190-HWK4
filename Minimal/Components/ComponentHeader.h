@@ -17,5 +17,6 @@
 #include "ComponentPlayerRotation.h"
 #include "ComponentBallProperties.h"
 #include "ComponentGoal.h"
+#include "ComponentMenuCube.h"
 
 #endif

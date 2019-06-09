@@ -8,7 +8,6 @@
 #include "Textures.h"
 #include "Material.h"
 //Rendering
-#include "SceneGraph.h"
 #include "Model.h"
 #include "Transform.h"
 #include "TexturedCube.h"
@@ -53,6 +52,7 @@ SceneGraph * scene1;
 //Declare Models
 Model * model_sphere;
 Model * model_cube;
+Model * model_cube_repeat;
 Model * model_plane;
 Model * model_stick;
 Model * model_robot;
@@ -75,6 +75,8 @@ glm::vec3 groundPosition = glm::vec3(0, -1.7f, 0);
 float stageSize = 10.0f;
 ComponentRigidBodyStick * stickL;
 ComponentRigidBodyStick * stickR;
+ComponentRigidBodyStick * otherStickL;
+ComponentRigidBodyStick * otherStickR;
 //Scene Management
 Scenes curScene = SCENE_MENU;
 
@@ -125,6 +127,7 @@ void ProjectManager::initModels() {
 	model_hand_left = new Model(MODEL_HAND_LEFT);
 	model_hand_right = new Model(MODEL_HAND_RIGHT);
 	model_goal = new Model(MODEL_GOAL);
+	model_cube_repeat = new Model(MODEL_CUBE_REPEAT);
 }
 
 void ProjectManager::initObjects() {
@@ -154,6 +157,7 @@ void ProjectManager::initGlobalScene() {
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_CYAN));
 		handR = new Transform(model_sphere, mat);
 		handR->name = "Right Hand";
+		handR->isActive = false;
 
 		mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTexture(Textures::T_STICK));
 		Transform * stick = new Transform(model_stick, mat);
@@ -178,6 +182,7 @@ void ProjectManager::initGlobalScene() {
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_RED));
 		handL = new Transform(model_sphere, mat);
 		handL->name = "Left Hand";
+		handL->isActive = false;
 
 		mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTexture(Textures::T_STICK));
 		Transform * stick = new Transform(model_stick, mat);
@@ -239,6 +244,16 @@ void ProjectManager::initGlobalScene() {
 		otherHandR = new Transform(model_sphere, mat);
 		otherHandR->name = "Other Player's Right Hand";
 		otherHandR->isActive = false;
+
+		mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTexture(Textures::T_STICK));
+		Transform * stick = new Transform(model_stick, mat);
+
+		stick->scale(glm::vec3(0.5f, 0.7f, 0.5f));
+		stick->translate(glm::vec3(0, -175, 0));
+
+		otherStickR = new ComponentRigidBodyStick(stickSize, false);
+		otherHandR->addComponent(otherStickR);
+
 		sceneGlobal->addTransform(otherHandR);
 
 	}
@@ -248,6 +263,16 @@ void ProjectManager::initGlobalScene() {
 		otherHandL = new Transform(model_sphere, mat);
 		otherHandL->name = "Other Player's Left Hand";
 		otherHandL->isActive = false;
+
+		mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTexture(Textures::T_STICK));
+		Transform * stick = new Transform(model_stick, mat);
+
+		stick->scale(glm::vec3(0.5f, 0.7f, 0.5f));
+		stick->translate(glm::vec3(0, -175, 0));
+		otherStickL = new ComponentRigidBodyStick(stickSize, true);
+		otherHandL->addComponent(otherStickL);
+
+
 		sceneGlobal->addTransform(otherHandL);
 	}
 	//Head setup
@@ -269,8 +294,31 @@ void ProjectManager::initMenuScene() {
 	//==================================
 	//Initialize sceneMenu objects here
 	//==================================
+	//Host Cube
 	{
+		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTexture(Textures::T_HOST));
+		Transform * cube = new Transform(model_cube_repeat, mat);
 
+		cube->translate(glm::vec3(-0.3f, 0.1f, -0.3f));
+		cube->scale(0.1f);
+
+		cube->addComponent(new ComponentRotate());
+		cube->addComponent(new ComponentMenuCube(true, 0.1f));
+
+		sceneMenu->addTransform(cube);
+	}
+	//Join Cube
+	{
+		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTexture(Textures::T_CONNECT));
+		Transform * cube = new Transform(model_cube_repeat, mat);
+
+		cube->translate(glm::vec3(0.3f, 0.1f, -0.3f));
+		cube->scale(0.1f);
+
+		cube->addComponent(new ComponentRotate(AXIS_Y_NEGATIVE));
+		cube->addComponent(new ComponentMenuCube(false, 0.1f));
+
+		sceneMenu->addTransform(cube);
 	}
 
 	sceneMenu->LateInit();
@@ -454,10 +502,7 @@ void ProjectManager::initProject() {
 void ProjectManager::draw(glm::mat4 headPose, glm::mat4 projection, int eye) {
 	//Draw SceneGraph objects
 	sceneGlobal->draw(headPose, projection);
-	sceneMenu->draw(headPose, projection);
-	scene1->draw(headPose, projection);
-
-	/*
+	
 	switch (curScene) {
 	case(SCENE_MENU):
 		sceneMenu->draw(headPose, projection);
@@ -467,9 +512,8 @@ void ProjectManager::draw(glm::mat4 headPose, glm::mat4 projection, int eye) {
 		break;
 	default:
 		curScene = SCENE_MENU;
-		break;
+		break;	
 	}
-	*/
 
 	//Debug Draw
 	lines->draw(headPose, projection, glm::mat4(1));
@@ -477,13 +521,12 @@ void ProjectManager::draw(glm::mat4 headPose, glm::mat4 projection, int eye) {
 }
 
 void ProjectManager::update(double deltaTime) {
-	physics->update(deltaTime);
-	sceneGlobal->update(deltaTime);
-	sceneMenu->update(deltaTime);
-	scene1->update(deltaTime);
+	if (client->player != 2) {
+		physics->update(deltaTime);
+	}
 
-	//TODO - handle scene changes (maybe use enum with a switch statement)
-	/*
+	sceneGlobal->update(deltaTime);
+
 	switch (curScene) {
 	case(SCENE_MENU):
 		sceneMenu->update(deltaTime);
@@ -495,14 +538,11 @@ void ProjectManager::update(double deltaTime) {
 		curScene = SCENE_MENU;
 		break;
 	}
-	*/
 
 	if (startedNetwork) {
 		sendPlayerData();
 		receivePackets();
 	}
-	else
-		networkingSetup();
 
 	testing();
 }
@@ -571,25 +611,9 @@ Sounds* ProjectManager::getSoundEffect(SoundEffect soundEffect) {
 	}
 }
 
+
 void ProjectManager::testing() {
 
-}
-
-void ProjectManager::networkingSetup() {
-	//Has networking setup begun?
-	if (startedNetwork) return;
-
-	//If not, is user attempting to begin?
-	if (Input::getButtonStickL()) {	//TODO - change how to host/join server
-		//Start Server
-		startedNetwork = true;
-		serverConnect();
-	}
-	else if (Input::getButtonStickR()) {
-		//Connect to server
-		startedNetwork = true;
-		clientConnect();
-	}
 }
 
 void ProjectManager::serverConnect() {
@@ -597,21 +621,34 @@ void ProjectManager::serverConnect() {
 	clientConnect();
 	client->player = 1;
 
-	handL->material->color = glm::vec3(COLOR_RED);
-	handR->material->color = glm::vec3(COLOR_RED);
+	handL->isActive = true;
+	handR->isActive = true;
+	handLModel->material->color = glm::vec3(COLOR_RED);
+	handRModel->material->color = glm::vec3(COLOR_RED);
 	otherHandL->material->color = glm::vec3(COLOR_BLUE);
 	otherHandR->material->color = glm::vec3(COLOR_BLUE);
 	otherHead->material->color = glm::vec3(COLOR_BLUE);
+
+	startedNetwork = true;
+
+	changeScene(SCENE_1);
 }
 
 void ProjectManager::clientConnect() {
 	client->joinServer();
 	client->player = 2;
-	handL->material->color = glm::vec3(COLOR_BLUE);
-	handR->material->color = glm::vec3(COLOR_BLUE);
+
+	handL->isActive = true;
+	handR->isActive = true;
+	handLModel->material->color = glm::vec3(COLOR_BLUE);
+	handRModel->material->color = glm::vec3(COLOR_BLUE);
 	otherHandL->material->color = glm::vec3(COLOR_RED);
 	otherHandR->material->color = glm::vec3(COLOR_RED);
 	otherHead->material->color = glm::vec3(COLOR_RED);
+
+	startedNetwork = true;
+
+	changeScene(SCENE_1);
 }
 
 void ProjectManager::stopNetworking() {
@@ -656,12 +693,18 @@ void ProjectManager::receivePackets() {
 			case HAND_RIGHT:
 				otherHandR->setToWorld(packet.toWorld);
 				break;
+			case BALL:
+				ball->setToWorld(packet.toWorld);
 			default:
-				std::cerr << "got trash" << std::endl;
+				std::cerr << "Unknown PlayerData packet type received" << std::endl;
 				break;
 			}
 		}
 	}
+}
+
+void ProjectManager::changeScene(Scenes scene) {
+	curScene = scene;
 }
 
 

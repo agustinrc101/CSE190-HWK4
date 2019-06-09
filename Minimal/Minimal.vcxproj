@@ -162,6 +162,7 @@
     <ClInclude Include="Components\ComponentBallProperties.h" />
     <ClInclude Include="Components\ComponentCollisionCheckTest.h" />
     <ClInclude Include="Components\ComponentGoal.h" />
+    <ClInclude Include="Components\ComponentMenuCube.h" />
     <ClInclude Include="Components\ComponentPlayerRotation.h" />
     <ClInclude Include="Components\ComponentPogoMovement.h" />
     <ClInclude Include="Components\ComponentRigidBodyBox.h" />

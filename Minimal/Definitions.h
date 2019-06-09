@@ -22,10 +22,13 @@
 #define TEXTURE_STICK "models/stick/stick.jpg"
 #define TEXTURE_ROBOT "models/robot/ROBOT.png"
 #define TEXTURE_WINDOW "textures/window.png"
+#define TEXTURE_HOST "textures/host.png"
+#define TEXTURE_CONNECT "textures/connect.png"
 
 //Models
 #define MODEL_SPHERE "models/sphere.obj"
 #define MODEL_CUBE "models/cube.obj"
+#define MODEL_CUBE_REPEAT "models/cube_repeat.obj"
 #define MODEL_PLANE "models/plane.obj"
 #define MODEL_STICK "models/stick/stick.obj"
 #define MODEL_ROBOT "models/robot/ROBOT.obj"

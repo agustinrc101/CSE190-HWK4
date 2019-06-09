@@ -4,6 +4,8 @@
 
 #include <glm/glm.hpp>
 #include "Definitions.h"
+//Scenes
+#include "SceneGraph.h"
 //Sound
 #include "Sounds.h"
 
@@ -29,7 +31,10 @@ public:
 
 	Sounds* getSoundEffect(SoundEffect soundEffect);
 	
+	void changeScene(Scenes scene);
 	
+	void serverConnect();
+	void clientConnect();
 
 private:
 	void initModels();
@@ -41,9 +46,6 @@ private:
 	void initAudio();
 	void initProject();
 
-	void networkingSetup();
-	void serverConnect();
-	void clientConnect();
 	void stopNetworking();
 	void sendPlayerData();
 	void receivePackets();

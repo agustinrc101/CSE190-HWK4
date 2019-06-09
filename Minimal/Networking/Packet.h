@@ -6,7 +6,7 @@
 
 
 #define LOCAL_HOST "127.0.0.1"
-#define DEFAULT_IP "128.54.70.52"	//TODO Change with computer changes 
+#define DEFAULT_IP "128.54.70.73"	//TODO Change with computer changes 
 #define DEFAULT_PORT 54000
 #define MAX_PACKET_SIZE 72	//Change to actual packet size (maybe)
 
@@ -23,6 +23,7 @@ enum PacketDataType {
 	HEAD = 0,
 	HAND_LEFT = 1,
 	HAND_RIGHT = 2,
+	BALL = 3,
 };
 
 struct Packet {

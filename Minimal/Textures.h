@@ -128,6 +128,8 @@ class Textures{
 			T_GRASS = 5,
 			T_ROBOT = 6,
 			T_WINDOW = 7,
+			T_CONNECT = 8,
+			T_HOST = 9,
 		};
 
 		//Init
@@ -139,6 +141,8 @@ class Textures{
 			Textures::textureStick = LoadTextures(TEXTURE_STICK);
 			Textures::textureGrass = LoadTextures(TEXTURE_GRASS);
 			Textures::textureWindow = LoadTextures(TEXTURE_WINDOW);
+			Textures::textureConnect = LoadTextures(TEXTURE_CONNECT);
+			Textures::textureHost = LoadTextures(TEXTURE_HOST);
 		}
 
 		//Getters
@@ -152,6 +156,8 @@ class Textures{
 			case T_GRASS:	return textureGrass;
 			case T_ROBOT:	return textureRobot;
 			case T_WINDOW:	return textureWindow;
+			case T_CONNECT:	return textureConnect;
+			case T_HOST:	return textureHost;
 			default:		return 0;
 			}
 			
@@ -168,6 +174,8 @@ class Textures{
 			glDeleteTextures(1, &textureStick);
 			glDeleteTextures(1, &textureRobot);
 			glDeleteTextures(1, &textureWindow);
+			glDeleteTextures(1, &textureConnect);
+			glDeleteTextures(1, &textureHost);
 		}
 
 	protected:
@@ -179,6 +187,8 @@ class Textures{
 		static GLuint textureGrass;
 		static GLuint textureRobot;
 		static GLuint textureWindow;
+		static GLuint textureConnect;
+		static GLuint textureHost;
 
 };
 
@@ -191,5 +201,7 @@ GLuint Textures::textureStick = 0;
 GLuint Textures::textureGrass = 0;
 GLuint Textures::textureRobot = 0;
 GLuint Textures::textureWindow = 0;
+GLuint Textures::textureHost = 0;
+GLuint Textures::textureConnect = 0;
 
 #endif
