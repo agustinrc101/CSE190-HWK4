@@ -26,9 +26,6 @@ public:
 	
 
 private:
-	void initBulletPhysics();
-	void initShadersAndLighting();
-	void initTextures();
 	void initModels();
 	void initObjects();
 	void initSceneGraphs();

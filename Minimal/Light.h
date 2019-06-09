@@ -6,6 +6,12 @@
 
 class Light {
 public:
+	//init
+	static void init(glm::vec3 position, glm::vec3 color) {
+		Light::setLightPosition(position);
+		Light::setLightColor(color);
+	}
+
 	//Setters
 	static void setLightPosition(glm::vec3 p) { position = p; }
 	static void setLightColor(glm::vec3 c) { color = c; }

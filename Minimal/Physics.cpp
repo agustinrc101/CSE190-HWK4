@@ -114,11 +114,7 @@ btRigidBody* Physics::addPlaneCollider(float size, glm::vec3 position, glm::vec3
 	if (isDynamic)	
 		shape->calculateLocalInertia(mass, localInertia);
 
-	if(false/*size == 40*/)	//hard coded differentiations between ground colliders
-		shape->setUserIndex(LAYER_NULL);
-	else {
-		shape->setUserIndex(LAYER_GROUND_MOVEMENT);
-	}
+	shape->setUserIndex(LAYER_GROUND_MOVEMENT);
 
 	//using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
 	btDefaultMotionState* myMotionState = new btDefaultMotionState(groundTransform);
@@ -141,11 +137,8 @@ btRigidBody* Physics::addPlaneCollider(float size, glm::vec3 position, glm::vec3
 }
 
 btRigidBody* Physics::addStickCollider(glm::vec3 size, glm::vec3 position, bool leftHand) {
-	//create a dynamic rigidbody
-
+	//Create shape
 	btCollisionShape* shape = new btBoxShape(bullet::fromGlm(size));
-	//btCollisionShape* shape = new btSphereShape(btScalar(radius));
-	//btCollisionShape* shape = new btSphereShape(0.3);
 
 	//Create Dynamic Objects
 	btTransform startTransform;
