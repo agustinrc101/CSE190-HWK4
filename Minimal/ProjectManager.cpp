@@ -299,10 +299,10 @@ void ProjectManager::initMenuScene() {
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTexture(Textures::T_HOST));
 		Transform * cube = new Transform(model_cube_repeat, mat);
 
-		cube->translate(glm::vec3(-0.3f, 0.1f, -0.3f));
+		cube->translate(glm::vec3(-0.3f, 0.1f, -0.2f));
 		cube->scale(0.1f);
 
-		cube->addComponent(new ComponentRotate());
+		cube->addComponent(new ComponentRotate(AXIS_Y_POSITIVE + AXIS_X_POSITIVE, 1.5f));
 		cube->addComponent(new ComponentMenuCube(true, 0.1f));
 
 		sceneMenu->addTransform(cube);
@@ -312,10 +312,10 @@ void ProjectManager::initMenuScene() {
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTexture(Textures::T_CONNECT));
 		Transform * cube = new Transform(model_cube_repeat, mat);
 
-		cube->translate(glm::vec3(0.3f, 0.1f, -0.3f));
+		cube->translate(glm::vec3(0.3f, 0.1f, -0.2f));
 		cube->scale(0.1f);
 
-		cube->addComponent(new ComponentRotate(AXIS_Y_NEGATIVE));
+		cube->addComponent(new ComponentRotate(AXIS_Y_NEGATIVE + AXIS_X_NEGATIVE, 1.5f));
 		cube->addComponent(new ComponentMenuCube(false, 0.1f));
 
 		sceneMenu->addTransform(cube);
