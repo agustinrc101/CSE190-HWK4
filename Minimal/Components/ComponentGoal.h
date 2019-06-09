@@ -38,24 +38,44 @@ private:
 	glm::vec3 bottom;
 	glm::vec3 bExtents;
 	glm::vec3 tExtents;
-
+	bool scored = false;
+	float scoreTime = 1.0f;
+	float curTime = 0.0f;
 	void update(double deltatime) {
 		glm::vec3 ballPos = ball->getPosition(false);
-
-		if (checkExtents(tExtents.x, bExtents.x, ballPos.x)) {
-			if (checkExtents(tExtents.y, bExtents.y, ballPos.y)) {
-				if (checkExtents(-tExtents.z, -bExtents.z, -ballPos.z)) {
-					std::cout << "goal my dude\n";
-					
-					//btTransform bt;
-					//bt.setIdentity();
-
-					//ball->rigidBody->setWorldTransform(bt);
-					//ball->rigidBody->getMotionState()->setWorldTransform(bt);
-					//ball->setToWorld(glm::mat4(1));
-					//ball->rigidBody->setLinearVelocity(btVector3(0, 0, 0));
+		if (!scored) {
+			if (checkExtents(tExtents.x, bExtents.x, ballPos.x)) {
+				if (checkExtents(tExtents.y, bExtents.y, ballPos.y)) {
+					if (checkExtents(-tExtents.z, -bExtents.z, -ballPos.z)) {
+						std::cout << "goal my dude\n";
+						scored = true;
+						
+						
+					}
 				}
 			}
+		}
+		else {
+			golazo(deltatime);
+		}
+	}
+
+	void golazo(double deltatime) {
+		curTime += deltatime;
+		if (curTime > scoreTime) {
+			btTransform bt;
+			bt.setIdentity();
+			bt.setOrigin(btVector3(0, 50, 0));
+			ball->rigidBody->setWorldTransform(bt);
+			ball->rigidBody->getMotionState()->setWorldTransform(bt);
+			glm::mat4 reset = glm::mat4(1);
+			reset[3] = glm::vec4(0, 0, 0, 1);
+			ball->setToWorld(reset);
+
+			ball->rigidBody->setLinearVelocity(btVector3(0, 0, 0));
+
+			curTime = 0;
+			scored = false;
 		}
 	}
 
