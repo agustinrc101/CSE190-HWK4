@@ -52,7 +52,7 @@ public:
 			const btCollisionObject* obB = contactManifold->getBody1();
 			// std::cout << "Collision " << i << " num contacts: " << contactManifold->getNumContacts() << std::endl;
 			if (contactManifold->getNumContacts() > 1) {
-				std::cout << "collision hit" << std::endl;
+				//std::cout << "collision hit" << std::endl;
 			}
 
 			if ((obA->getCollisionShape()->getUserIndex() == LAYER_BALL) || (obB->getCollisionShape()->getUserIndex() == LAYER_BALL) ) {
@@ -60,7 +60,7 @@ public:
 					if (!hasCollidedL) {
 						hasCollidedL = true;
 						
-						cout << "hitl " << endl;
+						//cout << "hitl " << endl;
 						//rigidbody->setLinearVelocity(rigidbody->getLinearVelocity() + bullet::fromGlm(ProjectManager::project->getStickVelocity(true)));
 						if (!hasHit) {
 							glm::vec4 soundPos = bullet::ToGlm(rigidbody->getWorldTransform())[3];
@@ -82,7 +82,7 @@ public:
 						hasCollidedR = true;
 						
 						//rigidbody->setLinearVelocity(rigidbody->getLinearVelocity() + bullet::fromGlm(ProjectManager::project->getStickVelocity(false)));
-						cout << "hit2" << endl;
+						//cout << "hit2" << endl;
 						if (!hasHit2) {
 							glm::vec4 soundPos = bullet::ToGlm(rigidbody->getWorldTransform())[3];
 							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(soundPos.x, soundPos.y, soundPos.z, hitSound  );

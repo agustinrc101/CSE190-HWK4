@@ -13,7 +13,7 @@
 
 class ComponentRigidBodyStick : public Component {
 public:
-	ComponentRigidBodyStick(glm::vec3 size, bool leftHand) : colliderSize(size), left(leftHand) {}
+	ComponentRigidBodyStick(glm::vec3 size, bool leftHand, bool thisPlayer = true) : colliderSize(size), left(leftHand), isPlayerSticks(thisPlayer) {}
 	~ComponentRigidBodyStick() {}
 	int up = 0;
 	glm::vec3 velo = glm::vec3(0);
@@ -40,18 +40,27 @@ protected:
 	btRigidBody * rigidbody;
 
 	bool left;
+	bool isPlayerSticks;
 	glm::vec3 colliderSize;
 
 	void Start() override {
 
 		lastPos = glm::vec3(0);
 
-		rigidbody = transform->rigidBody = Physics::addStickCollider(colliderSize, transform->getPosition(), left);
+		rigidbody = transform->rigidBody = Physics::addStickCollider(colliderSize, transform->getPosition(), left, isPlayerSticks);
 
-		if(left)
-			rigidbody->getCollisionShape()->setUserIndex(LAYER_STICK_LEFT);
-		else
-			rigidbody->getCollisionShape()->setUserIndex(LAYER_STICK_RIGHT);
+		if (left) {
+			if(isPlayerSticks)
+				rigidbody->getCollisionShape()->setUserIndex(LAYER_STICK_LEFT);
+			else
+				rigidbody->getCollisionShape()->setUserIndex(LAYER_OTHER_STICK_LEFT);
+		}
+		else {
+			if(isPlayerSticks)
+				rigidbody->getCollisionShape()->setUserIndex(LAYER_STICK_RIGHT);
+			else
+				rigidbody->getCollisionShape()->setUserIndex(LAYER_OTHER_STICK_RIGHT);
+		}
 	}
 
 

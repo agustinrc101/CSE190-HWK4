@@ -1,7 +1,5 @@
 #include "Physics.h"
 #include "Input.h"
-btRigidBody* rHandCol;
-btRigidBody* lHandCol;
 
 Physics::~Physics() {
 	//delete dynamics world
@@ -46,8 +44,9 @@ Physics::Physics(){
 	dynamicsWorld->setDebugDrawer(debugDrawer);
 }
 
+bool debug = true;
 void Physics::draw(glm::mat4 headPose, glm::mat4 projection) {
-	if (Input::getIndexTriggerL() || Input::getIndexTriggerR()) {		//TODO remove this
+	if (debug && (Input::getIndexTriggerL() || Input::getIndexTriggerR())) {		//TODO remove this
 		debugDrawer->SetMatrices(headPose, projection);
 		dynamicsWorld->debugDrawWorld();
 	}
@@ -57,7 +56,6 @@ void Physics::update(double deltaTime) {
 	dynamicsWorld->stepSimulation((btScalar)deltaTime, 5);
 	dynamicsWorld->updateAabbs();
 }
-
 
 void Physics::newLColPos(glm::vec3 position, glm::quat orientation, glm::vec3 velocity) {
 	btTransform newPos;
@@ -91,6 +89,41 @@ void Physics::newRColPos(glm::vec3 position, glm::quat orientation, glm::vec3 ve
 		rHandCol->setWorldTransform(newPos);
 		rHandCol->setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
 		
+	}
+}
+
+void Physics::newOtherLColPos(glm::vec3 position, glm::quat orientation, glm::vec3 velocity) {
+	btTransform newPos;
+	btQuaternion  ori;
+	//ori = bullet::fromGlm(orientation);
+	ori = btQuaternion(0, 0, 0, 1);
+	newPos.setOrigin(btVector3(position.x, position.y, position.z));
+	newPos.setRotation(bullet::fromGlm(orientation));
+	if (otherLHandCol) {
+		//lHandCol->clearForces();
+		//btVector3 zeroVector(0, 0, 0);
+		//lHandCol->setLinearVelocity(zeroVector);
+		otherLHandCol->setWorldTransform(newPos);
+		otherLHandCol->setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
+
+
+	}
+}
+
+void Physics::newOtherRColPos(glm::vec3 position, glm::quat orientation, glm::vec3 velocity) {
+	btTransform newPos;
+	btQuaternion  ori;
+	//ori = bullet::fromGlm(orientation);
+	ori = btQuaternion(0, 0, 0, 1);
+	newPos.setOrigin(btVector3(position.x, position.y, position.z));
+	newPos.setRotation(bullet::fromGlm(orientation));
+	if (otherRHandCol) {
+		//rHandCol->clearForces();
+		//btVector3 zeroVector(0, 0, 0);
+		//rHandCol->setLinearVelocity(zeroVector);
+		otherRHandCol->setWorldTransform(newPos);
+		otherRHandCol->setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
+
 	}
 }
 
@@ -138,7 +171,7 @@ btRigidBody* Physics::addPlaneCollider(float size, glm::vec3 position, glm::vec3
 	return body;
 }
 
-btRigidBody* Physics::addStickCollider(glm::vec3 size, glm::vec3 position, bool leftHand) {
+btRigidBody* Physics::addStickCollider(glm::vec3 size, glm::vec3 position, bool leftHand, bool thisPlayer) {
 	//Create shape
 	btCollisionShape* shape = new btBoxShape(bullet::fromGlm(size));
 
@@ -169,10 +202,16 @@ btRigidBody* Physics::addStickCollider(glm::vec3 size, glm::vec3 position, bool 
 	//body->setFriction(.10f);
   
 	if (!leftHand) {
-		rHandCol = body;
+		if (thisPlayer)
+			physics->rHandCol = body;
+		else
+			physics->otherRHandCol = body;
 	}
 	else {
-		lHandCol = body;
+		if (thisPlayer)
+			physics->lHandCol = body;
+		else
+			physics->otherLHandCol = body;
 	}
 
 	//add to collisionshapes

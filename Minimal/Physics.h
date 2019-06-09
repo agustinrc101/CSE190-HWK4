@@ -145,17 +145,24 @@ public:
 	void update(double deltaTime);
 	void draw(glm::mat4 headPose, glm::mat4 projection);
 
-	static btRigidBody* addPlaneCollider(float size, glm::vec3 position, glm::vec3 axis = AXIS_Y_NEGATIVE);
-	static btRigidBody* addSphereCollider(float radius, glm::vec3 position, float Mass = 0.1f);
-	static btRigidBody* addBoxCollider(glm::vec3 size, glm::vec3 position, float Mass = 1.0f);
-	static btRigidBody* addStickCollider(glm::vec3 size, glm::vec3 position, bool leftHand);
-	static btRigidBody* getRigidbody(int index);
+	static btRigidBody * addPlaneCollider(float size, glm::vec3 position, glm::vec3 axis = AXIS_Y_NEGATIVE);
+	static btRigidBody * addSphereCollider(float radius, glm::vec3 position, float Mass = 0.1f);
+	static btRigidBody * addBoxCollider(glm::vec3 size, glm::vec3 position, float Mass = 1.0f);
+	static btRigidBody * addStickCollider(glm::vec3 size, glm::vec3 position, bool leftHand, bool thisPlayer = true);
+	static btRigidBody * getRigidbody(int index);
 	static int getCollisionObjectCount() { return physics->dynamicsWorld->getNumCollisionObjects(); }
 
 	void newRColPos(glm::vec3 position, glm::quat orientation, glm::vec3 velocity);
 	void newLColPos(glm::vec3 position, glm::quat orientation, glm::vec3 velocity);
+	void newOtherRColPos(glm::vec3 position, glm::quat orientation, glm::vec3 velocity);
+	void newOtherLColPos(glm::vec3 position, glm::quat orientation, glm::vec3 velocity);
 
 private:
+	btRigidBody * rHandCol;
+	btRigidBody * lHandCol;
+	btRigidBody * otherRHandCol;
+	btRigidBody * otherLHandCol;
+
 	BulletDebugDrawer_OpenGL * debugDrawer;
 
 	btRigidBody * groundCollider = 0;

@@ -251,8 +251,15 @@ void ProjectManager::initGlobalScene() {
 		stick->scale(glm::vec3(0.5f, 0.7f, 0.5f));
 		stick->translate(glm::vec3(0, -175, 0));
 
-		//otherStickR = new ComponentRigidBodyStick(stickSize, false);
-		//otherHandR->addComponent(otherStickR);
+		otherStickR = new ComponentRigidBodyStick(stickSize, false, false);
+		otherHandR->addComponent(otherStickR);
+
+		Transform * col = new Transform();
+		col->scale(5);
+		col->translate(glm::vec3(0, -20, 0));
+
+		otherHandR->addChild(stick);
+		otherHandR->addChild(col);
 
 		sceneGlobal->addTransform(otherHandR);
 
@@ -269,9 +276,16 @@ void ProjectManager::initGlobalScene() {
 
 		stick->scale(glm::vec3(0.5f, 0.7f, 0.5f));
 		stick->translate(glm::vec3(0, -175, 0));
-		//otherStickL = new ComponentRigidBodyStick(stickSize, true);
-		//otherHandL->addComponent(otherStickL);
 
+		otherStickL = new ComponentRigidBodyStick(stickSize, true, false);
+		otherHandL->addComponent(otherStickL);
+
+		Transform * col = new Transform();
+		col->scale(5);
+		col->translate(glm::vec3(0, -20, 0));
+
+		otherHandL->addChild(stick);
+		otherHandL->addChild(col);
 
 		sceneGlobal->addTransform(otherHandL);
 	}
@@ -502,7 +516,7 @@ void ProjectManager::initProject() {
 void ProjectManager::draw(glm::mat4 headPose, glm::mat4 projection, int eye) {
 	//Draw SceneGraph objects
 	sceneGlobal->draw(headPose, projection);
-	//curScene = SCENE_1;
+
 	switch (curScene) {
 	case(SCENE_MENU):
 		sceneMenu->draw(headPose, projection);
@@ -560,8 +574,14 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 	handR->setToWorld(right);
 	handR->scale(glm::vec3(0.015f));
 
-	physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(player->getCompleteToWorld() * right), stickR->getlinVelo());
-	physics->newLColPos(handL->getChild(1)->getPosition(false), glm::quat_cast(player->getCompleteToWorld() * left), stickL->getlinVelo());
+	if (client->player == 1) {
+		//This player's hand
+		physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(player->getCompleteToWorld() * right), stickR->getlinVelo());
+		physics->newLColPos(handL->getChild(1)->getPosition(false), glm::quat_cast(player->getCompleteToWorld() * left), stickL->getlinVelo());
+		//Other player's hands
+		physics->newOtherRColPos(otherHandR->getChild(1)->getPosition(false), glm::quat_cast(otherHandR->getCompleteToWorld()), otherStickR->getlinVelo());
+		physics->newOtherLColPos(otherHandL->getChild(1)->getPosition(false), glm::quat_cast(otherHandL->getCompleteToWorld()), otherStickL->getlinVelo());
+	}
 }
 
 void ProjectManager::updateHead(glm::mat4 hmd) {
@@ -618,7 +638,7 @@ void ProjectManager::testing() {
 
 void ProjectManager::serverConnect() {
 	Server::startServer();
-	clientConnect();
+	clientConnect(true);
 	client->player = 1;
 
 	handL->isActive = true;
@@ -634,7 +654,7 @@ void ProjectManager::serverConnect() {
 	changeScene(SCENE_1);
 }
 
-void ProjectManager::clientConnect() {
+void ProjectManager::clientConnect(bool isHost) {
 	client->joinServer();
 	client->player = 2;
 
@@ -649,6 +669,13 @@ void ProjectManager::clientConnect() {
 	startedNetwork = true;
 
 	changeScene(SCENE_1);
+
+	if (!isHost) {
+		//Move player
+		player->setToWorld(glm::mat4(1));
+		player->translate(glm::vec3(0, 0, -4));
+		player->rotate(180, AXIS_Y_POSITIVE);
+	}
 }
 
 void ProjectManager::stopNetworking() {
@@ -663,20 +690,6 @@ void ProjectManager::sendPlayerData() {
 }
 
 void ProjectManager::receivePackets() {
-	//Init and Exit Packets
-	{
-		if (client->getInitPacket()) {	//Init Packet
-			otherHandL->isActive = true;
-			otherHandR->isActive = true;
-			otherHead->isActive = true;
-		}
-		else {							//Exit Packet
-			otherHandL->isActive = false;
-			otherHandR->isActive = false;
-			otherHead->isActive = false;
-		}
-	}
-
 	//Player Packets
 	{
 		std::vector<Packet> packets = client->getPlayerPackets();
@@ -701,6 +714,24 @@ void ProjectManager::receivePackets() {
 			}
 		}
 	}
+}
+
+void ProjectManager::initPacketReceived() {
+	otherHandL->isActive = true;
+	otherHandR->isActive = true;
+	otherHead->isActive = true;
+
+	//Move player
+	player->setToWorld(glm::mat4(1));
+	player->setPosition(glm::vec3(0, 0, 4));
+
+
+}
+
+void ProjectManager::exitPacketReceived() {
+	otherHandL->isActive = false;
+	otherHandR->isActive = false;
+	otherHead->isActive = false;
 }
 
 void ProjectManager::changeScene(Scenes scene) {

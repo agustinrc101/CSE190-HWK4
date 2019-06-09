@@ -34,7 +34,9 @@ public:
 	void changeScene(Scenes scene);
 	
 	void serverConnect();
-	void clientConnect();
+	void clientConnect(bool isHost);
+	void initPacketReceived();
+	void exitPacketReceived();
 
 private:
 	void initModels();

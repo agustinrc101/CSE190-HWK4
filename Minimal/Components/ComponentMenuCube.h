@@ -39,7 +39,7 @@ private:
 
 	void beginNetwork() {
 		if (isHosting) ProjectManager::project->serverConnect();
-		else ProjectManager::project->clientConnect();
+		else ProjectManager::project->clientConnect(false);
 	}
 };
 

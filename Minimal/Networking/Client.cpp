@@ -1,4 +1,5 @@
 #include "Client.h"
+#include "../ProjectManager.h"
 
 Client::Client(){
 	connected = false;
@@ -108,10 +109,10 @@ void Client::clientLoop(void *) {
 					std::cout << "Received TEST packet" << std::endl;
 					break;
 				case INIT:			//Handle init
-					client->initReceived = true;
+					ProjectManager::project->initPacketReceived();
 					i += sizeof(Packet);
 				case EXIT:			//Handle exit
-					client->initReceived = false;
+					ProjectManager::project->exitPacketReceived();
 					i += sizeof(Packet);
 					client->packets.push_back(packet);
 					break;
