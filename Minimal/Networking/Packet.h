@@ -16,7 +16,6 @@ enum PacketType {
 	EXIT = 1,			//Player leaving
 	INIT_REPLY = 2,	
 	PLAYER_DATA = 3,	//Sending player transform data
-
 };
 
 enum PacketDataType {

@@ -754,8 +754,9 @@ void ProjectManager::receivePackets() {
 				break;
 			case BALL:
 				ball->setToWorld(packet.toWorld);
+				break;
 			default:
-				std::cerr << "Unknown PlayerData packet type received" << std::endl;
+				std::cerr << "Unknown PlayerData packet type received" << std::endl; 
 				break;
 			}
 		}
