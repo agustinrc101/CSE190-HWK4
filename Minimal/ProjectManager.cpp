@@ -739,7 +739,6 @@ void ProjectManager::sendPlayerData() {
 	client->sendPlayerDataPacket(handR->getCompleteToWorld(), HAND_RIGHT);
 	if (client->player == 1) {
 		client->sendPlayerDataPacket(ball->getCompleteToWorld(), BALL);
-		print(ball->getCompleteToWorld());
 	}
 }
 
@@ -747,7 +746,7 @@ void ProjectManager::receivePackets() {
 	//Player Packets
 	{
 		std::vector<Packet> packets = client->getPlayerPackets();
-
+		std::cout << "Other: HANDL: " << otherHandL->isActive << ", HANDR: " << otherHandR->isActive << ", HEAD: " << otherHead->isActive << std::endl;
 		for (int i = 0; i < packets.size(); i++) {
 			Packet packet = packets[i];
 			switch (packet.dataType) {
