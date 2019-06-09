@@ -3,6 +3,9 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include "Definitions.h"
+//Sound
+#include "Sounds.h"
 
 class ProjectManager {
 public:
@@ -23,6 +26,9 @@ public:
 	glm::vec3 getLeftHandPosition();
 	glm::vec3 getRightHandPosition();
 	glm::vec3 getStickVelocity(bool left);
+
+	Sounds* getSoundEffect(SoundEffect soundEffect);
+	
 	
 
 private:

@@ -70,6 +70,9 @@ enum ObjectLayer {
 	LAYER_GROUND_MOVEMENT = 4,
 };
 
+enum SoundEffect {
+	HIT_SOUND = 0,
+};
 //========
 //PRINTING
 //========

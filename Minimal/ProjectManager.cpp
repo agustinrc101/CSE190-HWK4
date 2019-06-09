@@ -1,7 +1,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 
 #include "ProjectManager.h"
-#include "Definitions.h"
+
 //Shaders and textures
 #include "Shaders.h"
 #include "Light.h"
@@ -19,8 +19,7 @@
 //Networking
 #include "Networking/Server.h"
 #include "Networking/Client.h"
-//Sound
-#include "Sounds.h"
+
 //Physics
 #include "Physics.h"
 
@@ -441,9 +440,11 @@ void ProjectManager::initScene1() {
 }
 
 void ProjectManager::initAudio() {
-	sound_BG = new Sounds("Sound/67032__robinhood76__00892-funeral-silencium-trumpet.wav");
+	//sound_BG = new Sounds("Sound/67032__robinhood76__00892-funeral-silencium-trumpet.wav");
+	
 
-	sound_BG->Play();
+	//sound_BG->Play();
+	sound_Hit = new Sounds("Sound/fallsmall.wav");
 }
 
 void ProjectManager::initProject() {
@@ -558,6 +559,16 @@ glm::vec3 ProjectManager::getStickVelocity(bool left) {
 	else
 		return stickR->getlinVelo();
 
+}
+
+Sounds* ProjectManager::getSoundEffect(SoundEffect soundEffect) {
+	switch (soundEffect) {
+	case HIT_SOUND:
+		return sound_Hit;
+		break;
+	default:
+		break;
+	}
 }
 
 void ProjectManager::testing() {
