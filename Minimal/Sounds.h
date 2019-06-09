@@ -33,7 +33,7 @@ public:
 	unsigned int sourceid;
 	unsigned int sourceid2;
 	Sounds(const char* fn);
-	void Play();
+	void Play(float x, float y, float z);
 	~Sounds();
 
 private:

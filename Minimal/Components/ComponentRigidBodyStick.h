@@ -31,7 +31,7 @@ public:
 
 	glm::vec3 getlinVelo() {
 		//velo.y = 0.1f;
-		velo = .5f * 10.0f * velo;
+		velo = 0.7f * 10.0f * velo;
 	
 		return velo;
 	}

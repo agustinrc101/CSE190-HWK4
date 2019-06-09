@@ -120,6 +120,7 @@ Sounds::Sounds(const char* filename) {
 		std::cout << "alSourceasdf;lasdjf;alsjdf" << std::endl;
 
 	}
+	alSourcef(sourceid2, AL_GAIN, 0.3f);
 	alSourcePlay(sourceid2);
 	while (source_state2 == AL_PLAYING) {
 		alGetSourcei(source2, AL_SOURCE_STATE, &source_state2);
@@ -128,9 +129,10 @@ Sounds::Sounds(const char* filename) {
 
 };
 
-void Sounds::Play() {
+void Sounds::Play(float x, float y, float z) {
+	alSource3f(sourceid, AL_POSITION, x, y, z);
 	alSourcePlay(sourceid);
-
+	
 	while (source_state == AL_PLAYING) {
 		alGetSourcei(source, AL_SOURCE_STATE, &source_state);
 	}
@@ -138,6 +140,7 @@ void Sounds::Play() {
 
 Sounds::~Sounds() {
 	alDeleteSources(1, &source);
+	alDeleteSources(1, &source2);
 	alDeleteBuffers(1, &sndBuffer);
 	deviceAL = alcGetContextsDevice(contextAL);
 	alcMakeContextCurrent(NULL);

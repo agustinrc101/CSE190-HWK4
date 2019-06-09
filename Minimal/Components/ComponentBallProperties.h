@@ -61,7 +61,8 @@ public:
 						cout << "hitl " << endl;
 						//rigidbody->setLinearVelocity(rigidbody->getLinearVelocity() + bullet::fromGlm(ProjectManager::project->getStickVelocity(true)));
 						if (!hasHit) {
-							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play();
+							glm::vec4 soundPos = bullet::ToGlm(rigidbody->getWorldTransform())[3];
+							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(soundPos.x, soundPos.y, soundPos.z);
 
 
 							hasHit = true;
@@ -81,7 +82,8 @@ public:
 						//rigidbody->setLinearVelocity(rigidbody->getLinearVelocity() + bullet::fromGlm(ProjectManager::project->getStickVelocity(false)));
 						cout << "hit2" << endl;
 						if (!hasHit2) {
-							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play();
+							glm::vec4 soundPos = bullet::ToGlm(rigidbody->getWorldTransform())[3];
+							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(soundPos.x, soundPos.y, soundPos.z);
 						
 							
 							hasHit2 = true;
