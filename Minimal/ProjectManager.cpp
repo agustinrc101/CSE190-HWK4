@@ -502,7 +502,7 @@ void ProjectManager::initProject() {
 void ProjectManager::draw(glm::mat4 headPose, glm::mat4 projection, int eye) {
 	//Draw SceneGraph objects
 	sceneGlobal->draw(headPose, projection);
-	
+	curScene = SCENE_1;
 	switch (curScene) {
 	case(SCENE_MENU):
 		sceneMenu->draw(headPose, projection);

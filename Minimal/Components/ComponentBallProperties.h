@@ -22,6 +22,8 @@ public:
 	bool hasHit = false;
 	float delay2 = 0.0f;
 	bool hasHit2 = false;
+
+	int hitSound = 1;
 	//////Sound Properties/////
 
 	void Init(Transform * p) {
@@ -62,7 +64,7 @@ public:
 						//rigidbody->setLinearVelocity(rigidbody->getLinearVelocity() + bullet::fromGlm(ProjectManager::project->getStickVelocity(true)));
 						if (!hasHit) {
 							glm::vec4 soundPos = bullet::ToGlm(rigidbody->getWorldTransform())[3];
-							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(soundPos.x, soundPos.y, soundPos.z);
+							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(soundPos.x, soundPos.y, soundPos.z, hitSound);
 
 
 							hasHit = true;
@@ -83,7 +85,7 @@ public:
 						cout << "hit2" << endl;
 						if (!hasHit2) {
 							glm::vec4 soundPos = bullet::ToGlm(rigidbody->getWorldTransform())[3];
-							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(soundPos.x, soundPos.y, soundPos.z);
+							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(soundPos.x, soundPos.y, soundPos.z, hitSound );
 						
 							
 							hasHit2 = true;

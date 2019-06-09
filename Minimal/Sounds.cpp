@@ -86,8 +86,10 @@ Sounds::Sounds(const char* filename) {
 	//
 	int channel, sampleRate, bps, size;
 	int channel2, sampleRate2, bps2, size2;
-	char* data = loadWAV(filename, channel, sampleRate, bps, size);
-	char* data2 = loadWAV("Sound/SDR2_OST_-_-2-03-_Beautiful_Ruin-vNYydvw13LM.wav", channel2, sampleRate2, bps2, size2);
+	int channel3, sampleRate3, bps3, size3;
+	char* data = loadWAV(filename, channel, sampleRate, bps, size);	//hit sound (source id = 1)
+	char* data2 = loadWAV("Sound/SDR2_OST_-_-2-03-_Beautiful_Ruin-vNYydvw13LM.wav", channel2, sampleRate2, bps2, size2); //bg (source id = 2)
+	char* data3 = loadWAV("levelup.wav", channel3, sampleRate3, bps3, size3); //bg (source id = 2)
 	ALCdevice* device = alcOpenDevice(NULL);
 	if (device == NULL)
 	{
@@ -104,43 +106,64 @@ Sounds::Sounds(const char* filename) {
 
 	unsigned int bufferid, format;
 	unsigned int bufferid2, format2;
+	unsigned int bufferid3, format3;
 	alGenBuffers(1, &bufferid);
 	alGenBuffers(1, &bufferid2);
+	alGenBuffers(1, &bufferid3);
 	format = getFormat(channel, bps);
 	format2 = getFormat(channel2, bps2);
+	format3 = getFormat(channel3, bps3);
 	alBufferData(bufferid, format, data, size, sampleRate);
 	alBufferData(bufferid2, format2, data2, size2, sampleRate2);
+	alBufferData(bufferid3, format3, data3, size3, sampleRate3);
 
 	alGenSources(1, &sourceid);
 	alGenSources(1, &sourceid2);
+	alGenSources(1, &sourceid3);
 	alSourcei(sourceid, AL_BUFFER, bufferid);
 	alSourcei(sourceid2, AL_BUFFER, bufferid2);
+	alSourcei(sourceid3, AL_BUFFER, bufferid3);
 	if ((alGetError()) != AL_NO_ERROR)
 	{
-		std::cout << "alSourceasdf;lasdjf;alsjdf" << std::endl;
+		std::cout << "AUDIO ERROR" << std::endl;
 
 	}
+
+	////////////BACKGROUND MUSIC//////////////
 	alSourcef(sourceid2, AL_GAIN, 0.3f);
 	alSourcePlay(sourceid2);
 	while (source_state2 == AL_PLAYING) {
 		alGetSourcei(source2, AL_SOURCE_STATE, &source_state2);
 	}
+	////////////BACKGROUND MUSIC//////////////
 
 
 };
 
-void Sounds::Play(float x, float y, float z) {
-	alSource3f(sourceid, AL_POSITION, x, y, z);
-	alSourcePlay(sourceid);
+void Sounds::Play(float x, float y, float z, int sourceId) {
+	if (sourceId == 1) {
+		alSource3f(sourceid, AL_POSITION, x, y, z);
+		alSourcePlay(sourceid);
+
+		while (source_state == AL_PLAYING) {
+			alGetSourcei(source, AL_SOURCE_STATE, &source_state);
+		}
+	}
 	
-	while (source_state == AL_PLAYING) {
-		alGetSourcei(source, AL_SOURCE_STATE, &source_state);
+	if (sourceId == 2) {
+		
+		alSourcePlay(sourceid3);
+
+		while (source_state == AL_PLAYING) {
+			alGetSourcei(source3, AL_SOURCE_STATE, &source_state3);
+		}
 	}
 }
 
 Sounds::~Sounds() {
-	alDeleteSources(1, &source);
-	alDeleteSources(1, &source2);
+	alDeleteSources(1, &sourceid);
+	alDeleteSources(1, &sourceid2);
+	alDeleteSources(1, &sourceid3);
 	alDeleteBuffers(1, &sndBuffer);
 	deviceAL = alcGetContextsDevice(contextAL);
 	alcMakeContextCurrent(NULL);

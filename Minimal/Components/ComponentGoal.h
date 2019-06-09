@@ -41,6 +41,8 @@ private:
 	bool scored = false;
 	float scoreTime = 1.0f;
 	float curTime = 0.0f;
+	int scoreSound = 2;
+
 	void update(double deltatime) {
 		glm::vec3 ballPos = ball->getPosition(false);
 		if (!scored) {
@@ -48,6 +50,7 @@ private:
 				if (checkExtents(tExtents.y, bExtents.y, ballPos.y)) {
 					if (checkExtents(-tExtents.z, -bExtents.z, -ballPos.z)) {
 						std::cout << "goal my dude\n";
+						ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(0, 0, 0, scoreSound);
 						scored = true;
 						
 						
