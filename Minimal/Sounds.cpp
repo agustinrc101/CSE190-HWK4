@@ -89,7 +89,7 @@ Sounds::Sounds(const char* filename) {
 	int channel3, sampleRate3, bps3, size3;
 	char* data = loadWAV(filename, channel, sampleRate, bps, size);	//hit sound (source id = 1)
 	char* data2 = loadWAV("Sound/SDR2_OST_-_-2-03-_Beautiful_Ruin-vNYydvw13LM.wav", channel2, sampleRate2, bps2, size2); //bg (source id = 2)
-	char* data3 = loadWAV("levelup.wav", channel3, sampleRate3, bps3, size3); //bg (source id = 2)
+	char* data3 = loadWAV("Sound/levelup.wav", channel3, sampleRate3, bps3, size3); //scoresound (source id = 3)
 	ALCdevice* device = alcOpenDevice(NULL);
 	if (device == NULL)
 	{
@@ -130,7 +130,7 @@ Sounds::Sounds(const char* filename) {
 	}
 
 	////////////BACKGROUND MUSIC//////////////
-	alSourcef(sourceid2, AL_GAIN, 0.3f);
+	alSourcef(sourceid2, AL_GAIN, 0.0f);
 	alSourcePlay(sourceid2);
 	while (source_state2 == AL_PLAYING) {
 		alGetSourcei(source2, AL_SOURCE_STATE, &source_state2);
@@ -155,7 +155,7 @@ void Sounds::Play(float x, float y, float z, int sourceId) {
 		alSourcePlay(sourceid3);
 
 		while (source_state == AL_PLAYING) {
-			alGetSourcei(source3, AL_SOURCE_STATE, &source_state3);
+			alGetSourcei(sourceid3, AL_SOURCE_STATE, &source_state3);
 		}
 	}
 }
