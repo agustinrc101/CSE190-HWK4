@@ -98,15 +98,10 @@ void Physics::newOtherLColPos(glm::vec3 position, glm::quat orientation, glm::ve
 	//ori = bullet::fromGlm(orientation);
 	ori = btQuaternion(0, 0, 0, 1);
 	newPos.setOrigin(btVector3(position.x, position.y, position.z));
-	newPos.setRotation(bullet::fromGlm(orientation));
+	newPos.setRotation(ori);
 	if (otherLHandCol) {
-		//lHandCol->clearForces();
-		//btVector3 zeroVector(0, 0, 0);
-		//lHandCol->setLinearVelocity(zeroVector);
 		otherLHandCol->setWorldTransform(newPos);
 		otherLHandCol->setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
-
-
 	}
 }
 
@@ -116,14 +111,10 @@ void Physics::newOtherRColPos(glm::vec3 position, glm::quat orientation, glm::ve
 	//ori = bullet::fromGlm(orientation);
 	ori = btQuaternion(0, 0, 0, 1);
 	newPos.setOrigin(btVector3(position.x, position.y, position.z));
-	newPos.setRotation(bullet::fromGlm(orientation));
+	newPos.setRotation(ori);
 	if (otherRHandCol) {
-		//rHandCol->clearForces();
-		//btVector3 zeroVector(0, 0, 0);
-		//rHandCol->setLinearVelocity(zeroVector);
 		otherRHandCol->setWorldTransform(newPos);
 		otherRHandCol->setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
-
 	}
 }
 

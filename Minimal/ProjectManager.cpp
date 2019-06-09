@@ -614,7 +614,7 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 
 void ProjectManager::updateHead(glm::mat4 hmd) {
 	head->setToWorld(hmd);
-	head->scale(0.25f);
+	head->scale(0.5f);
 	head->rotate(180, AXIS_Y_POSITIVE);
 }
 
@@ -711,7 +711,7 @@ void ProjectManager::clientConnect(bool isHost) {
 
 		player->setToWorld(glm::mat4(1));
 		player->translate(glm::vec3(0, 0, -4));
-		//player->rotate(180, AXIS_Y_POSITIVE);
+		player->rotate(180, AXIS_Y_POSITIVE);
 	}
 }
 
@@ -730,7 +730,6 @@ void ProjectManager::offlineConnect() {
 
 void ProjectManager::stopNetworking() {
 	startedNetwork = false;
-
 }
 
 void ProjectManager::sendPlayerData() {
@@ -740,8 +739,6 @@ void ProjectManager::sendPlayerData() {
 	if (client->player == 1) {
 		client->sendPlayerDataPacket(ball->getCompleteToWorld(), BALL);
 	}
-	else
-		print(handL->getCompleteToWorld());
 }
 
 void ProjectManager::receivePackets() {
@@ -756,7 +753,6 @@ void ProjectManager::receivePackets() {
 				break;
 			case HAND_LEFT:
 				otherHandL->setToWorld(packet.toWorld);
-				if (client->player == 1) print(otherHandL->getCompleteToWorld());
 				break;
 			case HAND_RIGHT:
 				otherHandR->setToWorld(packet.toWorld);
