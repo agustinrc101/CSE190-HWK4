@@ -668,7 +668,6 @@ void ProjectManager::testing() {
 void ProjectManager::serverConnect() {
 	Server::startServer();
 	clientConnect(true);
-	client->player = 1;
 
 	handL->isActive = true;
 	handR->isActive = true;
@@ -685,7 +684,7 @@ void ProjectManager::serverConnect() {
 
 void ProjectManager::clientConnect(bool isHost) {
 	client->joinServer();
-	client->player = 2;
+	client->player = 1;
 
 	handL->isActive = true;
 	handR->isActive = true;
@@ -700,6 +699,8 @@ void ProjectManager::clientConnect(bool isHost) {
 	changeScene(SCENE_1);
 
 	if (!isHost) {
+		client->player = 2;
+
 		//Move player
 		otherHandL->isActive = true;
 		otherHandR->isActive = true;
@@ -709,7 +710,7 @@ void ProjectManager::clientConnect(bool isHost) {
 
 		player->setToWorld(glm::mat4(1));
 		player->translate(glm::vec3(0, 0, -4));
-		player->rotate(180, AXIS_Y_POSITIVE);
+		//player->rotate(180, AXIS_Y_POSITIVE);
 	}
 }
 
@@ -735,8 +736,10 @@ void ProjectManager::sendPlayerData() {
 	client->sendPlayerDataPacket(head->getCompleteToWorld(), HEAD);
 	client->sendPlayerDataPacket(handL->getCompleteToWorld(), HAND_LEFT);
 	client->sendPlayerDataPacket(handR->getCompleteToWorld(), HAND_RIGHT);
-	if (client->player == 1)
+	if (client->player == 1) {
 		client->sendPlayerDataPacket(ball->getCompleteToWorld(), BALL);
+		print(ball->getCompleteToWorld());
+	}
 }
 
 void ProjectManager::receivePackets() {
@@ -758,12 +761,15 @@ void ProjectManager::receivePackets() {
 				break;
 			case BALL:
 				ball->setToWorld(packet.toWorld);
+				print(ball->getCompleteToWorld());
 				break;
 			default:
 				std::cerr << "Unknown PlayerData packet type received" << std::endl; 
 				break;
 			}
 		}
+
+		packets.clear();
 	}
 }
 
