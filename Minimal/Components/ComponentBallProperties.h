@@ -85,7 +85,7 @@ public:
 						cout << "hit2" << endl;
 						if (!hasHit2) {
 							glm::vec4 soundPos = bullet::ToGlm(rigidbody->getWorldTransform())[3];
-							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(soundPos.x, soundPos.y, soundPos.z, hitSound + 1 );
+							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(soundPos.x, soundPos.y, soundPos.z, hitSound  );
 						
 							
 							hasHit2 = true;
