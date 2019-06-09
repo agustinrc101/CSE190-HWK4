@@ -37,7 +37,7 @@ Physics::Physics(){
 
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
 
-	dynamicsWorld->setGravity(btVector3(0, -9, 0));
+	dynamicsWorld->setGravity(btVector3(0, -7, 0));
 
 	//Debug Drawing
 	debugDrawer = new BulletDebugDrawer_OpenGL();
@@ -159,7 +159,7 @@ btRigidBody* Physics::addPlaneCollider(float size, glm::vec3 position, glm::vec3
 	
 	body->setRestitution(1.0f);
 	body->setFriction(0.6f);
-	body->setRollingFriction(0.05f);
+	body->setRollingFriction(0.005f);
 	body->setSpinningFriction(0.15f);
 
 	//add to collisionshapes
@@ -234,7 +234,7 @@ btRigidBody* Physics::addSphereCollider(float radius, glm::vec3 position, float 
 	btTransform startTransform;
 	startTransform.setIdentity();
 
-	btScalar mass(0.05f);
+	btScalar mass(0.15f);
 
 	//rigidbody is dynamic if and only if mass is non zero, otherwise static
 	bool isDynamic = (mass != 0.f);
@@ -253,7 +253,7 @@ btRigidBody* Physics::addSphereCollider(float radius, glm::vec3 position, float 
 	btRigidBody* body = new btRigidBody(rbInfo);
 	body->setActivationState(4);
 	
-	//body->setRestitution(1.0f);
+	body->setRestitution(1.0f);
 	//body->setFriction(0.5f);	
 	
 	//body->setRollingFriction(0.05f);
