@@ -37,13 +37,13 @@ private:
 		if (Input::getButtonY() || Input::getButtonB()) {
 			if (!button_press) {
 				button_press = true;
-				transform->rotate(90, AXIS_Y_NEGATIVE);
+				transform->rotate(180, AXIS_Y_NEGATIVE);
 			}
 		}
 		else if (Input::getButtonX() || Input::getButtonA()) {
 			if (!button_press) {
 				button_press = true;
-				transform->rotate(90, AXIS_Y_POSITIVE);
+				transform->rotate(180, AXIS_Y_POSITIVE);
 			}
 		}
 		else {

@@ -13,7 +13,8 @@ class ComponentPogoMovement : public Component {
 public:
 	bool isActive = true;
 
-	ComponentPogoMovement(Transform * theHead, Transform * theHand, Transform * pogoCollider, ComponentRigidBodyStick * theStickCollider) : head(theHead), hand(theHand), collider(pogoCollider), stickCollider(theStickCollider)  {
+	ComponentPogoMovement(Transform * theHead, Transform * theHand, Transform * pogoCollider, ComponentRigidBodyStick * theStickCollider, Transform * handModel) 
+		: head(theHead), hand(theHand), collider(pogoCollider), stickCollider(theStickCollider), handTransform (handModel)  {
 		storedColor = hand->material->color;
 	}
 	~ComponentPogoMovement() {}
@@ -43,6 +44,7 @@ public:
 
 protected:
 	Transform * transform;
+	Transform * handTransform;
 
 	void Start() override {
 		
@@ -95,8 +97,8 @@ private:
 		if (hand->getPosition().y < (head->getPosition().y - 0.15f) && collider->getPosition(false).y <= -1.0f) {
 		/*if(stickCollider->touchingGround){*/
 			hand->material->color = glm::vec3(COLOR_BLACK);
-			storedHandPosition = hand->getPosition(false);
-			prevHandPosition = hand->getPosition(false);
+			storedHandPosition = handTransform->getPosition(false);
+			prevHandPosition = handTransform->getPosition(false);
 			state = ARM_DOWN;
 			ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(collider->getPosition(false).x, collider->getPosition(false).y, collider->getPosition(false).z, hitSound);
 		}
@@ -112,12 +114,20 @@ private:
 		}
 
 
-		glm::vec3 dir = prevHandPosition - hand->getPosition(false);
+		glm::vec3 dir = prevHandPosition - handTransform->getPosition(false);
 		dir.y = 0;
 		dir.z = dir.z;
 		
-		//dir *= glm::mat3(transform->getRotation());
+		glm::mat4 m = glm::mat4(1);
+		m[3] = glm::vec4(dir, 1);
+
+		glm::mat4 p = transform->getCompleteToWorld();
+		p[3] = glm::vec4(0, 0, 0, 1);
+
+		m = p * m;
 	
+		dir = m[3];
+
 		transform->translate(dir);
 
 		//Lock
