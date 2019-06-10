@@ -713,9 +713,7 @@ void ProjectManager::clientConnect(bool isHost) {
 		client->player = 2;
 
 		//Move player
-		otherHandL->isActive = true;
-		otherHandR->isActive = true;
-		otherHead->isActive = true;
+		otherPlayer->isActive = true;
 		
 		ball->setUseToWorld(true);
 		ball->disableAllComponents();
@@ -754,6 +752,8 @@ void ProjectManager::sendPlayerData() {
 	else if (client->player == 2) {
 		client->sendPlayerDataPacket(otherControllerL, PDATA_CONTROLLER_LEFT);
 		client->sendPlayerDataPacket(otherControllerR, PDATA_CONTROLLER_RIGHT);
+
+		print(otherControllerR);
 	}
 }
 
@@ -796,9 +796,7 @@ void ProjectManager::receivePackets() {
 }
 
 void ProjectManager::initPacketReceived() {
-	otherHandL->isActive = true;
-	otherHandR->isActive = true;
-	otherHead->isActive = true;
+	otherPlayer->isActive = true;
 
 	//Move player
 	player->setToWorld(glm::mat4(1));
