@@ -398,7 +398,7 @@ void ProjectManager::initScene1() {
 	}
 	////Sun
 	{
-		Material * mat = new Material(Shaders::getGradientShader(), glm::vec3(COLOR_ORANGE), Textures::getTexture(Textures::T_STEAM));
+		Material * mat = new Material(Shaders::getGradientShader(), glm::vec3(COLOR_ORANGE));
 		mat->color2 = glm::vec3(COLOR_RED);
 		Transform * sun = new Transform(model_sphere, mat, false);
 
@@ -721,7 +721,7 @@ void ProjectManager::clientConnect(bool isHost) {
 
 		player->setToWorld(glm::mat4(1));
 		player->translate(glm::vec3(0, 0, -4));
-		//player->rotate(180, AXIS_Y_POSITIVE);
+		player->rotate(180, AXIS_Y_POSITIVE);
 	}
 }
 
