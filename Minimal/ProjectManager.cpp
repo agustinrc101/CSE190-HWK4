@@ -292,8 +292,6 @@ void ProjectManager::initGlobalScene() {
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTexture(Textures::T_ROBOT));
 		otherHead = new Transform(model_robot, mat);
 		otherHead->name = "Other Player's Head";
-
-		sceneGlobal->addTransform(otherHead);
 	}
 	//Player setup
 	{
@@ -614,8 +612,8 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 		physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(player->getCompleteToWorld() * right), stickR->getlinVelo());
 		physics->newLColPos(handL->getChild(1)->getPosition(false), glm::quat_cast(player->getCompleteToWorld() * left), stickL->getlinVelo());
 		//Other player's hands
-		physics->newOtherRColPos(otherPlayer->getChild(1)->getPosition(false), glm::quat_cast(otherPlayer->getCompleteToWorld() * otherControllerR), otherStickR->getlinVelo());
-		physics->newOtherLColPos(otherPlayer->getChild(1)->getPosition(false), glm::quat_cast(otherPlayer->getCompleteToWorld() * otherControllerL), otherStickL->getlinVelo());
+		physics->newOtherRColPos(otherHandR->getChild(1)->getPosition(false), glm::quat_cast(otherPlayer->getCompleteToWorld() * otherControllerR), otherStickR->getlinVelo());
+		physics->newOtherLColPos(otherHandL->getChild(1)->getPosition(false), glm::quat_cast(otherPlayer->getCompleteToWorld() * otherControllerL), otherStickL->getlinVelo());
 	}
 	else if (client->player == 2) {
 		otherControllerL = left;
@@ -720,7 +718,7 @@ void ProjectManager::clientConnect(bool isHost) {
 
 		player->setToWorld(glm::mat4(1));
 		player->translate(glm::vec3(0, 0, -4));
-		player->rotate(180, AXIS_Y_POSITIVE);
+		//player->rotate(180, AXIS_Y_POSITIVE);
 	}
 }
 
@@ -752,8 +750,6 @@ void ProjectManager::sendPlayerData() {
 	else if (client->player == 2) {
 		client->sendPlayerDataPacket(otherControllerL, PDATA_CONTROLLER_LEFT);
 		client->sendPlayerDataPacket(otherControllerR, PDATA_CONTROLLER_RIGHT);
-
-		print(otherControllerR);
 	}
 }
 
