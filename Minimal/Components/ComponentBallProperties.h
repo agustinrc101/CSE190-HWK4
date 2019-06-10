@@ -127,7 +127,7 @@ public:
 			hasCollidedR = false;
 		}
 
-		if (Input::getButtonA() || Input::getButtonX()) {
+		if (Input::getButtonStickL() || Input::getButtonStickR()) {
 			if (!button_press) {
 				button_press = true;
 				btTransform bt;
