@@ -12,7 +12,7 @@
 class ComponentPogoMovement : public Component {
 public:
 	bool isActive = true;
-
+	bool isWalking = false;
 	ComponentPogoMovement(Transform * theHead, Transform * theHand, Transform * pogoCollider, ComponentRigidBodyStick * theStickCollider, Transform * handModel) 
 		: head(theHead), hand(theHand), collider(pogoCollider), stickCollider(theStickCollider), handTransform (handModel)  {
 		storedColor = hand->material->color;
@@ -67,6 +67,7 @@ private:
 	Transform * hand;
 	Transform * collider;
 	ComponentRigidBodyStick * stickCollider;
+	ComponentRigidBodyStick * otherStickCollider;
 
 	glm::vec3 storedColor;
 
@@ -82,7 +83,7 @@ private:
 	int hitSound = 3;
 
 	void handleIdleState() {
-		if (hand->getPosition().y >= (head->getPosition().y / 1.5f)) {
+		if (hand->getPosition().y >= (head->getPosition().y / 1.7f)) {
 			handState = RIGHT;
 			hand->material->color = glm::vec3(COLOR_WHITE);
 			state = ARM_UP;
@@ -108,48 +109,53 @@ private:
 	}
 
 	void handleArmDownState() {
-		if (collider->getPosition(false).y > -1.2f) {
+		if (collider->getPosition(false).y > -1.0f) {
 			hand->material->color = storedColor;
 			state = IDLE;
+			//transform->translate(dir);
+
 		}
-
-
-		glm::vec3 dir = prevHandPosition - handTransform->getPosition(false);
-		dir.y = 0;
-		dir.z = dir.z;
-		
-		glm::mat4 m = glm::mat4(1);
-		m[3] = glm::vec4(dir, 1);
-
-		glm::mat4 p = transform->getCompleteToWorld();
-		p[3] = glm::vec4(0, 0, 0, 1);
-
-		m = p * m;
-	
-		dir = m[3];
-
-		transform->translate(dir);
-
-		//Lock
-		prevHandPosition = hand->getPosition(false);
-		glm::vec3 yMove = prevHandPosition - storedHandPosition;	yMove.x = yMove.z = 0;
-		if (yMove.y < 0)	hand->setPosition(storedHandPosition, false);
-		else				hand->setPosition(storedHandPosition + yMove, false);
-
-		if (testMinHorizontalDistance(hand->getPosition(false), head->getPosition(false))) {
-			hand->material->color = storedColor;
-			//state = IDLE;
-			//state = ARM_UP;
-		}
-		else if (hand->getPosition().y >= head->getPosition().y * .7f) {
-		//else if (!stickCollider->touchingGround) {
-
-			hand->material->color = glm::vec3(COLOR_WHITE);
-			state = ARM_UP;
-		}
-		
 		else {
-			hand->material->color = glm::vec3(COLOR_BLACK);
+
+			glm::vec3 dir = prevHandPosition - handTransform->getPosition(false);
+
+			dir.y = 0;
+			dir.z = dir.z;
+
+			glm::mat4 m = glm::mat4(1);
+			m[3] = glm::vec4(dir, 1);
+
+			glm::mat4 p = transform->getCompleteToWorld();
+			p[3] = glm::vec4(0, 0, 0, 1);
+
+			m = p * m;
+
+			dir = m[3];
+
+			transform->translate(dir);
+			
+
+			//Lock
+			prevHandPosition = hand->getPosition(false);
+			glm::vec3 yMove = prevHandPosition - storedHandPosition;	yMove.x = yMove.z = 0;
+			if (yMove.y < 0)	hand->setPosition(storedHandPosition, false);
+			else				hand->setPosition(storedHandPosition + yMove, false);
+
+			if (testMinHorizontalDistance(hand->getPosition(false), head->getPosition(false))) {
+				hand->material->color = storedColor;
+				//state = IDLE;
+				//state = ARM_UP;
+			}
+			else if (hand->getPosition().y >= head->getPosition().y * .7f) {
+				//else if (!stickCollider->touchingGround) {
+
+				hand->material->color = glm::vec3(COLOR_WHITE);
+				state = ARM_UP;
+			}
+
+			else {
+				hand->material->color = glm::vec3(COLOR_BLACK);
+			}
 		}
 		
 	}
