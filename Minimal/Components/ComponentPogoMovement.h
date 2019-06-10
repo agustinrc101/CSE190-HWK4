@@ -3,9 +3,11 @@
 #pragma once
 
 #include <iostream>
-//#include "../Transform.h"
-//#include "Component.h"
+#include "../Transform.h"
+#include "Component.h"
 #include "ComponentRigidBodyStick.h"
+#include "glm/gtx/quaternion.hpp"
+#include "glm/gtc/quaternion.hpp"
 
 class ComponentPogoMovement : public Component {
 public:
@@ -107,13 +109,14 @@ private:
 		if (collider->getPosition(false).y > -1.2f) {
 			hand->material->color = storedColor;
 			state = IDLE;
-			
 		}
 
 
 		glm::vec3 dir = prevHandPosition - hand->getPosition(false);
 		dir.y = 0;
 		dir.z = dir.z;
+		
+		//dir *= glm::mat3(transform->getRotation());
 	
 		transform->translate(dir);
 

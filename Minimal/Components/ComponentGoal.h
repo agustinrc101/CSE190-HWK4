@@ -64,7 +64,7 @@ private:
 	}
 
 	void golazo(double deltatime) {
-		curTime += deltatime;
+		curTime += (float)deltatime;
 		if (curTime > scoreTime) {
 			btTransform bt;
 			bt.setIdentity();

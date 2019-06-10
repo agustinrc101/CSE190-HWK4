@@ -34,14 +34,14 @@ public:
 	int up = 0;
 	void Update(double deltaTime) override {
 		if (hasHit) {
-			delay += deltaTime;
+			delay += (float)deltaTime;
 			if (delay > delayTime) {
 				hasHit = false;
 				delay = 0;
 			}
 		}
 		if (hasHit2) {
-			delay2 += deltaTime;
+			delay2 += (float)deltaTime;
 			if (delay2 > delayTime) {
 				hasHit2 = false;
 				delay2 = 0;
