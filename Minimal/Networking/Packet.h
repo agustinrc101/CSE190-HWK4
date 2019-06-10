@@ -11,18 +11,20 @@
 #define MAX_PACKET_SIZE 72	//Change to actual packet size (maybe)
 
 enum PacketType {
-	TEST = -1,		
-	INIT = 0,			//Player joining
-	EXIT = 1,			//Player leaving
-	INIT_REPLY = 2,	
-	PLAYER_DATA = 3,	//Sending player transform data
+	PACKET_TEST = -1,		
+	PACKET_INIT = 0,			//Player joining
+	PACKET_EXIT = 1,			//Player leaving
+	PACKET_INIT_REPLY = 2,
+	PACKET_PLAYER_DATA = 3,		//Sending player transform data
 };
 
 enum PacketDataType {
-	HEAD = 0,
-	HAND_LEFT = 1,
-	HAND_RIGHT = 2,
-	BALL = 3,
+	PDATA_HEAD = 0,
+	PDATA_HAND_LEFT = 1,
+	PDATA_HAND_RIGHT = 2,
+	PDATA_BALL = 3,
+	PDATA_CONTROLLER_LEFT = 4,
+	PDATA_CONTROLLER_RIGHT = 5,
 };
 
 struct Packet {

@@ -71,6 +71,9 @@ Transform * otherHead;
 Transform * otherHandL;
 Transform * otherHandR;
 Transform * ball;
+//Controller matrices
+glm::mat4 otherControllerL = glm::mat4(1);
+glm::mat4 otherControllerR = glm::mat4(1);
 //Components
 glm::vec3 groundPosition = glm::vec3(0, -1.7f, 0);
 float stageSize = 10.0f;
@@ -607,14 +610,18 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 		physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(player->getCompleteToWorld() * right), stickR->getlinVelo());
 		physics->newLColPos(handL->getChild(1)->getPosition(false), glm::quat_cast(player->getCompleteToWorld() * left), stickL->getlinVelo());
 		//Other player's hands
-		physics->newOtherRColPos(otherHandR->getChild(1)->getPosition(false), glm::quat_cast(otherHandR->getCompleteToWorld()), otherStickR->getlinVelo());
-		physics->newOtherLColPos(otherHandL->getChild(1)->getPosition(false), glm::quat_cast(otherHandL->getCompleteToWorld()), otherStickL->getlinVelo());
+		physics->newOtherRColPos(otherHandR->getChild(1)->getPosition(false), glm::quat_cast(otherHandR->getCompleteToWorld() * otherControllerR), otherStickR->getlinVelo());
+		physics->newOtherLColPos(otherHandL->getChild(1)->getPosition(false), glm::quat_cast(otherHandL->getCompleteToWorld() * otherControllerL), otherStickL->getlinVelo());
+	}
+	else if (client->player == 2) {
+		otherControllerL = left;
+		otherControllerR = right;
 	}
 }
 
 void ProjectManager::updateHead(glm::mat4 hmd) {
 	head->setToWorld(hmd);
-	head->scale(0.5f);
+	head->scale(0.4f);
 	head->rotate(180, AXIS_Y_POSITIVE);
 }
 
@@ -733,11 +740,15 @@ void ProjectManager::stopNetworking() {
 }
 
 void ProjectManager::sendPlayerData() {
-	client->sendPlayerDataPacket(head->getCompleteToWorld(), HEAD);
-	client->sendPlayerDataPacket(handL->getCompleteToWorld(), HAND_LEFT);
-	client->sendPlayerDataPacket(handR->getCompleteToWorld(), HAND_RIGHT);
+	client->sendPlayerDataPacket(head->getCompleteToWorld(), PDATA_HEAD);
+	client->sendPlayerDataPacket(handL->getCompleteToWorld(), PDATA_HAND_LEFT);
+	client->sendPlayerDataPacket(handR->getCompleteToWorld(), PDATA_HAND_RIGHT);
 	if (client->player == 1) {
-		client->sendPlayerDataPacket(ball->getCompleteToWorld(), BALL);
+		client->sendPlayerDataPacket(ball->getCompleteToWorld(), PDATA_BALL);
+	}
+	else if (client->player == 2) {
+		client->sendPlayerDataPacket(otherControllerL, PDATA_CONTROLLER_LEFT);
+		client->sendPlayerDataPacket(otherControllerR, PDATA_CONTROLLER_RIGHT);
 	}
 }
 
@@ -748,17 +759,23 @@ void ProjectManager::receivePackets() {
 		for (int i = 0; i < packets.size(); i++) {
 			Packet packet = packets[i];
 			switch (packet.dataType) {
-			case HEAD:
+			case PDATA_HEAD:
 				otherHead->setToWorld(packet.toWorld);
 				break;
-			case HAND_LEFT:
+			case PDATA_HAND_LEFT:
 				otherHandL->setToWorld(packet.toWorld);
 				break;
-			case HAND_RIGHT:
+			case PDATA_HAND_RIGHT:
 				otherHandR->setToWorld(packet.toWorld);
 				break;
-			case BALL:
+			case PDATA_BALL:
 				ball->setToWorld(packet.toWorld);
+				break;
+			case PDATA_CONTROLLER_LEFT:
+				otherControllerL = packet.toWorld;
+				break;
+			case PDATA_CONTROLLER_RIGHT:
+				otherControllerR = packet.toWorld;
 				break;
 			default:
 				std::cerr << "Unknown PlayerData packet type received" << std::endl; 

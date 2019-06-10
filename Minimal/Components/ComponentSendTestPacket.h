@@ -26,7 +26,7 @@ public:
 				button_press = true;
 
 				Packet p;
-				p.type = TEST;
+				p.type = PACKET_TEST;
 				std::cout << "SENDING TEST PACKET" << std::endl;
 				Client::sendPacket(p);
 			}

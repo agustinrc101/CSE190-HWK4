@@ -19,12 +19,12 @@ void Client::joinServer() {
 
 	if (connectToServer(DEFAULT_IP)) {
 		connected = true;
-		sendPacket(INIT);
+		sendPacket(PACKET_INIT);
 		_beginthread(clientLoop, 0, (void*)0);
 	}
 	else if (connectToServer(LOCAL_HOST)) {
 		connected = true;
-		sendPacket(INIT);
+		sendPacket(PACKET_INIT);
 		_beginthread(clientLoop, 0, (void*)0);
 	}
 }
@@ -106,22 +106,22 @@ void Client::clientLoop(void *) {
 				packet.deserialize(&(data[i]));
 
 				switch (packet.type) {
-				case TEST:
+				case PACKET_TEST:
 					i += sizeof(Packet);
 					std::cout << "Received TEST packet" << std::endl;
 					break;
-				case INIT:			//Handle init
+				case PACKET_INIT:			//Handle init
 					std::cout << "Received INIT packet" << std::endl;
 					ProjectManager::project->initPacketReceived();
 					i += sizeof(Packet);
 					break;
-				case EXIT:			//Handle exit
+				case PACKET_EXIT:			//Handle exit
 					std::cout << "Received EXIT packet" << std::endl;
 					ProjectManager::project->exitPacketReceived();
 					i += sizeof(Packet);
 					client->packets.push_back(packet);
 					break;
-				case PLAYER_DATA:	//Handle player data
+				case PACKET_PLAYER_DATA:	//Handle player data
 					i += sizeof(Packet);
 					client->playerDataPackets.push_back(packet);
 					break;
@@ -164,7 +164,7 @@ void Client::sendPacket() {
 	char buf[sizeof(Packet)];
 
 	Packet packet;
-	packet.type = TEST;
+	packet.type = PACKET_TEST;
 	packet.serialize(buf);
 
 	int sendResult = send(sock, buf, sizeof(Packet), 0);
@@ -188,7 +188,7 @@ void Client::sendPlayerDataPacket(glm::mat4 t, PacketDataType type) {
 	char buf[sizeof(Packet)];
 
 	Packet packet;
-	packet.type = PLAYER_DATA;
+	packet.type = PACKET_PLAYER_DATA;
 	packet.dataType = type;
 	packet.toWorld = t;
 	packet.serialize(buf);
