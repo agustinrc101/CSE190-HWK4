@@ -154,7 +154,7 @@ protected:
 
 	void Start() override {
 		rigidbody = transform->rigidBody;
-		rigidbody->setRestitution(0.5f);			//Bouncyness
+		rigidbody->setRestitution(0.75f);			//Bouncyness
 		rigidbody->setFriction(0.5f);				//Friction
 		//rigidbody->setRollingFriction(0.075f);		//Rolling Friction
 

@@ -14,7 +14,7 @@
 class ComponentRigidBodyStick : public Component {
 public:
 	bool isActive = true;
-
+	bool isWalking = false;
 	ComponentRigidBodyStick(glm::vec3 size, bool leftHand, bool thisPlayer = true) : colliderSize(size), left(leftHand), isPlayerSticks(thisPlayer) {}
 	~ComponentRigidBodyStick() {}
 	int up = 0;
@@ -36,6 +36,13 @@ public:
 		velo = 0.7f * 10.0f * velo;
 	
 		return velo;
+	}
+
+	bool getIsLeft() {
+		if (left) {
+			return true;
+		}
+		return false;
 	}
 protected:
 	Transform * transform;

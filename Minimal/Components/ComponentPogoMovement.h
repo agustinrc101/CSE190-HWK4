@@ -12,9 +12,9 @@
 class ComponentPogoMovement : public Component {
 public:
 	bool isActive = true;
-	bool isWalking = false;
-	ComponentPogoMovement(Transform * theHead, Transform * theHand, Transform * pogoCollider, ComponentRigidBodyStick * theStickCollider, Transform * handModel) 
-		: head(theHead), hand(theHand), collider(pogoCollider), stickCollider(theStickCollider), handTransform (handModel)  {
+	
+	ComponentPogoMovement(Transform * theHead, Transform * theHand, Transform * pogoCollider, ComponentRigidBodyStick * theStickCollider, ComponentRigidBodyStick * theOtherStickCollider, Transform * handModel)
+		: head(theHead), hand(theHand), collider(pogoCollider), stickCollider(theStickCollider), otherStickCollider(theOtherStickCollider), handTransform (handModel)  {
 		storedColor = hand->material->color;
 	}
 	~ComponentPogoMovement() {}
@@ -83,7 +83,7 @@ private:
 	int hitSound = 3;
 
 	void handleIdleState() {
-		if (hand->getPosition().y >= (head->getPosition().y / 1.7f)) {
+		if (hand->getPosition().y >= (head->getPosition().y / 1.75f)) {
 			handState = RIGHT;
 			hand->material->color = glm::vec3(COLOR_WHITE);
 			state = ARM_UP;
@@ -95,7 +95,7 @@ private:
 	}
 
 	void handleArmUpState() {
-		if (hand->getPosition().y < (head->getPosition().y - 0.15f) && collider->getPosition(false).y <= -1.0f) {
+		if (hand->getPosition().y < (head->getPosition().y - 0.15f) && collider->getPosition(false).y <= 0.0f) {
 		/*if(stickCollider->touchingGround){*/
 			hand->material->color = glm::vec3(COLOR_BLACK);
 			storedHandPosition = handTransform->getPosition(false);
@@ -109,14 +109,15 @@ private:
 	}
 
 	void handleArmDownState() {
-		if (collider->getPosition(false).y > -1.0f) {
+		if (collider->getPosition(false).y > -1.3f) {
 			hand->material->color = storedColor;
+			stickCollider->isWalking = false;
 			state = IDLE;
 			//transform->translate(dir);
 
 		}
 		else {
-
+			stickCollider->isWalking = true;
 			glm::vec3 dir = prevHandPosition - handTransform->getPosition(false);
 
 			dir.y = 0;
@@ -131,8 +132,11 @@ private:
 			m = p * m;
 
 			dir = m[3];
-
-			transform->translate(dir);
+			if(otherStickCollider->isWalking)
+				transform->translate(dir);
+			else {
+				transform->translate(1.85f * dir);	//I AM SPEED
+			}
 			
 
 			//Lock
@@ -150,6 +154,7 @@ private:
 				//else if (!stickCollider->touchingGround) {
 
 				hand->material->color = glm::vec3(COLOR_WHITE);
+				stickCollider->isWalking = false;
 				state = ARM_UP;
 			}
 

@@ -232,9 +232,9 @@ void ProjectManager::initGlobalScene() {
 		player->addChild(handRModel);
 
 		//Pogo Movement
-		ComponentPogoMovement * c1 = new ComponentPogoMovement(head, handR, colliderR, stickR, handRModel);
+		ComponentPogoMovement * c1 = new ComponentPogoMovement(head, handR, colliderR, stickR, stickL, handRModel);
 		player->addComponent(c1);
-		c1 = new ComponentPogoMovement(head, handL, colliderL, stickL, handLModel);
+		c1 = new ComponentPogoMovement(head, handL, colliderL, stickL, stickR, handLModel);
 		player->addComponent(c1);
 		//Player Rotation
 		ComponentPlayerRotation * c2 = new ComponentPlayerRotation();
