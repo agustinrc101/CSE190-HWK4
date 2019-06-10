@@ -96,7 +96,6 @@ void Physics::newOtherLColPos(glm::vec3 position, glm::quat orientation, glm::ve
 	btTransform newPos;
 	btQuaternion  ori;
 	ori = bullet::fromGlm(orientation);
-	//ori = btQuaternion(0, 0, 0, 1);
 	newPos.setOrigin(btVector3(position.x, position.y, position.z));
 	newPos.setRotation(ori);
 	if (otherLHandCol) {
@@ -109,7 +108,6 @@ void Physics::newOtherRColPos(glm::vec3 position, glm::quat orientation, glm::ve
 	btTransform newPos;
 	btQuaternion  ori;
 	ori = bullet::fromGlm(orientation);
-	//ori = btQuaternion(0, 0, 0, 1);
 	newPos.setOrigin(btVector3(position.x, position.y, position.z));
 	newPos.setRotation(ori);
 	if (otherRHandCol) {

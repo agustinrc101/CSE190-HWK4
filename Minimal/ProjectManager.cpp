@@ -609,10 +609,6 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 	handR->setToWorld(right);
 	handR->scale(glm::vec3(0.015f));
 
-
-	glm::quat q = glm::quat_cast(player->getCompleteToWorld() * right);
-	std::cout << q.x << ", " << q.y << ", " << q.z << ", " << q.w << std::endl;
-
 	if (client->player != 2) {
 		//This player's hand
 		physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(player->getCompleteToWorld() * right), stickR->getlinVelo());
