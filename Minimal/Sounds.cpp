@@ -140,8 +140,9 @@ Sounds::Sounds(const char* filename) {
 
 	}
 
-	////////////BACKGROUND MUSIC//////////////
-	alSourcef(sourceid2, AL_GAIN, 0.0f);
+	////////////BACKGROUND MUSIC//////////////==========================================================================================================================================
+	alSourcef(sourceid2, AL_GAIN, 0.0f);	//DEBUG
+	//alSourcef(sourceid2, AL_GAIN, 0.3f);	//ACTUAL
 	alSourcePlay(sourceid2);
 	while (source_state2 == AL_PLAYING) {
 		alGetSourcei(sourceid2, AL_SOURCE_STATE, &source_state2);
