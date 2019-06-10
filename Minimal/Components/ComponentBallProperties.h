@@ -6,6 +6,7 @@
 #include "../Transform.h"
 #include "../Definitions.h"
 #include "../Input.h"
+#include "../Networking/Client.h"
 #include "Component.h"
 #include "Physics.h"
 #include "btBulletDynamicsCommon.h"
@@ -52,26 +53,17 @@ public:
 			btPersistentManifold* contactManifold = Physics::physics->dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
 			const btCollisionObject* obA = contactManifold->getBody0();
 			const btCollisionObject* obB = contactManifold->getBody1();
-			// std::cout << "Collision " << i << " num contacts: " << contactManifold->getNumContacts() << std::endl;
-			if (contactManifold->getNumContacts() > 1) {
-				//std::cout << "collision hit" << std::endl;
-			}
 
 			if ((obA->getCollisionShape()->getUserIndex() == LAYER_BALL) || (obB->getCollisionShape()->getUserIndex() == LAYER_BALL) ) {
 				if (((obA->getCollisionShape()->getUserIndex() == LAYER_STICK_LEFT) || (obB->getCollisionShape()->getUserIndex() == LAYER_STICK_LEFT)) && contactManifold->getNumContacts() >= 1) {
 					if (!hasCollidedL) {
 						hasCollidedL = true;
-						
-						//cout << "hitl " << endl;
-						//rigidbody->setLinearVelocity(rigidbody->getLinearVelocity() + bullet::fromGlm(ProjectManager::project->getStickVelocity(true)));
 						if (!hasHit) {
 							glm::vec4 soundPos = bullet::ToGlm(rigidbody->getWorldTransform())[3];
 							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(soundPos.x, soundPos.y, soundPos.z, hitSound);
-
-
+							Client::client->sendAudioPacket(hitSound, soundPos);
 							hasHit = true;
 						}
-
 					}
 					
 					isCollidingL = true;
@@ -82,37 +74,57 @@ public:
 				if(((obA->getCollisionShape()->getUserIndex() == LAYER_STICK_RIGHT) || (obB->getCollisionShape()->getUserIndex() == LAYER_STICK_RIGHT)) && contactManifold->getNumContacts() >= 1) {
 					if (!hasCollidedR) {
 						hasCollidedR = true;
-						
-						//rigidbody->setLinearVelocity(rigidbody->getLinearVelocity() + bullet::fromGlm(ProjectManager::project->getStickVelocity(false)));
-						//cout << "hit2" << endl;
 						if (!hasHit2) {
 							glm::vec4 soundPos = bullet::ToGlm(rigidbody->getWorldTransform())[3];
-							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(soundPos.x, soundPos.y, soundPos.z, hitSound  );
-						
-							
+							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(soundPos.x, soundPos.y, soundPos.z, hitSound);
+							Client::client->sendAudioPacket(hitSound, soundPos);
 							hasHit2 = true;
 						}
-
 					}
-					
 					isCollidingR = true;
 				}
 				else {
 					isCollidingR = false;
 				}
-				
+				if (((obA->getCollisionShape()->getUserIndex() == LAYER_OTHER_STICK_LEFT) || (obB->getCollisionShape()->getUserIndex() == LAYER_OTHER_STICK_LEFT)) && contactManifold->getNumContacts() >= 1) {
+					if (!hasCollidedL) {
+						hasCollidedL = true;
+						if (!hasHit) {
+							glm::vec4 soundPos = bullet::ToGlm(rigidbody->getWorldTransform())[3];
+							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(soundPos.x, soundPos.y, soundPos.z, hitSound);
+							Client::client->sendAudioPacket(hitSound, soundPos);
+							hasHit = true;
+						}
+					}
+
+					isCollidingL = true;
+				}
+				else {
+					isCollidingL = false;
+				}
+				if (((obA->getCollisionShape()->getUserIndex() == LAYER_OTHER_STICK_RIGHT) || (obB->getCollisionShape()->getUserIndex() == LAYER_OTHER_STICK_RIGHT)) && contactManifold->getNumContacts() >= 1) {
+					if (!hasCollidedR) {
+						hasCollidedR = true;
+						if (!hasHit2) {
+							glm::vec4 soundPos = bullet::ToGlm(rigidbody->getWorldTransform())[3];
+							ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(soundPos.x, soundPos.y, soundPos.z, hitSound);
+							Client::client->sendAudioPacket(hitSound, soundPos);
+							hasHit2 = true;
+						}
+					}
+					isCollidingR = true;
+				}
+				else {
+					isCollidingR = false;
+				}
 			}
-			
-			
 		}
 
 		if (!isCollidingL && hasCollidedL) {
 			hasCollidedL = false;
-			
 		}
 		else if (!isCollidingR && hasCollidedR) {
 			hasCollidedR = false;
-			//ProjectManager::project->getSoundEffect(HIT_SOUND)->Play();
 		}
 
 		if (Input::getButtonA() || Input::getButtonX()) {

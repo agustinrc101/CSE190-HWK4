@@ -16,6 +16,7 @@ enum PacketType {
 	PACKET_EXIT = 1,			//Player leaving
 	PACKET_INIT_REPLY = 2,
 	PACKET_PLAYER_DATA = 3,		//Sending player transform data
+	PACKET_AUDIO = 4,
 };
 
 enum PacketDataType {

@@ -26,6 +26,7 @@
 GLint Shaders::colorShader = 0;
 GLint Shaders::textureShader = 0;
 GLint Shaders::skyboxShader = 0;
+GLint Shaders::gradientShader = 0;
 //Init Light
 glm::vec3 Light::position = glm::vec3(0);
 glm::vec3 Light::color = glm::vec3(COLOR_WHITE);
@@ -112,7 +113,7 @@ ProjectManager::ProjectManager() {
 	project = this;
 
 	physics = new Physics();
-	Light::init(glm::vec3(-10, 10, 5), glm::vec3(COLOR_WHITE));
+	Light::init(glm::vec3(7.5f, 15, -0.7f), glm::vec3(COLOR_LIGHT));
 	Shaders::init();
 	Textures::init();
 	initModels();
@@ -378,7 +379,8 @@ void ProjectManager::initScene1() {
 	}
 	//Ball
 	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_CYAN), Textures::getTexture(Textures::T_STEAM));
+		Material * mat = new Material(Shaders::getGradientShader(), glm::vec3(COLOR_PURPLE), Textures::getTexture(Textures::T_STEAM));
+		mat->color2 = glm::vec3(COLOR_BLUE);
 		ball = new Transform(model_sphere, mat, false);
 
 		ball->scale(0.4f);
@@ -396,7 +398,8 @@ void ProjectManager::initScene1() {
 	}
 	////Sun
 	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_ORANGE), Textures::getTexture(Textures::T_STEAM));
+		Material * mat = new Material(Shaders::getGradientShader(), glm::vec3(COLOR_ORANGE), Textures::getTexture(Textures::T_STEAM));
+		mat->color2 = glm::vec3(COLOR_RED);
 		Transform * sun = new Transform(model_sphere, mat, false);
 
 		sun->scale(10.4f);
@@ -787,6 +790,19 @@ void ProjectManager::receivePackets() {
 			}
 		}
 		if(packets.size() > 0)
+			packets.clear();
+	}
+
+	//Audio Packets
+	{
+		std::vector<Packet> packets = client->getPlayerPackets();
+
+		for (int i = 0; i < packets.size(); i++) {
+			glm::vec3 pos = packets[i].toWorld[3];
+			sound_Hit->Play(pos.x, pos.y, pos.z, packets[i].dataType);
+		}
+
+		if (packets.size() > 0)
 			packets.clear();
 	}
 }

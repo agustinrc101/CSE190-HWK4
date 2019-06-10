@@ -12,12 +12,15 @@ public:
 	GLuint shader;
 	GLuint TEX;
 	glm::vec3 color;
+	glm::vec3 color2;
 	float specular;
 	float ambiance;
 
 	//Constructor/Destructor
 	Material(GLuint Shader = 0, glm::vec3 Color =glm::vec3(COLOR_WHITE),  GLuint Tex=0) 
-	: shader(Shader), TEX(Tex), color(Color), ambiance(0.1f), specular(0.5f) { }
+	: shader(Shader), TEX(Tex), color(Color), ambiance(0.1f), specular(0.5f) { 
+		color2 = glm::vec3(COLOR_WHITE);
+	}
 
 	~Material() {}
 

@@ -3,9 +3,11 @@ out vec4 FragColor;
 
 in vec3 Normal;
 in vec3 FragPos;
+in vec2 uv;
 
 uniform sampler2D texture_diffuse1;
 uniform vec3 Color;
+uniform vec3 Color2;
 uniform vec3 LightPos;
 uniform vec3 LightColor;
 uniform vec3 CameraPos;
@@ -30,7 +32,9 @@ void main(){
 	vec3 specular = SpecularStrenght * spec * LightColor;
 
 	//Fragment Color
-	vec4 c =  vec4(Color.r, Color.g, Color.b, 1.0);			//Color
-	vec3 result = (ambient + diffuse + specular) * vec3(c);	//Phong
-	FragColor = vec4(result, c.a);
+	vec4 c = texture(texture_diffuse1, uv);
+	vec3 gradient = mix(Color, Color2, uv.y);
+	c *= vec4(gradient, 1);
+
+	FragColor = c;
 }

@@ -23,6 +23,8 @@ enum ConnectionType {
 
 class Client{
 public:
+	static Client * client;
+
 	int player = 0;
 
 	Client();
@@ -35,8 +37,10 @@ public:
 	void sendPacket();
 	void sendPacket(PacketType type);
 	void sendPlayerDataPacket(glm::mat4 t, PacketDataType type);
+	void sendAudioPacket(int soundId, glm::vec3 position);
 
 	std::vector<Packet> getPlayerPackets();
+	std::vector<Packet> getAudioPackets();
 
 private:
 	SOCKET sock;
@@ -44,13 +48,11 @@ private:
 
 	std::vector<Packet> packets;
 	std::vector<Packet> playerDataPackets;
+	std::vector<Packet> audioPackets;
 
 	bool connectToServer(std::string ip);
 	bool connectionErrorHelper();
 	static void clientLoop(void *);
-
-protected:
-	static Client * client;
 };
 
 #endif

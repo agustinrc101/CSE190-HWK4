@@ -11,6 +11,8 @@
 #define SHADER_TEXTURE_FRAGMENT "./shaders/TextureShader.frag"
 #define SHADER_SKYBOX_VERTEX "./shaders/skybox.vert"
 #define SHADER_SKYBOX_FRAGMENT "./shaders/skybox.frag"
+#define SHADER_GRADIENT_VERTEX "./shaders/colorGrad.vert"
+#define SHADER_GRADIENT_FRAGMENT "./shaders/colorGrad.frag"
 
 //Textures
 #define TEXTURE_SKYBOX_LEFT "skybox/left"
@@ -55,6 +57,7 @@
 #define COLOR_GREY 0.6f, 0.6f, 0.6f
 #define COLOR_FOCUS_RED 1, .5f, .5f
 #define COLOR_FOCUS_BLUE .75f, .75f, 1
+#define COLOR_LIGHT 1, 0.7f, 0.7f
 
 //Axes
 #define AXIS_X_POSITIVE glm::vec3(1, 0, 0)

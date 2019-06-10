@@ -125,6 +125,10 @@ void Client::clientLoop(void *) {
 					i += sizeof(Packet);
 					client->playerDataPackets.push_back(packet);
 					break;
+				case PACKET_AUDIO:
+					i += sizeof(Packet);
+					client->audioPackets.push_back(packet);
+					break;
 				default:			//Ignore unkown packets
 					i++;
 					std::cout << "<<SERVER>> Received package of unknown type" << std::endl;
@@ -144,6 +148,14 @@ std::vector<Packet> Client::getPlayerPackets() {
 	std::vector<Packet> p = playerDataPackets;
 
 	playerDataPackets.clear();
+
+	return p;
+}
+
+std::vector<Packet> Client::getAudioPackets() {
+	std::vector<Packet> p = audioPackets;
+
+	audioPackets.clear();
 
 	return p;
 }
@@ -191,6 +203,21 @@ void Client::sendPlayerDataPacket(glm::mat4 t, PacketDataType type) {
 	packet.type = PACKET_PLAYER_DATA;
 	packet.dataType = type;
 	packet.toWorld = t;
+	packet.serialize(buf);
+
+	int sendResult = send(sock, buf, sizeof(Packet), 0);
+	if (sendResult == SOCKET_ERROR)
+		std::cerr << "Error sending packet, Err#" << WSAGetLastError() << std::endl;
+}
+
+void Client::sendAudioPacket(int soundId, glm::vec3 position) {
+	char buf[sizeof(Packet)];
+
+	Packet packet;
+	packet.type = PACKET_AUDIO;
+	packet.dataType = (PacketDataType)soundId;
+	packet.toWorld = glm::mat4(1);
+	packet.toWorld[3] = glm::vec4(position, 1);
 	packet.serialize(buf);
 
 	int sendResult = send(sock, buf, sizeof(Packet), 0);

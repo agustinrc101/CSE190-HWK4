@@ -117,6 +117,7 @@ public:
 		glUniformMatrix4fv(glGetUniformLocation(shader, "View"), 1, GL_FALSE, &headPose[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(shader, "Model"), 1, GL_FALSE, &m[0][0]);
 		glUniform3f(glGetUniformLocation(shader, "Color"), mat->color.r, mat->color.g, mat->color.b);
+		glUniform3f(glGetUniformLocation(shader, "Color2"), mat->color2.r, mat->color2.g, mat->color2.b);
 		glUniform3f(glGetUniformLocation(shader, "LightPos"), lightP.x, lightP.y, lightP.z);
 		glUniform3f(glGetUniformLocation(shader, "LightColor"), lightC.r, lightC.g, lightC.b);
 		glUniform3f(glGetUniformLocation(shader, "CameraPos"), cameraPos.x, cameraPos.y, cameraPos.z);
