@@ -67,6 +67,7 @@ Transform * handL;
 Transform * handR;
 Transform * handLModel;
 Transform * handRModel;
+Transform * otherPlayer;
 Transform * otherHead;
 Transform * otherHandL;
 Transform * otherHandR;
@@ -220,7 +221,6 @@ void ProjectManager::initGlobalScene() {
 	//Player parent
 	{
 		//Create transform
-		Material * mat = new Material();
 		player = new Transform();
 		player->name = "Player";
 		//Add children
@@ -248,7 +248,6 @@ void ProjectManager::initGlobalScene() {
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_WHITE));
 		otherHandR = new Transform(model_sphere, mat);
 		otherHandR->name = "Other Player's Right Hand";
-		otherHandR->isActive = false;
 
 		mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTexture(Textures::T_STICK));
 		Transform * stick = new Transform(model_stick, mat);
@@ -265,16 +264,12 @@ void ProjectManager::initGlobalScene() {
 
 		otherHandR->addChild(stick);
 		otherHandR->addChild(col);
-
-		sceneGlobal->addTransform(otherHandR);
-
 	}
 	//Left Hand setup
 	{
 		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_WHITE));
 		otherHandL = new Transform(model_sphere, mat);
 		otherHandL->name = "Other Player's Left Hand";
-		otherHandL->isActive = false;
 
 		mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTexture(Textures::T_STICK));
 		Transform * stick = new Transform(model_stick, mat);
@@ -291,17 +286,26 @@ void ProjectManager::initGlobalScene() {
 
 		otherHandL->addChild(stick);
 		otherHandL->addChild(col);
-
-		sceneGlobal->addTransform(otherHandL);
 	}
 	//Head setup
 	{
 		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTexture(Textures::T_ROBOT));
 		otherHead = new Transform(model_robot, mat);
 		otherHead->name = "Other Player's Head";
-		otherHead->isActive = false;
 
 		sceneGlobal->addTransform(otherHead);
+	}
+	//Player setup
+	{
+		otherPlayer = new Transform();
+		otherPlayer->name = "Other player";
+		otherPlayer->isActive = false;
+
+		otherPlayer->addChild(otherHandL);
+		otherPlayer->addChild(otherHandR);
+		otherPlayer->addChild(otherHead);
+
+		sceneGlobal->addTransform(otherPlayer);
 	}
 
 	sceneGlobal->LateInit();
@@ -605,13 +609,17 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 	handR->setToWorld(right);
 	handR->scale(glm::vec3(0.015f));
 
+
+	glm::quat q = glm::quat_cast(player->getCompleteToWorld() * right);
+	std::cout << q.x << ", " << q.y << ", " << q.z << ", " << q.w << std::endl;
+
 	if (client->player != 2) {
 		//This player's hand
 		physics->newRColPos(handR->getChild(1)->getPosition(false), glm::quat_cast(player->getCompleteToWorld() * right), stickR->getlinVelo());
 		physics->newLColPos(handL->getChild(1)->getPosition(false), glm::quat_cast(player->getCompleteToWorld() * left), stickL->getlinVelo());
 		//Other player's hands
-		physics->newOtherRColPos(otherHandR->getChild(1)->getPosition(false), glm::quat_cast(otherHandR->getCompleteToWorld() * otherControllerR), otherStickR->getlinVelo());
-		physics->newOtherLColPos(otherHandL->getChild(1)->getPosition(false), glm::quat_cast(otherHandL->getCompleteToWorld() * otherControllerL), otherStickL->getlinVelo());
+		physics->newOtherRColPos(otherPlayer->getChild(1)->getPosition(false), glm::quat_cast(otherPlayer->getCompleteToWorld() * otherControllerR), otherStickR->getlinVelo());
+		physics->newOtherLColPos(otherPlayer->getChild(1)->getPosition(false), glm::quat_cast(otherPlayer->getCompleteToWorld() * otherControllerL), otherStickL->getlinVelo());
 	}
 	else if (client->player == 2) {
 		otherControllerL = left;
@@ -740,9 +748,10 @@ void ProjectManager::stopNetworking() {
 }
 
 void ProjectManager::sendPlayerData() {
-	client->sendPlayerDataPacket(head->getCompleteToWorld(), PDATA_HEAD);
-	client->sendPlayerDataPacket(handL->getCompleteToWorld(), PDATA_HAND_LEFT);
-	client->sendPlayerDataPacket(handR->getCompleteToWorld(), PDATA_HAND_RIGHT);
+	client->sendPlayerDataPacket(player->getToWorld(), PDATA_PLAYER);
+	client->sendPlayerDataPacket(head->getToWorld(), PDATA_HEAD);
+	client->sendPlayerDataPacket(handL->getToWorld(), PDATA_HAND_LEFT);
+	client->sendPlayerDataPacket(handR->getToWorld(), PDATA_HAND_RIGHT);
 	if (client->player == 1) {
 		client->sendPlayerDataPacket(ball->getCompleteToWorld(), PDATA_BALL);
 	}
@@ -759,6 +768,9 @@ void ProjectManager::receivePackets() {
 		for (int i = 0; i < packets.size(); i++) {
 			Packet packet = packets[i];
 			switch (packet.dataType) {
+			case PDATA_PLAYER:
+				otherPlayer->setToWorld(packet.toWorld);
+				break;
 			case PDATA_HEAD:
 				otherHead->setToWorld(packet.toWorld);
 				break;

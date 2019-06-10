@@ -25,6 +25,7 @@ enum PacketDataType {
 	PDATA_BALL = 3,
 	PDATA_CONTROLLER_LEFT = 4,
 	PDATA_CONTROLLER_RIGHT = 5,
+	PDATA_PLAYER = 6,
 };
 
 struct Packet {
