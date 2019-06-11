@@ -441,7 +441,22 @@ void ProjectManager::initScene1() {
 		t->addComponent(score);
 
 		scene1->addTransform(t);
+		{
+			mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_BLACK));
+			Transform * black = new Transform(model_rectangle, mat);
 
+			black->translate(glm::vec3(0.2f, 0, .75f));
+			black->scale(glm::vec3(1, 0.75f, 0.3f));
+
+			t->addChild(black);
+
+			black = new Transform(model_rectangle, mat);
+
+			black->translate(glm::vec3(0.2f, 0, -.75f));
+			black->scale(glm::vec3(1, 0.75f, 0.3f));
+
+			t->addChild(black);
+		}
 		//Goalpost - RED
 		{
 			Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_RED));

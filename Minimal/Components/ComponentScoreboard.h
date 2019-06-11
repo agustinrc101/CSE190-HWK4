@@ -39,21 +39,21 @@ protected:
 	Transform * transform;
 
 	void Start() override {
-		addRedChild(	glm::vec3(0.25f, 0.5f, 0.75f),		glm::vec3(0.1f, 0.05f, 0.2f));
-		addRedChild(	glm::vec3(0.25f, 0.25f, 1),			glm::vec3(0.1f, 0.2f, 0.05f));
-		addRedChild(	glm::vec3(0.25f, 0.25f, 0.5f),		glm::vec3(0.1f, 0.2f, 0.05f));
-		addRedChild(	glm::vec3(0.25f, 0, 0.75f),			glm::vec3(0.1f, 0.05f, 0.2f));
-		addRedChild(	glm::vec3(0.25f, -0.25f, 1),		glm::vec3(0.1f, 0.2f, 0.05f));
-		addRedChild(	glm::vec3(0.25f, -0.25f, 0.5f),		glm::vec3(0.1f, 0.2f, 0.05f));
-		addRedChild(	glm::vec3(0.25f, -0.5f, 0.75f),		glm::vec3(0.1f, 0.05f, 0.2f));
+		addRedChild(	glm::vec3(0.3f, 0.5f, 0.75f),		glm::vec3(0.1f, 0.05f, 0.2f));
+		addRedChild(	glm::vec3(0.3f, 0.25f, 1),			glm::vec3(0.1f, 0.2f, 0.05f));
+		addRedChild(	glm::vec3(0.3f, 0.25f, 0.5f),		glm::vec3(0.1f, 0.2f, 0.05f));
+		addRedChild(	glm::vec3(0.3f, 0, 0.75f),			glm::vec3(0.1f, 0.05f, 0.2f));
+		addRedChild(	glm::vec3(0.3f, -0.25f, 1),			glm::vec3(0.1f, 0.2f, 0.05f));
+		addRedChild(	glm::vec3(0.3f, -0.25f, 0.5f),		glm::vec3(0.1f, 0.2f, 0.05f));
+		addRedChild(	glm::vec3(0.3f, -0.5f, 0.75f),		glm::vec3(0.1f, 0.05f, 0.2f));
 		
-		addBlueChild(	glm::vec3(0.25f, 0.5f, -0.75f),		glm::vec3(0.1f, 0.05f, 0.2f));
-		addBlueChild(	glm::vec3(0.25f, 0.25f, -0.5f),		glm::vec3(0.1f, 0.2f, 0.05f));
-		addBlueChild(	glm::vec3(0.25f, 0.25f, -1),		glm::vec3(0.1f, 0.2f, 0.05f));
-		addBlueChild(	glm::vec3(0.25f, 0, -0.75f),		glm::vec3(0.1f, 0.05f, 0.2f));
-		addBlueChild(	glm::vec3(0.25f, -0.25f, -0.5f),	glm::vec3(0.1f, 0.2f, 0.05f));
-		addBlueChild(	glm::vec3(0.25f, -0.25f, -1),		glm::vec3(0.1f, 0.2f, 0.05f));
-		addBlueChild(	glm::vec3(0.25f, -0.5f, -0.75f),	glm::vec3(0.1f, 0.05f, 0.2f));
+		addBlueChild(	glm::vec3(0.3f, 0.5f, -0.75f),		glm::vec3(0.1f, 0.05f, 0.2f));
+		addBlueChild(	glm::vec3(0.3f, 0.25f, -0.5f),		glm::vec3(0.1f, 0.2f, 0.05f));
+		addBlueChild(	glm::vec3(0.3f, 0.25f, -1),			glm::vec3(0.1f, 0.2f, 0.05f));
+		addBlueChild(	glm::vec3(0.3f, 0, -0.75f),			glm::vec3(0.1f, 0.05f, 0.2f));
+		addBlueChild(	glm::vec3(0.3f, -0.25f, -0.5f),		glm::vec3(0.1f, 0.2f, 0.05f));
+		addBlueChild(	glm::vec3(0.3f, -0.25f, -1),		glm::vec3(0.1f, 0.2f, 0.05f));
+		addBlueChild(	glm::vec3(0.3f, -0.5f, -0.75f),		glm::vec3(0.1f, 0.05f, 0.2f));
 
 		initVectorValues();
 
