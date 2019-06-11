@@ -131,6 +131,9 @@ class Textures{
 			T_CONNECT = 8,
 			T_HOST = 9,
 			T_OFFLINE = 10,
+			T_BALL = 11,
+			T_WHITE = 12,
+			T_TRANSPARENT = 13,
 		};
 
 		//Init
@@ -145,22 +148,28 @@ class Textures{
 			Textures::textureConnect = LoadTextures(TEXTURE_CONNECT);
 			Textures::textureHost = LoadTextures(TEXTURE_HOST);
 			Textures::textureOffline = LoadTextures(TEXTURE_OFFLINE);
+			Textures::textureBall = LoadTextures(TEXTURE_BALL);
+			Textures::textureWhite = LoadTextures(TEXTURE_WHITE);
+			Textures::textureTransparent = LoadTextures(TEXTURE_TRANSPARENT);
 		}
 
 		//Getters
 		static GLuint getTexture(Tex tex = T_EMPTY) {
 			switch (tex) {
-			case T_SKYBOX:	return textureSkybox;
-			case T_STEAM:	return textureSteam;
-			case T_GRIP1:	return textureGrip1Albedo;
-			case T_GRIP2:	return textureGrip2Albedo;
-			case T_STICK:	return textureStick;
-			case T_GRASS:	return textureGrass;
-			case T_ROBOT:	return textureRobot;
-			case T_WINDOW:	return textureWindow;
-			case T_CONNECT:	return textureConnect;
-			case T_HOST:	return textureHost;
-			case T_OFFLINE:	return textureOffline;
+			case T_SKYBOX:		return textureSkybox;
+			case T_STEAM:		return textureSteam;
+			case T_GRIP1:		return textureGrip1Albedo;
+			case T_GRIP2:		return textureGrip2Albedo;
+			case T_STICK:		return textureStick;
+			case T_GRASS:		return textureGrass;
+			case T_ROBOT:		return textureRobot;
+			case T_WINDOW:		return textureWindow;
+			case T_CONNECT:		return textureConnect;
+			case T_HOST:		return textureHost;
+			case T_OFFLINE:		return textureOffline;
+			case T_BALL:		return textureBall;
+			case T_WHITE:		return textureWhite;
+			case T_TRANSPARENT:	return textureTransparent;
 			default:		return 0;
 			}	
 		}
@@ -177,6 +186,9 @@ class Textures{
 			glDeleteTextures(1, &textureConnect);
 			glDeleteTextures(1, &textureHost);
 			glDeleteTextures(1, &textureOffline);
+			glDeleteTextures(1, &textureBall);
+			glDeleteTextures(1, &textureWhite);
+			glDeleteTextures(1, &textureTransparent);
 		}
 
 	protected:
@@ -191,6 +203,9 @@ class Textures{
 		static GLuint textureConnect;
 		static GLuint textureHost;
 		static GLuint textureOffline;
+		static GLuint textureBall;
+		static GLuint textureWhite;
+		static GLuint textureTransparent;
 
 };
 
@@ -206,5 +221,8 @@ GLuint Textures::textureWindow = 0;
 GLuint Textures::textureHost = 0;
 GLuint Textures::textureConnect = 0;
 GLuint Textures::textureOffline = 0;
+GLuint Textures::textureBall = 0;
+GLuint Textures::textureWhite = 0;
+GLuint Textures::textureTransparent = 0;
 
 #endif

@@ -28,7 +28,8 @@ public:
 	glm::vec3 getLeftHandPosition();
 	glm::vec3 getRightHandPosition();
 	glm::vec3 getStickVelocity(bool left);
-
+	int getPlayerNumber();
+	Model * getSphereModel();
 	Sounds* getSoundEffect(SoundEffect soundEffect);
 	
 	void changeScene(Scenes scene);

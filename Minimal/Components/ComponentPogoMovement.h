@@ -135,7 +135,10 @@ private:
 			if(otherStickCollider->isWalking)
 				transform->translate(dir);
 			else {
-				transform->translate(1.85f * dir);	//I AM SPEED
+				if (Input::getHandTriggerL() > 0.5f && Input::getHandTriggerR() > 0.5f)
+					transform->translate(1.85f * dir);	//I AM SPEED
+				else
+					transform->translate(dir);
 			}
 			
 

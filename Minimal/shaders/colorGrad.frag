@@ -15,25 +15,27 @@ uniform float SpecularStrenght;
 uniform float AmbianceStrength;
 
 void main(){
-	vec3 norm = normalize(Normal);
-	vec3 lightDir = normalize(LightPos - FragPos);
-	vec3 viewDir = normalize(CameraPos - FragPos);
-	vec3 reflectDir = reflect(-lightDir, norm);
+	//vec3 norm = normalize(Normal);
+	//vec3 lightDir = normalize(LightPos - FragPos);
+	//vec3 viewDir = normalize(CameraPos - FragPos);
+	//vec3 reflectDir = reflect(-lightDir, norm);
 
 	//Ambient 
-	vec3 ambient = AmbianceStrength * LightColor;
+	//vec3 ambient = AmbianceStrength * LightColor;
 
 	//Diffuse
-	float diff = max(dot(norm, lightDir), 0.0);
-	vec3 diffuse = diff * LightColor;
+	//float diff = max(dot(norm, lightDir), 0.0);
+	//vec3 diffuse = diff * LightColor;
 
 	//Specular 
-	float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-	vec3 specular = SpecularStrenght * spec * LightColor;
+	//float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+	//vec3 specular = SpecularStrenght * spec * LightColor;
 
 	//Fragment Color
 	vec4 c = texture(texture_diffuse1, uv);
-	vec3 gradient = mix(Color, Color2, uv.y);
+	vec3 gradient = mix(vec3(0, 0, 1), vec3(1, 0, 0), sin(uv.y));
+	gradient = mix(Color, Color2, sin(uv.y));
+	//vec3 gradient = Color * (uv.y) + Color2 * (1 - uv.y);
 	c *= vec4(gradient, 1);
 
 	FragColor = c;

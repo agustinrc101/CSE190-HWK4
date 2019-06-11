@@ -7,6 +7,8 @@ Transform::~Transform() {
 	if(material != NULL) delete(material);
 	//Delete components
 	for (int i = 0; i < components.size(); i++)	delete &components[i];
+	//Delete children
+	for (int i = 0; i < children.size(); i++) delete &children[i];
 }
 
 Transform::Transform(Model * m, Material * mat, bool UseToWorld){

@@ -18,5 +18,6 @@
 #include "ComponentBallProperties.h"
 #include "ComponentGoal.h"
 #include "ComponentMenuCube.h"
+#include "ComponentScoreboard.h"
 
 #endif

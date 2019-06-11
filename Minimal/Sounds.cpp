@@ -141,8 +141,8 @@ Sounds::Sounds(const char* filename) {
 	}
 
 	////////////BACKGROUND MUSIC//////////////==========================================================================================================================================
-	//alSourcef(sourceid2, AL_GAIN, 0.0f);	//DEBUG
 	alSourcei(sourceid2, AL_LOOPING, 1);
+	//alSourcef(sourceid2, AL_GAIN, 0.0f);	//DEBUG
 	alSourcef(sourceid2, AL_GAIN, 0.1f);	//ACTUAL
 	alSourcePlay(sourceid2);
 	while (source_state2 == AL_PLAYING) {

@@ -172,6 +172,7 @@
     <ClInclude Include="Components\ComponentRigidBodyBox.h" />
     <ClInclude Include="Components\ComponentRigidBodyPlane.h" />
     <ClInclude Include="Components\ComponentRigidBodyStick.h" />
+    <ClInclude Include="Components\ComponentScoreboard.h" />
     <ClInclude Include="Components\ComponentSendTestPacket.h" />
     <ClInclude Include="Components\ComponentHeader.h" />
     <ClInclude Include="Components\ComponentRigidBodySphere.h" />

@@ -55,12 +55,12 @@ Model * model_sphere;
 Model * model_cube;
 Model * model_cube_repeat;
 Model * model_plane;
-//Model * model_tiled_plane;
 Model * model_stick;
 Model * model_robot;
 Model * model_hand_left;
 Model * model_hand_right;
 Model * model_goal;
+Model * model_rectangle;
 //Declare Important Objects
 Transform * player;
 Transform * head;
@@ -68,6 +68,8 @@ Transform * handL;
 Transform * handR;
 Transform * handLModel;
 Transform * handRModel;
+Transform * otherHandLModel;
+Transform * otherHandRModel;
 Transform * otherPlayer;
 Transform * otherHead;
 Transform * otherHandL;
@@ -83,6 +85,7 @@ ComponentRigidBodyStick * stickL;
 ComponentRigidBodyStick * stickR;
 ComponentRigidBodyStick * otherStickL;
 ComponentRigidBodyStick * otherStickR;
+ComponentScoreboard * score;
 //Scene Management
 Scenes curScene = SCENE_MENU;
 
@@ -128,13 +131,13 @@ void ProjectManager::initModels() {
 	model_sphere = new Model(MODEL_SPHERE);
 	model_cube = new Model(MODEL_CUBE);
 	model_plane = new Model(MODEL_PLANE);
-	//model_tiled_plane = new Model(MODEL_TILED_PLANE);
 	model_stick = new Model(MODEL_STICK);
 	model_robot = new Model(MODEL_ROBOT);
 	model_hand_left = new Model(MODEL_HAND_LEFT);
 	model_hand_right = new Model(MODEL_HAND_RIGHT);
 	model_goal = new Model(MODEL_GOAL);
 	model_cube_repeat = new Model(MODEL_CUBE_REPEAT);
+	model_rectangle = new Model(MODEL_RECTANGLE);
 }
 
 void ProjectManager::initObjects() {
@@ -294,6 +297,12 @@ void ProjectManager::initGlobalScene() {
 		otherHead = new Transform(model_robot, mat);
 		otherHead->name = "Other Player's Head";
 	}
+	//Hand Models
+	{
+		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTexture(Textures::T_GRIP2));
+		otherHandLModel = new Transform(model_hand_left, mat);
+		otherHandRModel = new Transform(model_hand_right, mat);
+	}
 	//Player setup
 	{
 		otherPlayer = new Transform();
@@ -303,6 +312,8 @@ void ProjectManager::initGlobalScene() {
 		otherPlayer->addChild(otherHandL);
 		otherPlayer->addChild(otherHandR);
 		otherPlayer->addChild(otherHead);
+		otherPlayer->addChild(otherHandLModel);
+		otherPlayer->addChild(otherHandRModel);
 
 		sceneGlobal->addTransform(otherPlayer);
 	}
@@ -371,7 +382,7 @@ void ProjectManager::initScene1() {
 
 		transform->translate(groundPosition);	//ACTUAL GROUND POS
 		//transform->translate(glm::vec3(0, -.4f, 0));	//DEBUG GROUND POS
-		
+
 		ComponentRigidBodyPlane * col = new ComponentRigidBodyPlane(stageSize * 2);
 		transform->addComponent(col);
 
@@ -379,14 +390,14 @@ void ProjectManager::initScene1() {
 	}
 	//Ball
 	{
-		Material * mat = new Material(Shaders::getGradientShader(), glm::vec3(COLOR_PURPLE), Textures::getTexture(Textures::T_STEAM));
-		mat->color2 = glm::vec3(COLOR_BLUE);
+		Material * mat = new Material(Shaders::getGradientShader(), glm::vec3(COLOR_BLUE), Textures::getTexture(Textures::T_BALL));
+		mat->color2 = glm::vec3(COLOR_RED);
 		ball = new Transform(model_sphere, mat, false);
 
 		ball->scale(0.4f);
 
 		//transform->translate(glm::vec3(-2, 10, -0.8f));
-		ball->translate(glm::vec3(0, 50, 0));
+		ball->translate(glm::vec3(0, 20, 0));
 
 		ComponentRigidBodySphere * rb = new ComponentRigidBodySphere(0.4f);
 		ball->addComponent(rb);
@@ -396,144 +407,168 @@ void ProjectManager::initScene1() {
 
 		scene1->addTransform(ball);
 	}
+	//Transparent ground
+	{
+		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_WHITE), Textures::getTexture(Textures::T_TRANSPARENT));
+		Transform * p = new Transform(model_plane, mat);
+
+		p->translate(groundPosition + glm::vec3(0, -.5f, 0));
+		p->scale(200);
+
+		scene1->addTransform(p);
+	}
 	////Sun
 	{
-		Material * mat = new Material(Shaders::getGradientShader(), glm::vec3(COLOR_ORANGE));
-		mat->color2 = glm::vec3(COLOR_RED);
+		Material * mat = new Material(Shaders::getGradientShader(), glm::vec3(COLOR_ORANGE), Textures::getTexture(Textures::T_WHITE));
+		mat->color2 = glm::vec3(COLOR_MAGENTA);
 		Transform * sun = new Transform(model_sphere, mat, false);
 
-		sun->scale(10.4f);
-
 		//sun->translate(glm::vec3(-2, 10, -0.8f));
-		sun->translate(glm::vec3(30.5, 0, -0.7f));
+		sun->translate(glm::vec3(200, 0, -0.7f));
+
+		sun->scale(75);
 
 		scene1->addTransform(sun);
 	}
-	//Goalpost - RED
+	//Scoreboard
 	{
-		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_RED));
-		Transform * goal = new Transform(model_goal, mat);
+		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_GRAY));
+		Transform * t = new Transform(model_rectangle, mat);
 
-		goal->translate(glm::vec3(0, 0, 7.5) + groundPosition);
-		goal->rotate(180, AXIS_Y_POSITIVE);
+		t->translate(glm::vec3(-10, 1, 0));
 
+		score = new ComponentScoreboard();
+		t->addComponent(score);
+
+		scene1->addTransform(t);
+
+		//Goalpost - RED
 		{
-			float colThicc = 0.05f;
+			Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_RED));
+			Transform * goal = new Transform(model_goal, mat);
 
-			Transform * child = new Transform();
-			child->translate(glm::vec3(-2.f, 1.25f, -0.5f));
-			child->scale(0.25f);
-			goal->addChild(child);
-			ComponentRigidBodyBox * c = new ComponentRigidBodyBox(glm::vec3(colThicc, 1.25f, 0.5f), true);
-			child->addComponent(c);
+			goal->translate(glm::vec3(0, 0, 7.5) + groundPosition);
+			goal->rotate(180, AXIS_Y_POSITIVE);
+
+			{
+				float colThicc = 0.05f;
+
+				Transform * child = new Transform();
+				child->translate(glm::vec3(-2.f, 1.25f, -0.5f));
+				child->scale(0.25f);
+				goal->addChild(child);
+				ComponentRigidBodyBox * c = new ComponentRigidBodyBox(glm::vec3(colThicc, 1.25f, 0.5f), true);
+				child->addComponent(c);
 
 
-			child = new Transform();
-			child->translate(glm::vec3(2.f, 1.25f, -0.5f));
-			child->scale(0.25f);
-			goal->addChild(child);
-			c = new ComponentRigidBodyBox(glm::vec3(colThicc, 1.25f, 0.5f), true);
-			child->addComponent(c);
+				child = new Transform();
+				child->translate(glm::vec3(2.f, 1.25f, -0.5f));
+				child->scale(0.25f);
+				goal->addChild(child);
+				c = new ComponentRigidBodyBox(glm::vec3(colThicc, 1.25f, 0.5f), true);
+				child->addComponent(c);
 
-			child = new Transform();
-			child->translate(glm::vec3(0.f, 2.5f, -0.5f));
-			child->scale(0.25f);
-			goal->addChild(child);
-			c = new ComponentRigidBodyBox(glm::vec3(2.f, colThicc, 0.5f), true);
-			child->addComponent(c);
+				child = new Transform();
+				child->translate(glm::vec3(0.f, 2.5f, -0.5f));
+				child->scale(0.25f);
+				goal->addChild(child);
+				c = new ComponentRigidBodyBox(glm::vec3(2.f, colThicc, 0.5f), true);
+				child->addComponent(c);
 
-			child = new Transform();
-			child->translate(glm::vec3(0.f, 1.25f, -1.f));
-			child->scale(0.25f);
-			goal->addChild(child);
-			c = new ComponentRigidBodyBox(glm::vec3(2.f, 1.25f, colThicc), true);
-			child->addComponent(c);
+				child = new Transform();
+				child->translate(glm::vec3(0.f, 1.25f, -1.f));
+				child->scale(0.25f);
+				goal->addChild(child);
+				c = new ComponentRigidBodyBox(glm::vec3(2.f, 1.25f, colThicc), true);
+				child->addComponent(c);
+			}
+
+			ComponentGoal * c = new ComponentGoal(ball, glm::vec3(2, 2.5f, -1), glm::vec3(-2, 0, 0), true, score);
+			goal->addComponent(c);
+
+			scene1->addTransform(goal);
 		}
-
-		ComponentGoal * c = new ComponentGoal(ball, glm::vec3(2, 2.5f, -1), glm::vec3(-2, 0, 0));
-		goal->addComponent(c);
-
-		scene1->addTransform(goal);
-	}
-	//Goalpost - BLUE
-	{
-		Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_BLUE));
-		Transform * goal = new Transform(model_goal, mat);
-
-		goal->translate(glm::vec3(0, 0, -7.5) + groundPosition);
-
+		//Goalpost - BLUE
 		{
-			float colThicc = 0.05f;
+			Material * mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_BLUE));
+			Transform * goal = new Transform(model_goal, mat);
 
-			Transform * child = new Transform();
-			child->translate(glm::vec3(-2.f, 1.25f, -0.5f));
-			child->scale(0.25f);
-			goal->addChild(child);
-			ComponentRigidBodyBox * c = new ComponentRigidBodyBox(glm::vec3(colThicc, 1.25f, 0.5f), true);
-			child->addComponent(c);
+			goal->translate(glm::vec3(0, 0, -7.5) + groundPosition);
+
+			{
+				float colThicc = 0.05f;
+
+				Transform * child = new Transform();
+				child->translate(glm::vec3(-2.f, 1.25f, -0.5f));
+				child->scale(0.25f);
+				goal->addChild(child);
+				ComponentRigidBodyBox * c = new ComponentRigidBodyBox(glm::vec3(colThicc, 1.25f, 0.5f), true);
+				child->addComponent(c);
 
 
-			child = new Transform();
-			child->translate(glm::vec3(2.f, 1.25f, -0.5f));
-			child->scale(0.25f);
-			goal->addChild(child);
-			c = new ComponentRigidBodyBox(glm::vec3(colThicc, 1.25f, 0.5f), true);
-			child->addComponent(c);
+				child = new Transform();
+				child->translate(glm::vec3(2.f, 1.25f, -0.5f));
+				child->scale(0.25f);
+				goal->addChild(child);
+				c = new ComponentRigidBodyBox(glm::vec3(colThicc, 1.25f, 0.5f), true);
+				child->addComponent(c);
 
-			child = new Transform();
-			child->translate(glm::vec3(0.f, 2.5f, -0.5f));
-			child->scale(0.25f);
-			goal->addChild(child);
-			c = new ComponentRigidBodyBox(glm::vec3(2.f, colThicc, 0.5f), true);
-			child->addComponent(c);
+				child = new Transform();
+				child->translate(glm::vec3(0.f, 2.5f, -0.5f));
+				child->scale(0.25f);
+				goal->addChild(child);
+				c = new ComponentRigidBodyBox(glm::vec3(2.f, colThicc, 0.5f), true);
+				child->addComponent(c);
 
-			child = new Transform();
-			child->translate(glm::vec3(0.f, 1.25f, -1.f));
-			child->scale(0.25f);
-			goal->addChild(child);
-			c = new ComponentRigidBodyBox(glm::vec3(2.f, 1.25f, colThicc), true);
-			child->addComponent(c);
+				child = new Transform();
+				child->translate(glm::vec3(0.f, 1.25f, -1.f));
+				child->scale(0.25f);
+				goal->addChild(child);
+				c = new ComponentRigidBodyBox(glm::vec3(2.f, 1.25f, colThicc), true);
+				child->addComponent(c);
+			}
+
+			ComponentGoal * c = new ComponentGoal(ball, glm::vec3(2, 2.5f, -1), glm::vec3(-2, 0, 0), false, score);
+			goal->addComponent(c);
+
+			scene1->addTransform(goal);
 		}
-
-		ComponentGoal * c = new ComponentGoal(ball, glm::vec3(2, 2.5f, -1), glm::vec3(-2, 0, 0));
-		goal->addComponent(c);
-
-		scene1->addTransform(goal);
 	}
 	//Walls
 	{
-		Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_GRAY), Textures::getTexture(Textures::T_WINDOW));
-		Transform * transform = new Transform(model_plane, mat);
-		transform->translate(glm::vec3(-stageSize, 0, 0));
-		transform->rotate(90, AXIS_Z_POSITIVE);
-		transform->rotate(90, AXIS_Y_POSITIVE);
-		ComponentRigidBodyPlane * plane = new ComponentRigidBodyPlane(stageSize * 2, AXIS_X_NEGATIVE);
-		transform->addComponent(plane);
-		scene1->addTransform(transform);
+		{
+			Material * mat = new Material(Shaders::getTextureShader(), glm::vec3(COLOR_GRAY), Textures::getTexture(Textures::T_WINDOW));
+			Transform * transform = new Transform(model_plane, mat);
+			transform->translate(glm::vec3(-stageSize, 0, 0));
+			transform->rotate(90, AXIS_Z_POSITIVE);
+			transform->rotate(90, AXIS_Y_POSITIVE);
+			ComponentRigidBodyPlane * plane = new ComponentRigidBodyPlane(stageSize * 2, AXIS_X_NEGATIVE);
+			transform->addComponent(plane);
+			scene1->addTransform(transform);
 
-		transform = new Transform(model_plane, mat);
-		transform->translate(glm::vec3(stageSize, 0, 0));
-		transform->rotate(-90, AXIS_Z_POSITIVE);
-		transform->rotate(90, AXIS_Y_POSITIVE);
-		plane = new ComponentRigidBodyPlane(stageSize * 2, AXIS_X_POSITIVE);
-		transform->addComponent(plane);
-		scene1->addTransform(transform);
+			transform = new Transform(model_plane, mat);
+			transform->translate(glm::vec3(stageSize, 0, 0));
+			transform->rotate(-90, AXIS_Z_POSITIVE);
+			transform->rotate(90, AXIS_Y_POSITIVE);
+			plane = new ComponentRigidBodyPlane(stageSize * 2, AXIS_X_POSITIVE);
+			transform->addComponent(plane);
+			scene1->addTransform(transform);
 
-		transform = new Transform(model_plane, mat);
-		transform->translate(glm::vec3(0, 0, stageSize));
-		transform->rotate(-90, AXIS_X_POSITIVE);
-		plane = new ComponentRigidBodyPlane(stageSize * 2, AXIS_Z_NEGATIVE);
-		transform->addComponent(plane);
-		scene1->addTransform(transform);
+			transform = new Transform(model_plane, mat);
+			transform->translate(glm::vec3(0, 0, stageSize));
+			transform->rotate(-90, AXIS_X_POSITIVE);
+			plane = new ComponentRigidBodyPlane(stageSize * 2, AXIS_Z_NEGATIVE);
+			transform->addComponent(plane);
+			scene1->addTransform(transform);
 
-		transform = new Transform(model_plane, mat);
-		transform->translate(glm::vec3(0, 0, -stageSize));
-		transform->rotate(90, AXIS_X_POSITIVE);
-		plane = new ComponentRigidBodyPlane(stageSize * 2, AXIS_Z_POSITIVE);
-		transform->addComponent(plane);
-		scene1->addTransform(transform);
+			transform = new Transform(model_plane, mat);
+			transform->translate(glm::vec3(0, 0, -stageSize));
+			transform->rotate(90, AXIS_X_POSITIVE);
+			plane = new ComponentRigidBodyPlane(stageSize * 2, AXIS_Z_POSITIVE);
+			transform->addComponent(plane);
+			scene1->addTransform(transform);
+		}
 	}
-
 	scene1->LateInit();
 }
 
@@ -571,7 +606,7 @@ void ProjectManager::draw(glm::mat4 headPose, glm::mat4 projection, int eye) {
 }
 
 void ProjectManager::update(double deltaTime) {
-	if (client->player != 2) {
+	if (client->player != 2 && curScene != SCENE_MENU) {
 		physics->update(deltaTime);
 	}
 
@@ -626,7 +661,7 @@ void ProjectManager::updateHands(glm::mat4 left, glm::mat4 right) {
 
 void ProjectManager::updateHead(glm::mat4 hmd) {
 	head->setToWorld(hmd);
-	head->scale(0.4f);
+	head->scale(0.35f);
 	head->rotate(180, AXIS_Y_POSITIVE);
 }
 
@@ -662,6 +697,14 @@ glm::vec3 ProjectManager::getStickVelocity(bool left) {
 
 }
 
+int ProjectManager::getPlayerNumber() {
+	return client->player;
+}
+
+Model * ProjectManager::getSphereModel() {
+	return model_sphere;
+}
+
 Sounds* ProjectManager::getSoundEffect(SoundEffect soundEffect) {
 	switch (soundEffect) {
 	case HIT_SOUND:
@@ -687,6 +730,8 @@ void ProjectManager::serverConnect() {
 	handRModel->material->color = glm::vec3(COLOR_FOCUS_RED);
 	otherHandL->material->color = glm::vec3(COLOR_FOCUS_BLUE);
 	otherHandR->material->color = glm::vec3(COLOR_FOCUS_BLUE);
+	otherHandLModel->material->color = glm::vec3(COLOR_FOCUS_BLUE);
+	otherHandRModel->material->color = glm::vec3(COLOR_FOCUS_BLUE);
 	otherHead->material->color = glm::vec3(COLOR_FOCUS_BLUE);
 
 	startedNetwork = true;
@@ -704,6 +749,8 @@ void ProjectManager::clientConnect(bool isHost) {
 	handRModel->material->color = glm::vec3(COLOR_FOCUS_BLUE);
 	otherHandL->material->color = glm::vec3(COLOR_FOCUS_RED);
 	otherHandR->material->color = glm::vec3(COLOR_FOCUS_RED);
+	otherHandLModel->material->color = glm::vec3(COLOR_FOCUS_RED);
+	otherHandRModel->material->color = glm::vec3(COLOR_FOCUS_RED);
 	otherHead->material->color = glm::vec3(COLOR_FOCUS_RED);
 
 	startedNetwork = true;
@@ -771,9 +818,11 @@ void ProjectManager::receivePackets() {
 				break;
 			case PDATA_HAND_LEFT:
 				otherHandL->setToWorld(packet.toWorld);
+				handLModel->setToWorld(packet.toWorld);
 				break;
 			case PDATA_HAND_RIGHT:
 				otherHandR->setToWorld(packet.toWorld);
+				handRModel->setToWorld(packet.toWorld);
 				break;
 			case PDATA_BALL:
 				ball->setToWorld(packet.toWorld);
@@ -817,7 +866,7 @@ void ProjectManager::initPacketReceived() {
 	//Move Ball
 	btTransform bt;
 	bt.setIdentity();
-	bt.setOrigin(btVector3(0, 50, 0));
+	bt.setOrigin(btVector3(0, 20, 0));
 	ball->rigidBody->setWorldTransform(bt);
 	ball->rigidBody->getMotionState()->setWorldTransform(bt);
 	glm::mat4 reset = glm::mat4(1);
@@ -825,6 +874,9 @@ void ProjectManager::initPacketReceived() {
 	ball->setToWorld(reset);
 
 	ball->rigidBody->setLinearVelocity(btVector3(0, 0, 0));
+
+	//Reset score
+	score->resetScore();
 }
 
 void ProjectManager::exitPacketReceived() {
@@ -836,8 +888,3 @@ void ProjectManager::exitPacketReceived() {
 void ProjectManager::changeScene(Scenes scene) {
 	curScene = scene;
 }
-
-
-
-
-

@@ -5,13 +5,14 @@
 #include <iostream>
 #include "../Transform.h"
 #include "Component.h"
-
+#include "ComponentScoreboard.h"
 
 class ComponentGoal : public Component {
 public:
 	bool isActive = true;
 
-	ComponentGoal(Transform * Ball, glm::vec3 TopExtents, glm::vec3 BottomExtents) : ball(Ball), top(TopExtents), bottom(BottomExtents) {}
+	ComponentGoal(Transform * Ball, glm::vec3 TopExtents, glm::vec3 BottomExtents, bool isP1Goal, ComponentScoreboard * ScoreBoard)
+		: ball(Ball), top(TopExtents), bottom(BottomExtents), isRed(isP1Goal), scoreboard(ScoreBoard) {}
 	~ComponentGoal() {}
 
 	void Init(Transform * p) {
@@ -28,6 +29,8 @@ public:
 
 protected:
 	Transform * transform;
+	ComponentScoreboard * scoreboard;
+	bool isRed;
 
 	void Start() override {
 		bExtents = transform->getPosition(false) + bottom;
@@ -51,7 +54,6 @@ private:
 			if (checkExtents(tExtents.x, bExtents.x, ballPos.x)) {
 				if (checkExtents(tExtents.y, bExtents.y, ballPos.y)) {
 					if (checkExtents(-tExtents.z, -bExtents.z, -ballPos.z)) {
-						std::cout << "goal my dude\n";
 						ProjectManager::project->getSoundEffect(HIT_SOUND)->Play(0, 0, 0, scoreSound);
 						scored = true;
 					}
@@ -68,7 +70,7 @@ private:
 		if (curTime > scoreTime) {
 			btTransform bt;
 			bt.setIdentity();
-			bt.setOrigin(btVector3(0, 50, 0));
+			bt.setOrigin(btVector3(0, 20, 0));
 			ball->rigidBody->setWorldTransform(bt);
 			ball->rigidBody->getMotionState()->setWorldTransform(bt);
 			glm::mat4 reset = glm::mat4(1);
@@ -76,6 +78,8 @@ private:
 			ball->setToWorld(reset);
 
 			ball->rigidBody->setLinearVelocity(btVector3(0, 0, 0));
+
+			scoreboard->increaseScore(!isRed);
 
 			curTime = 0;
 			scored = false;

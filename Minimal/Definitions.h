@@ -27,6 +27,9 @@
 #define TEXTURE_HOST "textures/host.png"
 #define TEXTURE_CONNECT "textures/connect.png"
 #define TEXTURE_OFFLINE "textures/offline.png"
+#define TEXTURE_WHITE "textures/white.png"
+#define TEXTURE_TRANSPARENT "textures/transparent.png"
+#define TEXTURE_BALL "textures/ball.jpg"
 
 //Models
 #define MODEL_SPHERE "models/sphere.obj"
@@ -39,6 +42,7 @@
 #define MODEL_HAND_RIGHT "models/hand/handR.obj"
 #define MODEL_HAND_LEFT "models/hand/handL.obj"
 #define MODEL_GOAL "models/goal/goal.obj"
+#define MODEL_RECTANGLE "models/rectangle.obj"
 
 //Audio Files
 #define AUDIO_FUNERAL "Sound/67032__robinhood76__00892-funeral-silencium-trumpet.wav"
@@ -58,6 +62,7 @@
 #define COLOR_FOCUS_RED 1, .5f, .5f
 #define COLOR_FOCUS_BLUE .75f, .75f, 1
 #define COLOR_LIGHT 1, 0.7f, 0.7f
+#define COLOR_MAGENTA 1, 0, 1
 
 //Axes
 #define AXIS_X_POSITIVE glm::vec3(1, 0, 0)
