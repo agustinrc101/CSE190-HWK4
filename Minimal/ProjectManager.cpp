@@ -417,7 +417,7 @@ void ProjectManager::initScene1() {
 
 		scene1->addTransform(p);
 	}
-	////Sun
+	//Sun
 	{
 		Material * mat = new Material(Shaders::getGradientShader(), glm::vec3(COLOR_ORANGE), Textures::getTexture(Textures::T_WHITE));
 		mat->color2 = glm::vec3(COLOR_MAGENTA);
@@ -441,6 +441,7 @@ void ProjectManager::initScene1() {
 		t->addComponent(score);
 
 		scene1->addTransform(t);
+		//Display
 		{
 			mat = new Material(Shaders::getColorShader(), glm::vec3(COLOR_BLACK));
 			Transform * black = new Transform(model_rectangle, mat);
