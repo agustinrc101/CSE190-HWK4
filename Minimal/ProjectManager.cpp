@@ -834,11 +834,11 @@ void ProjectManager::receivePackets() {
 				break;
 			case PDATA_HAND_LEFT:
 				otherHandL->setToWorld(packet.toWorld);
-				handLModel->setToWorld(packet.toWorld);
+				otherHandLModel->setToWorld(packet.toWorld);
 				break;
 			case PDATA_HAND_RIGHT:
 				otherHandR->setToWorld(packet.toWorld);
-				handRModel->setToWorld(packet.toWorld);
+				otherHandRModel->setToWorld(packet.toWorld);
 				break;
 			case PDATA_BALL:
 				ball->setToWorld(packet.toWorld);
